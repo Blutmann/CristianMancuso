@@ -25,6 +25,7 @@ import {
   type FabricCategoryId,
 } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
+import { useMotion } from "@/context/MotionContext";
 
 type MeasureKey = keyof BespokeMeasurements;
 
@@ -56,7 +57,7 @@ function CollarMiniIcon({
   collar: CollarOption;
   active: boolean;
 }) {
-  const stroke = active ? "#C9A96E" : "#A1A1AA";
+  const stroke = active ? "#C8A25A" : "#A1A1AA";
   return (
     <svg
       aria-hidden="true"
@@ -119,8 +120,13 @@ export function ShirtBuilderSection() {
     addToSelection,
     openDrawer,
   } = useAtelier();
+  const { isMotionPaused } = useMotion();
 
   const fabricRailRef = useRef<HTMLDivElement | null>(null);
+  const collarStepRef = useRef<HTMLDivElement | null>(null);
+  const buttonStepRef = useRef<HTMLDivElement | null>(null);
+  const measuresStepRef = useRef<HTMLDivElement | null>(null);
+
   const [fabricCategory, setFabricCategory] =
     useState<FabricCategoryId | null>(null);
   const [collar, setCollar] = useState<CollarOption>("Italiano");
@@ -136,6 +142,11 @@ export function ShirtBuilderSection() {
   const [monogramPlacement, setMonogramPlacement] =
     useState<MonogramPlacement>("Puño izquierdo");
   const [justAdded, setJustAdded] = useState(false);
+
+  const scrollToStep = (ref: React.RefObject<HTMLDivElement | null>) => {
+    if (isMotionPaused || !ref.current) return;
+    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   const visibleFabrics = fabricCategory
     ? CATALOG_SHIRTS.filter((s) => s.fabricId === fabricCategory)
@@ -200,7 +211,7 @@ export function ShirtBuilderSection() {
     <section
       id="arma-tu-camisa"
       aria-labelledby="builder-heading"
-      className="relative w-full scroll-mt-24 bg-[#09090B] text-white py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 bg-[#111113] text-white py-20 sm:py-24 lg:py-28"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 atelier-grain opacity-65" />
@@ -210,8 +221,8 @@ export function ShirtBuilderSection() {
         {/* Section Header */}
         <div className="max-w-2xl">
           <div className="mb-3 flex items-center gap-3">
-            <span aria-hidden="true" className="h-[1px] w-7 bg-stitch" />
-            <span className="text-xs font-medium tracking-[0.18em] text-stitch uppercase">
+            <span aria-hidden="true" className="h-[1px] w-7 bg-gold" />
+            <span className="text-xs font-medium tracking-[0.18em] text-gold uppercase">
               Confección a medida sin cargo
             </span>
           </div>
@@ -228,7 +239,7 @@ export function ShirtBuilderSection() {
 
         {/* 2-Column Main Split */}
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start lg:gap-12">
-          {/* LEFT COLUMN: 4 Steps with Sectorized Square Swatches + Price */}
+          {/* LEFT COLUMN: 4 Steps with Auto-Scroll & Sectorized Square Swatches */}
           <div className="lg:col-span-7 space-y-8 min-w-0">
             {/* Step 1: Sectorized Square Fabric Swatches + Price */}
             <div>
@@ -242,7 +253,7 @@ export function ShirtBuilderSection() {
                     type="button"
                     aria-label="Desplazar telas a la izquierda"
                     onClick={() => scrollFabricRail(-1)}
-                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-[#141417] text-muted transition-colors hover:border-white/40 hover:text-white"
+                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#18181B] text-muted transition-colors hover:border-gold/60 hover:text-white"
                   >
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -250,7 +261,7 @@ export function ShirtBuilderSection() {
                     type="button"
                     aria-label="Desplazar telas a la derecha"
                     onClick={() => scrollFabricRail(1)}
-                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-[#141417] text-muted transition-colors hover:border-white/40 hover:text-white"
+                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#18181B] text-muted transition-colors hover:border-gold/60 hover:text-white"
                   >
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -283,8 +294,8 @@ export function ShirtBuilderSection() {
                       }}
                       className={`cursor-pointer shrink-0 min-h-[44px] rounded-full border px-3.5 text-xs font-medium transition-colors ${
                         active
-                          ? "border-white bg-white text-[#09090B] font-semibold"
-                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
+                          ? "border-gold bg-gold text-[#111113] font-semibold"
+                          : "border-white/10 bg-[#18181B] text-muted hover:border-white/30 hover:text-white"
                       }`}
                     >
                       {cat.label}
@@ -307,22 +318,25 @@ export function ShirtBuilderSection() {
                       id={`builder-fabric-${shirt.id}`}
                       type="button"
                       aria-pressed={active}
-                      onClick={() => setBuilderShirtId(shirt.id)}
+                      onClick={() => {
+                        setBuilderShirtId(shirt.id);
+                        scrollToStep(collarStepRef);
+                      }}
                       className="cursor-pointer group snap-start shrink-0 w-[108px] text-left focus-visible:outline-none"
                     >
                       {/* Square Textile Swatch */}
                       <div
                         className={`relative h-24 w-24 rounded-2xl border transition-all ${
                           active
-                            ? "border-stitch ring-2 ring-stitch/40 shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
-                            : "border-white/15 group-hover:border-white/40"
+                            ? "border-gold ring-2 ring-gold/40 shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
+                            : "border-white/12 group-hover:border-white/40"
                         }`}
                         style={{
                           background: `linear-gradient(135deg, ${shirt.secondaryHex} 0%, ${shirt.baseHex} 100%)`,
                         }}
                       >
                         {active && (
-                          <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#09090B]">
+                          <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gold text-[#111113]">
                             <Check className="h-3 w-3" aria-hidden="true" />
                           </span>
                         )}
@@ -338,7 +352,7 @@ export function ShirtBuilderSection() {
                       <p className="mt-0.5 font-mono text-[10px] text-muted line-clamp-1">
                         {shirt.refCode}
                       </p>
-                      <p className="mt-1 text-xs font-medium text-stitch tabular-nums">
+                      <p className="mt-1 text-xs font-medium text-gold tabular-nums">
                         {formatFabricPrice(shirt.priceArs, currency)}
                       </p>
                     </button>
@@ -348,7 +362,7 @@ export function ShirtBuilderSection() {
             </div>
 
             {/* Step 2: Tipo de Cuello */}
-            <div>
+            <div ref={collarStepRef} className="scroll-mt-28">
               <h3 className="mb-3 text-sm font-semibold text-white">
                 2. Elegí el tipo de cuello
               </h3>
@@ -361,11 +375,14 @@ export function ShirtBuilderSection() {
                       id={`builder-collar-${option.toLowerCase()}`}
                       type="button"
                       aria-pressed={active}
-                      onClick={() => setCollar(option)}
+                      onClick={() => {
+                        setCollar(option);
+                        scrollToStep(buttonStepRef);
+                      }}
                       className={`cursor-pointer snap-start shrink-0 min-h-[76px] min-w-[126px] flex flex-col items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 transition-all ${
                         active
-                          ? "border-white bg-white/[0.08] text-white"
-                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
+                          ? "border-gold bg-gold/12 text-white"
+                          : "border-white/10 bg-[#18181B] text-muted hover:border-white/30 hover:text-white"
                       }`}
                     >
                       <CollarMiniIcon collar={option} active={active} />
@@ -377,7 +394,7 @@ export function ShirtBuilderSection() {
             </div>
 
             {/* Step 3: Tipo de Botón */}
-            <div>
+            <div ref={buttonStepRef} className="scroll-mt-28">
               <h3 className="mb-3 text-sm font-semibold text-white">
                 3. Elegí el tipo de botón
               </h3>
@@ -390,11 +407,14 @@ export function ShirtBuilderSection() {
                       id={`builder-button-${btn.id.toLowerCase().replace(/\s+/g, "-")}`}
                       type="button"
                       aria-pressed={active}
-                      onClick={() => setButtonId(btn.id)}
+                      onClick={() => {
+                        setButtonId(btn.id);
+                        scrollToStep(measuresStepRef);
+                      }}
                       className={`cursor-pointer snap-start shrink-0 min-h-[56px] min-w-[144px] flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-all ${
                         active
-                          ? "border-white bg-white/[0.08] text-white"
-                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
+                          ? "border-gold bg-gold/12 text-white"
+                          : "border-white/10 bg-[#18181B] text-muted hover:border-white/30 hover:text-white"
                       }`}
                     >
                       <span
@@ -418,14 +438,17 @@ export function ShirtBuilderSection() {
             </div>
 
             {/* Step 4: Medidas en cm + Iniciales opcionales */}
-            <div className="rounded-2xl border border-white/12 bg-[#141417] p-5">
+            <div
+              ref={measuresStepRef}
+              className="scroll-mt-28 rounded-2xl border border-white/10 bg-[#18181B] p-5"
+            >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h3 className="text-sm font-semibold text-white">
                   4. Ingresá tus medidas (cm)
                 </h3>
                 <Link
                   href="/#como-medir"
-                  className="text-xs font-medium text-stitch hover:underline"
+                  className="text-xs font-medium text-gold hover:underline"
                 >
                   ¿Cómo me mido?
                 </Link>
@@ -444,8 +467,8 @@ export function ShirtBuilderSection() {
                         {field.label}
                       </label>
                       <div
-                        className={`mt-1.5 flex min-h-[44px] items-center rounded-xl border bg-[#09090B] px-3 transition-colors ${
-                          isFocused ? "border-stitch" : "border-white/15"
+                        className={`mt-1.5 flex min-h-[44px] items-center rounded-xl border bg-[#111113] px-3 transition-colors ${
+                          isFocused ? "border-gold" : "border-white/12"
                         }`}
                       >
                         <input
@@ -502,7 +525,7 @@ export function ShirtBuilderSection() {
                         )
                       }
                       placeholder="Ej. CM"
-                      className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/15 bg-[#09090B] px-3.5 text-sm tracking-[0.22em] text-stitch uppercase placeholder:tracking-normal placeholder:text-muted/40 focus:border-stitch focus:outline-none"
+                      className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/12 bg-[#111113] px-3.5 text-sm tracking-[0.22em] text-gold uppercase placeholder:tracking-normal placeholder:text-muted/40 focus:border-gold focus:outline-none"
                     />
                   </div>
 
@@ -517,8 +540,8 @@ export function ShirtBuilderSection() {
                           onClick={() => setMonogramPlacement(place)}
                           className={`cursor-pointer min-h-[44px] rounded-xl border px-3 text-xs font-medium transition-colors ${
                             active
-                              ? "border-white bg-white/[0.1] text-white"
-                              : "border-white/12 bg-[#09090B] text-muted hover:text-white"
+                              ? "border-gold bg-gold/15 text-white"
+                              : "border-white/10 bg-[#111113] text-muted hover:text-white"
                           }`}
                         >
                           {place}
@@ -531,9 +554,9 @@ export function ShirtBuilderSection() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Live Full Long-Sleeve Shirt Model + Real-Time cm Callouts */}
-          <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="rounded-3xl border border-white/12 bg-[#141417] p-5 sm:p-6 shadow-[0_28px_80px_rgba(0,0,0,0.65)]">
+          {/* RIGHT COLUMN: Sticky Live Full Long-Sleeve Shirt Model */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28">
+            <div className="rounded-3xl border border-white/10 bg-[#18181B] p-5 sm:p-6 shadow-[0_28px_80px_rgba(0,0,0,0.65)]">
               {/* Top Title + Ref */}
               <div className="flex items-start justify-between gap-3">
                 <div>
@@ -886,11 +909,11 @@ export function ShirtBuilderSection() {
                   type="button"
                   disabled={Boolean(invalidField)}
                   onClick={handleAddBespoke}
-                  className="cursor-pointer flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-semibold tracking-[0.06em] text-[#09090B] uppercase transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3 text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {justAdded ? (
                     <>
-                      <Check className="h-4 w-4 text-stitch" aria-hidden="true" />
+                      <Check className="h-4 w-4" aria-hidden="true" />
                       <span>Agregada a tu selección</span>
                     </>
                   ) : (

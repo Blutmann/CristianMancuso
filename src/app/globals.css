@@ -1,31 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* V4 Palette: Monochrome Editorial B&W + Stitch Champagne Accent */
-  --bg-black: #09090B;
-  --bg-navy: #09090B;
-  --bg-obsidian: #09090B;
-  --surface-card-dark: #141417;
-  --surface-elevated: #141417;
-  --surface-border: rgba(255, 255, 255, 0.12);
+  /* V5 Palette: Carbón Profundo (#111113) + Blanco Tiza (#FAFAFA) + Dorado Champagne (#C8A25A) */
+  --bg-black: #111113;
+  --bg-navy: #111113;
+  --bg-obsidian: #111113;
+  --surface-card-dark: #18181B;
+  --surface-elevated: #18181B;
+  --surface-border: rgba(255, 255, 255, 0.10);
 
-  --bg-white: #FFFFFF;
-  --bg-light: #FFFFFF;
-  --bg-ivory: #FFFFFF;
+  --bg-white: #FAFAFA;
+  --bg-light: #FAFAFA;
+  --bg-ivory: #FAFAFA;
   --bg-pearl: #F4F4F5;
   --surface-card-light: #FFFFFF;
   --border-light: #E4E4E7;
 
   --text-light: #FAFAFA;
   --text-primary: #FAFAFA;
-  --text-dark: #09090B;
+  --text-dark: #111113;
   --text-muted: #A1A1AA;
 
-  /* Reserved strictly for stitches, thread, and embroidered initials */
-  --stitch-accent: #C9A96E;
-  --accent-bronze: #C9A96E;
-  --accent-champagne: #C9A96E;
-  --accent-cyan: #C9A96E;
+  /* Dorado Champagne sastrero */
+  --accent-gold: #C8A25A;
+  --accent-gold-hover: #D4B26E;
+  --stitch-accent: #C8A25A;
+  --accent-bronze: #C8A25A;
+  --accent-champagne: #C8A25A;
+  --accent-cyan: #C8A25A;
 }
 
 @theme inline {
@@ -36,10 +38,12 @@
   --color-pearl: var(--bg-pearl);
   --color-primary: var(--text-primary);
   --color-muted: var(--text-muted);
-  --color-cyan: var(--stitch-accent);
-  --color-champagne: var(--stitch-accent);
-  --color-bronze: var(--stitch-accent);
-  --color-stitch: var(--stitch-accent);
+  --color-cyan: var(--accent-gold);
+  --color-champagne: var(--accent-gold);
+  --color-bronze: var(--accent-gold);
+  --color-stitch: var(--accent-gold);
+  --color-gold: var(--accent-gold);
+  --color-gold-hover: var(--accent-gold-hover);
 
   --font-display: var(--font-syne), system-ui, sans-serif;
   --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
@@ -82,7 +86,7 @@ html.lenis body {
 
 /* Selection styling */
 ::selection {
-  background-color: rgba(201, 169, 110, 0.28);
+  background-color: rgba(200, 162, 90, 0.3);
   color: var(--text-primary);
 }
 

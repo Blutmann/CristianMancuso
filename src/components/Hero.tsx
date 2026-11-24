@@ -16,7 +16,7 @@ const HERO_LINES = [
 ] as const;
 
 const BUTTON_Y = [108, 196, 284, 372] as const;
-const STITCH_LEN = 18; // exact diagonal length for cross-stitch strokeDasharray
+const STITCH_LEN = 20;
 
 export function Hero() {
   const { isMotionPaused, preloaderDone } = useMotion();
@@ -88,7 +88,7 @@ export function Hero() {
     return () => ctx.revert();
   }, [isMotionPaused, preloaderDone]);
 
-  // WOW #1: Needle & Thread Cross-Stitching the 4 mother-of-pearl buttons on scroll
+  // Prominent Needle & Gold Thread (#C8A25A) Cross-Stitching the 4 buttons on scroll
   useEffect(() => {
     const stitchesA = stitchARefs.current.filter(Boolean) as SVGLineElement[];
     const stitchesB = stitchBRefs.current.filter(Boolean) as SVGLineElement[];
@@ -98,11 +98,11 @@ export function Hero() {
     if (isMotionPaused || !sectionRef.current || stitchesA.length === 0) {
       gsap.set([...stitchesA, ...stitchesB], { strokeDashoffset: 0 });
       if (trail) gsap.set(trail, { strokeDashoffset: 0 });
-      if (needle) gsap.set(needle, { y: 278, x: 0, rotation: 0, opacity: 0.85 });
+      if (needle) gsap.set(needle, { y: 274, x: 0, rotation: 0, opacity: 0.9 });
       return;
     }
 
-    const trailLength = trail ? trail.getTotalLength() : 320;
+    const trailLength = trail ? trail.getTotalLength() : 360;
 
     const ctx = gsap.context(() => {
       gsap.set([...stitchesA, ...stitchesB], { strokeDashoffset: STITCH_LEN });
@@ -113,15 +113,15 @@ export function Hero() {
         });
       }
       if (needle) {
-        gsap.set(needle, { y: 0, x: 0, rotation: -12, opacity: 1 });
+        gsap.set(needle, { y: -16, x: 14, rotation: -22, opacity: 1 });
       }
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "bottom 25%",
-          scrub: 0.6,
+          end: "bottom 42%",
+          scrub: 0.45,
         },
       });
 
@@ -138,8 +138,9 @@ export function Hero() {
             needle,
             {
               y: deltaY,
-              rotation: idx % 2 === 0 ? -18 : 14,
-              duration: 0.2,
+              x: idx % 2 === 0 ? -12 : 16,
+              rotation: idx % 2 === 0 ? -26 : 18,
+              duration: 0.19,
               ease: "power1.inOut",
             },
             startAt
@@ -172,17 +173,24 @@ export function Hero() {
       ref={sectionRef}
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative min-h-[94svh] w-full overflow-hidden bg-[#09090B] pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 flex flex-col justify-center"
+      className="relative min-h-[94svh] w-full overflow-hidden bg-[#111113] pt-32 pb-16 sm:pt-36 sm:pb-20 lg:pt-40 flex flex-col justify-center"
     >
-      {/* Subtle monochrome grain */}
+      {/* Subtle charcoal grain & warm gold rim */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div
+          className="absolute -top-24 right-[-8%] h-[500px] w-[500px] rounded-full opacity-25 blur-[130px]"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(200,162,90,0.34) 0%, rgba(17,17,19,0) 70%)",
+          }}
+        />
         <div className="absolute inset-0 atelier-grain opacity-65" />
       </div>
 
       {/* Main Editorial Split */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-12">
-          {/* Left Column: Stark Monochrome Editorial Typography */}
+          {/* Left Column: Stark Editorial Typography */}
           <div className="lg:col-span-7 flex flex-col items-start">
             <div
               ref={(el) => {
@@ -190,8 +198,8 @@ export function Hero() {
               }}
               className="mb-6 flex items-center gap-3"
             >
-              <span aria-hidden="true" className="h-[1px] w-7 bg-stitch" />
-              <span className="text-xs font-medium tracking-[0.2em] text-stitch uppercase">
+              <span aria-hidden="true" className="h-[1px] w-7 bg-gold" />
+              <span className="text-xs font-medium tracking-[0.2em] text-gold uppercase">
                 Sastrería de autor · Buenos Aires
               </span>
             </div>
@@ -207,7 +215,7 @@ export function Hero() {
                       lineRefs.current[index] = el;
                     }}
                     className={`block will-change-transform ${
-                      line.accent ? "text-stitch" : "text-white"
+                      line.accent ? "text-gold" : "text-white"
                     }`}
                   >
                     {line.text}
@@ -225,7 +233,7 @@ export function Hero() {
               Elegí tela, cuello y medidas. Envío a todo el país y exterior.
             </p>
 
-            {/* 2 Clear B&W CTAs */}
+            {/* 2 Clear CTAs (Gold Protagonist Primary CTA) */}
             <div
               ref={(el) => {
                 fadeRefs.current[2] = el;
@@ -235,7 +243,7 @@ export function Hero() {
               <Link
                 id="hero-cta-collection"
                 href="/#coleccion"
-                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#09090B] transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090B]"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-gold px-7 py-3 text-sm font-semibold text-[#111113] transition-all duration-300 hover:-translate-y-0.5 hover:bg-gold-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113]"
               >
                 <span>Ver colección</span>
                 <ArrowUpRight
@@ -247,10 +255,10 @@ export function Hero() {
               <Link
                 id="hero-cta-builder"
                 href="/#arma-tu-camisa"
-                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:border-white hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch focus-visible:ring-offset-2 focus-visible:ring-offset-[#09090B]"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-medium text-white transition-all duration-300 hover:border-gold hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-[#111113]"
               >
                 <Ruler
-                  className="h-4 w-4 text-stitch transition-transform duration-300 group-hover:rotate-12"
+                  className="h-4 w-4 text-gold transition-transform duration-300 group-hover:rotate-12"
                   aria-hidden="true"
                 />
                 <span>Armar a medida</span>
@@ -258,11 +266,11 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Live Needle & Thread Cross-Stitching Placket */}
+          {/* Right Column: Prominent Live Needle & Gold Thread Cross-Stitching */}
           <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
             <div
               ref={specimenRef}
-              className="relative aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-3xl border border-white/12 bg-[#141417] shadow-[0_30px_80px_rgba(0,0,0,0.75)] will-change-transform"
+              className="relative aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-3xl border border-white/10 bg-[#18181B] shadow-[0_30px_80px_rgba(0,0,0,0.7)] will-change-transform"
             >
               <svg
                 aria-hidden="true"
@@ -272,7 +280,7 @@ export function Hero() {
               >
                 <defs>
                   <pattern
-                    id="hero-bw-twill"
+                    id="hero-charcoal-twill"
                     width="10"
                     height="10"
                     patternUnits="userSpaceOnUse"
@@ -288,13 +296,13 @@ export function Hero() {
                     />
                   </pattern>
 
-                  <radialGradient id="hero-bw-sheen" cx="68%" cy="26%" r="74%">
-                    <stop offset="0%" stopColor="#202026" />
-                    <stop offset="55%" stopColor="#121216" />
-                    <stop offset="100%" stopColor="#09090B" />
+                  <radialGradient id="hero-charcoal-sheen" cx="68%" cy="26%" r="74%">
+                    <stop offset="0%" stopColor="#26262C" />
+                    <stop offset="55%" stopColor="#18181B" />
+                    <stop offset="100%" stopColor="#111113" />
                   </radialGradient>
 
-                  <radialGradient id="hero-pearl-bw" cx="38%" cy="34%" r="65%">
+                  <radialGradient id="hero-pearl-v5" cx="38%" cy="34%" r="65%">
                     <stop offset="0%" stopColor="#FFFFFF" />
                     <stop offset="45%" stopColor="#F4F4F5" />
                     <stop offset="85%" stopColor="#D4D4D8" />
@@ -302,8 +310,8 @@ export function Hero() {
                   </radialGradient>
                 </defs>
 
-                <rect width="400" height="500" fill="url(#hero-bw-sheen)" />
-                <rect width="400" height="500" fill="url(#hero-bw-twill)" />
+                <rect width="400" height="500" fill="url(#hero-charcoal-sheen)" />
+                <rect width="400" height="500" fill="url(#hero-charcoal-twill)" />
 
                 {/* Tailored Center Placket */}
                 <rect
@@ -311,14 +319,14 @@ export function Hero() {
                   y="0"
                   width="88"
                   height="500"
-                  fill="rgba(9, 9, 11, 0.55)"
+                  fill="rgba(17, 17, 19, 0.55)"
                 />
                 <line
                   x1="166"
                   y1="0"
                   x2="166"
                   y2="500"
-                  stroke="rgba(201, 169, 110, 0.45)"
+                  stroke="rgba(200, 162, 90, 0.48)"
                   strokeWidth="1"
                   strokeDasharray="3 3"
                 />
@@ -327,53 +335,54 @@ export function Hero() {
                   y1="0"
                   x2="234"
                   y2="500"
-                  stroke="rgba(201, 169, 110, 0.45)"
+                  stroke="rgba(200, 162, 90, 0.48)"
                   strokeWidth="1"
                   strokeDasharray="3 3"
                 />
 
-                {/* Continuous Guiding Thread connecting the 4 buttons */}
+                {/* Prominent Golden Sewing Thread connecting all 4 buttons */}
                 <path
                   ref={trailPathRef}
-                  d="M 200 72 C 216 90, 188 152, 200 196 C 214 238, 186 322, 200 372 L 200 412"
+                  d="M 200 66 C 230 96, 174 152, 200 196 C 228 240, 172 324, 200 372 L 200 416"
                   fill="none"
-                  stroke="rgba(201, 169, 110, 0.45)"
-                  strokeWidth="1.2"
-                  strokeDasharray="3 3"
+                  stroke="#C8A25A"
+                  strokeOpacity="0.72"
+                  strokeWidth="1.8"
+                  strokeDasharray="4 3"
                 />
 
-                {/* 4 Mother-of-Pearl Buttons with Live Cross-Stitch (X) */}
+                {/* 4 Mother-of-Pearl Buttons with Prominent Gold Cross-Stitch (X) */}
                 {BUTTON_Y.map((cy, idx) => (
                   <g key={cy} transform={`translate(200, ${cy})`}>
                     <circle
-                      r="23"
+                      r="24"
                       fill="rgba(0,0,0,0.55)"
                       transform="translate(2, 5)"
                     />
-                    <circle r="22" fill="url(#hero-pearl-bw)" />
+                    <circle r="23" fill="url(#hero-pearl-v5)" />
                     <circle
-                      r="16.5"
+                      r="17"
                       fill="none"
-                      stroke="rgba(255,255,255,0.8)"
+                      stroke="rgba(255,255,255,0.85)"
                       strokeWidth="0.9"
                     />
                     {/* 4 Buttonholes */}
-                    <circle cx="-4.5" cy="-4.5" r="1.7" fill="#09090B" />
-                    <circle cx="4.5" cy="-4.5" r="1.7" fill="#09090B" />
-                    <circle cx="-4.5" cy="4.5" r="1.7" fill="#09090B" />
-                    <circle cx="4.5" cy="4.5" r="1.7" fill="#09090B" />
+                    <circle cx="-5" cy="-5" r="1.9" fill="#111113" />
+                    <circle cx="5" cy="-5" r="1.9" fill="#111113" />
+                    <circle cx="-5" cy="5" r="1.9" fill="#111113" />
+                    <circle cx="5" cy="5" r="1.9" fill="#111113" />
 
                     {/* Animated Cross-Stitch Diagonal A (\) */}
                     <line
                       ref={(el) => {
                         stitchARefs.current[idx] = el;
                       }}
-                      x1="-4.5"
-                      y1="-4.5"
-                      x2="4.5"
-                      y2="4.5"
-                      stroke="#C9A96E"
-                      strokeWidth="2.2"
+                      x1="-5"
+                      y1="-5"
+                      x2="5"
+                      y2="5"
+                      stroke="#C8A25A"
+                      strokeWidth="2.8"
                       strokeLinecap="round"
                       strokeDasharray={STITCH_LEN}
                       strokeDashoffset={STITCH_LEN}
@@ -384,12 +393,12 @@ export function Hero() {
                       ref={(el) => {
                         stitchBRefs.current[idx] = el;
                       }}
-                      x1="4.5"
-                      y1="-4.5"
-                      x2="-4.5"
-                      y2="4.5"
-                      stroke="#C9A96E"
-                      strokeWidth="2.2"
+                      x1="5"
+                      y1="-5"
+                      x2="-5"
+                      y2="5"
+                      stroke="#C8A25A"
+                      strokeWidth="2.8"
                       strokeLinecap="round"
                       strokeDasharray={STITCH_LEN}
                       strokeDashoffset={STITCH_LEN}
@@ -397,32 +406,33 @@ export function Hero() {
                   </g>
                 ))}
 
-                {/* Animated Tailor's Silver Needle & Thread Eye */}
-                <g ref={needleRef} transform="translate(238, 108)">
+                {/* Prominent Tailor's Silver Needle & Flowing Gold Thread */}
+                <g ref={needleRef} transform="translate(240, 108)">
                   <line
                     x1="0"
                     y1="0"
-                    x2="44"
-                    y2="-24"
-                    stroke="#E4E4E7"
-                    strokeWidth="2.2"
+                    x2="54"
+                    y2="-30"
+                    stroke="#FAFAFA"
+                    strokeWidth="2.8"
                     strokeLinecap="round"
                   />
                   {/* Eye of the needle */}
                   <ellipse
-                    cx="36"
-                    cy="-19.5"
-                    rx="3.2"
-                    ry="1.2"
-                    transform="rotate(-28 36 -19.5)"
-                    fill="#09090B"
+                    cx="44"
+                    cy="-24.5"
+                    rx="3.8"
+                    ry="1.4"
+                    transform="rotate(-29 44 -24.5)"
+                    fill="#111113"
                   />
-                  {/* Trailing champagne thread from needle eye */}
+                  {/* Flowing Champagne Gold Thread from Needle Eye */}
                   <path
-                    d="M 38 -20.5 Q 68 -32 76 -4"
+                    d="M 46 -25.5 C 82 -42, 92 -8, 66 24"
                     fill="none"
-                    stroke="#C9A96E"
-                    strokeWidth="1.3"
+                    stroke="#C8A25A"
+                    strokeWidth="1.9"
+                    strokeLinecap="round"
                   />
                 </g>
               </svg>
@@ -437,7 +447,7 @@ export function Hero() {
                     Ref. Art. 2529
                   </p>
                 </div>
-                <span className="font-serif text-base italic tracking-[0.14em] text-stitch">
+                <span className="font-serif text-base italic tracking-[0.14em] text-gold">
                   C.M.
                 </span>
               </div>

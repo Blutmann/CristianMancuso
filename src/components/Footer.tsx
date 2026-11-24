@@ -13,14 +13,14 @@ export function Footer() {
   const { isMotionPaused, toggleMotion } = useMotion();
 
   return (
-    <footer className="relative w-full border-t border-dashed border-white/15 bg-[#09090B] text-primary">
+    <footer className="relative w-full border-t border-dashed border-white/15 bg-[#111113] text-primary">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           {/* Brand Column */}
           <div className="md:col-span-5">
             <Link
               href="/"
-              className="relative inline-flex items-center gap-3 border border-dashed border-stitch/55 bg-[#09090B] px-3.5 py-2"
+              className="relative inline-flex items-center gap-3 border border-dashed border-gold/55 bg-[#111113] px-3.5 py-2"
             >
               <span className="font-display text-xs font-bold tracking-[0.14em] text-stitch">
                 CM
