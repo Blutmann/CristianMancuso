@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Pause, Play, ShoppingBag, X } from "lucide-react";
 import { useMotion } from "@/context/MotionContext";
+import { useAtelier } from "@/context/AtelierContext";
 
 const NAV_LINKS = [
   { label: "Telas", href: "/#telas" },
@@ -15,7 +16,8 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
-  const { isMotionPaused, toggleMotion, selectionCount } = useMotion();
+  const { isMotionPaused, toggleMotion } = useMotion();
+  const { totalSelectionCount, openDrawer } = useAtelier();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -144,7 +146,8 @@ export function Navbar() {
             <button
               id="nav-selection-btn"
               type="button"
-              aria-label={`Mi Selección, ${selectionCount} prendas`}
+              onClick={openDrawer}
+              aria-label={`Mi Selección, ${totalSelectionCount} prendas`}
               className="cursor-pointer group inline-flex items-center gap-2 rounded-full border border-champagne/35 bg-champagne/[0.08] px-3.5 py-1.5 text-xs font-medium text-primary transition-all duration-200 hover:border-champagne/70 hover:bg-champagne/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne"
             >
               <ShoppingBag
@@ -153,7 +156,7 @@ export function Navbar() {
               />
               <span className="hidden sm:inline">Mi Selección</span>
               <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-champagne px-1 font-mono text-[10px] font-medium text-obsidian tabular-nums">
-                {selectionCount}
+                {totalSelectionCount}
               </span>
             </button>
 

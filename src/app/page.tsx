@@ -1,6 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { FabricComparator } from "@/components/FabricComparator";
 import { AtelierAnatomy } from "@/components/AtelierAnatomy";
+import { CatalogSection } from "@/components/CatalogSection";
 
 export default function HomePage() {
   return (
@@ -8,6 +9,7 @@ export default function HomePage() {
       <Hero />
       <FabricComparator />
       <AtelierAnatomy />
+      <CatalogSection />
     </>
   );
 }
