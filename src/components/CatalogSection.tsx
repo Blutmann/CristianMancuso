@@ -1,21 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, Check, ChevronDown, ShoppingBag } from "lucide-react";
+import { Grid2x2, Grid3x3, Shirt, SwatchBook } from "lucide-react";
 import {
-  ALPHA_SIZES,
   CATALOG_SHIRTS,
-  NUMERIC_SIZES,
   type CatalogShirt,
-  type CommercialSize,
   type ShirtBadge,
 } from "@/data/catalog";
-import {
-  formatFabricPrice,
-  type FabricCategoryId,
-} from "@/data/fabrics";
+import type { FabricCategoryId } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
 import { useMotion } from "@/context/MotionContext";
 
@@ -34,196 +29,142 @@ const VALID_GAMAS = new Set<FabricCategoryId>([
   "donna",
 ]);
 
-const CURATED_IDS = new Set([
-  "pima-piura-noche",
-  "biella-lino-marfil",
-  "urbano-oxford-grafito",
-  "donna-cloque-raya-mineral",
-]);
+type GridCols = 3 | 4;
+type VisualMode = "camisa" | "tela";
 
-function getBadgeStyle(badge: ShirtBadge): string {
-  switch (badge) {
-    case "EDICIÓN LIMITADA":
-      return "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]";
-    case "OFERTA":
-      return "bg-[#881337] text-white";
-    case "DESTACADO":
-      return "bg-[#16233B]/90 text-white dark:bg-white/15 dark:border dark:border-white/30 dark:backdrop-blur-md";
-    case "NOVEDAD":
-    default:
-      return "bg-black/10 text-[#111113] backdrop-blur-md dark:bg-white/12 dark:border dark:border-white/20 dark:text-white/90";
-  }
+function formatArsClean(amount: number): string {
+  return `$${amount.toLocaleString("es-AR")}`;
 }
 
-function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
-  const { currency, addToSelection, openDrawer, goToBuilderWithShirt } =
-    useAtelier();
+function getDiscreetBadge(badge?: ShirtBadge): {
+  label: string;
+  className: string;
+} | null {
+  if (badge === "OFERTA") {
+    return {
+      label: "OFERTA",
+      className: "bg-[#881337] text-white",
+    };
+  }
+  if (badge === "DESTACADO") {
+    return {
+      label: "DESTACADO",
+      className:
+        "bg-[#16233B]/90 text-white dark:bg-white/15 dark:border dark:border-white/25 dark:backdrop-blur-md",
+    };
+  }
+  return null;
+}
+
+function MinimalShirtCard({
+  shirt,
+  visualMode,
+  isWide,
+}: {
+  shirt: CatalogShirt;
+  visualMode: VisualMode;
+  isWide: boolean;
+}) {
   const { isMotionPaused } = useMotion();
-
-  const sizes = shirt.sizeType === "alpha" ? ALPHA_SIZES : NUMERIC_SIZES;
-  const defaultSize: CommercialSize = shirt.sizeType === "alpha" ? "M" : "40";
-  const [selectedSize, setSelectedSize] = useState<CommercialSize>(defaultSize);
-  const [justAdded, setJustAdded] = useState(false);
-
-  const formattedPrice = formatFabricPrice(shirt.priceArs, currency);
-  const formattedCompare = shirt.compareAtArs
-    ? formatFabricPrice(shirt.compareAtArs, currency)
-    : null;
-  const installmentArs = Math.round(shirt.priceArs / 3);
-
-  const handleAddDirect = () => {
-    addToSelection(shirt, {
-      mode: "commercial",
-      commercialSize: selectedSize,
-    });
-    setJustAdded(true);
-    openDrawer();
-    window.setTimeout(() => setJustAdded(false), 1800);
-  };
+  const badge = getDiscreetBadge(shirt.badge);
 
   return (
-    <article className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-all duration-300 hover:border-black/20 dark:text-white dark:hover:border-white/28 dark:hover:bg-white/[0.075]">
-      {/* Compact Transparent Studio Stage (h-44) */}
-      <div className="relative h-44 w-full overflow-hidden bg-transparent">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-4 rounded-full opacity-55 blur-2xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(255,255,255,0.45) 0%, transparent 72%)",
-          }}
-        />
-        <Image
-          src={shirt.studioImage}
-          alt={`${shirt.name} — ${shirt.composition}`}
-          fill
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className={`object-contain px-3 pt-2 drop-shadow-[0_14px_20px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_14px_22px_rgba(0,0,0,0.55)] ${
-            isMotionPaused
-              ? ""
-              : "transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-          }`}
-        />
-
-        {/* Floating Ref & Badge */}
-        <div className="pointer-events-none absolute inset-x-2.5 top-2.5 z-10 flex items-start justify-between gap-1.5">
-          <span className="rounded-full bg-white/85 px-2 py-0.5 font-mono text-[9.5px] text-[#111113]/85 shadow-xs backdrop-blur-md dark:bg-black/55 dark:text-white/85">
-            {shirt.refCode}
-          </span>
-
-          {shirt.badge && (
+    <Link
+      href={`/coleccion/${shirt.id}`}
+      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:text-white dark:hover:border-white/28"
+    >
+      {/* Visual Area: Floating Shirt OR Clean Square Fabric Macro */}
+      <div
+        className={`relative w-full overflow-hidden ${
+          visualMode === "tela"
+            ? "aspect-square"
+            : isWide
+              ? "aspect-[4/4.3]"
+              : "aspect-[4/4.5]"
+        }`}
+      >
+        {visualMode === "camisa" ? (
+          <div className="relative flex h-full w-full items-center justify-center p-5 pb-6">
+            <div className="relative h-full w-full">
+              <Image
+                src={shirt.studioImage}
+                alt={shirt.name}
+                fill
+                sizes={
+                  isWide
+                    ? "(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    : "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                }
+                className={`object-contain drop-shadow-[0_14px_20px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.55)] ${
+                  isMotionPaused
+                    ? ""
+                    : "transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.04]"
+                }`}
+              />
+            </div>
+            {/* Soft floor shadow */}
             <span
-              className={`rounded-full px-2 py-0.5 text-[9.5px] font-semibold tracking-[0.06em] uppercase ${getBadgeStyle(
-                shirt.badge
-              )}`}
-            >
-              {shirt.badge}
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-3 left-1/2 h-2.5 w-24 -translate-x-1/2 rounded-full bg-[#111113] opacity-15 blur-md dark:bg-black dark:opacity-50"
+            />
+          </div>
+        ) : (
+          <div className="relative h-full w-full overflow-hidden">
+            <Image
+              src={shirt.studioImage}
+              alt={`Detalle de tela ${shirt.name}`}
+              fill
+              sizes="(min-width: 1024px) 33vw, 50vw"
+              className={`scale-[2.65] object-cover object-center ${
+                isMotionPaused
+                  ? ""
+                  : "transition-transform duration-700 ease-out group-hover:scale-[2.85]"
+              }`}
+            />
+          </div>
+        )}
+
+        {/* Discreet badge ONLY for DESTACADO / OFERTA */}
+        {badge && (
+          <span
+            className={`pointer-events-none absolute right-3 top-3 z-10 rounded-full px-2.5 py-0.5 text-[9.5px] font-semibold tracking-[0.08em] uppercase ${badge.className}`}
+          >
+            {badge.label}
+          </span>
+        )}
+      </div>
+
+      {/* Ultra-clean Editorial Metadata: Name + Ref. Art. + Price */}
+      <div className="flex flex-1 flex-col justify-between gap-2 px-4 py-3.5">
+        <div>
+          <h2 className="truncate font-display text-sm font-bold tracking-[-0.015em] text-[#111113] sm:text-[15px] dark:text-white">
+            {shirt.name}
+          </h2>
+          <p className="mt-0.5 font-mono text-[10.5px] text-muted">
+            {shirt.refCode}
+          </p>
+        </div>
+
+        <div className="flex items-baseline gap-2 pt-0.5">
+          <span className="font-mono text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
+            {formatArsClean(shirt.priceArs)}
+          </span>
+          {shirt.compareAtArs && (
+            <span className="font-mono text-[11px] text-muted line-through tabular-nums">
+              {formatArsClean(shirt.compareAtArs)}
             </span>
           )}
         </div>
       </div>
-
-      {/* Compact Card Body (p-4) */}
-      <div className="flex flex-1 flex-col justify-between p-4">
-        <div>
-          <p className="text-[11px] font-medium text-[#111113]/55 dark:text-white/55">
-            {shirt.fabricLabel}
-          </p>
-
-          <h3 className="mt-0.5 truncate font-display text-base font-bold leading-snug tracking-[-0.02em] text-[#111113] dark:text-white">
-            {shirt.name}
-          </h3>
-
-          <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="text-base font-semibold text-[#111113] tabular-nums dark:text-white">
-              {formattedPrice}
-            </span>
-            {formattedCompare && (
-              <span className="text-[11px] text-muted line-through tabular-nums">
-                {formattedCompare}
-              </span>
-            )}
-          </div>
-
-          <p className="mt-0.5 truncate text-[11px] text-muted">
-            {currency === "ARS"
-              ? `3 cuotas s/i de ARS $${installmentArs.toLocaleString("es-AR")}`
-              : "3 cuotas sin interés en ARS"}
-          </p>
-
-          {/* Commercial Size Selector — 1 Single Row */}
-          <div className="mt-3">
-            <div
-              className={`grid gap-1 ${
-                shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
-              }`}
-            >
-              {sizes.map((size) => {
-                const active = selectedSize === size;
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    aria-pressed={active}
-                    onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer flex min-h-[38px] w-full items-center justify-center rounded-lg text-[11px] font-medium transition-all ${
-                      active
-                        ? "bg-[#111113] text-white font-semibold shadow-sm dark:bg-white dark:text-[#07080B]"
-                        : "border border-black/12 bg-black/[0.03] text-[#111113]/80 hover:bg-black/[0.08] dark:border-white/12 dark:bg-white/[0.06] dark:text-white/80 dark:hover:bg-white/[0.12] dark:hover:text-white"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Primary CTA + Compact Bespoke Link */}
-        <div className="mt-3.5 space-y-1.5">
-          <button
-            id={`add-cart-btn-${shirt.id}`}
-            type="button"
-            onClick={handleAddDirect}
-            className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-4 text-[11px] font-semibold tracking-[0.04em] uppercase transition-all ${
-              justAdded
-                ? "bg-[#16233B] text-white dark:bg-white/20 dark:border dark:border-white/35"
-                : "bg-[#111113] text-white hover:bg-[#16233B] dark:bg-white dark:text-[#07080B] dark:hover:bg-white/90"
-            }`}
-          >
-            {justAdded ? (
-              <>
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Agregada</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>Agregar al carrito</span>
-              </>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => goToBuilderWithShirt(shirt.id)}
-            className="cursor-pointer inline-flex min-h-[36px] w-full items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-[#111113]/65 transition-colors hover:bg-black/[0.05] hover:text-[#111113] dark:text-white/65 dark:hover:bg-white/[0.06] dark:hover:text-white"
-          >
-            <span>¿La querés a medida? Armala sin cargo</span>
-            <ArrowRight className="h-3 w-3 shrink-0" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-    </article>
+    </Link>
   );
 }
 
 export function CatalogSection() {
-  const { currency, setCurrency, selectedFabric, setSelectedFabric } =
-    useAtelier();
+  const { selectedFabric, setSelectedFabric } = useAtelier();
   const { isMotionPaused } = useMotion();
-  const [showAll, setShowAll] = useState(true);
+  const [gridCols, setGridCols] = useState<GridCols>(4);
+  const [visualMode, setVisualMode] = useState<VisualMode>("camisa");
 
   // Sync ?gama= query param when arriving from Home's 4 Fabric Gamas
   useEffect(() => {
@@ -235,14 +176,9 @@ export function CatalogSection() {
     }
   }, [setSelectedFabric]);
 
-  const categoryFiltered = selectedFabric
+  const visibleShirts = selectedFabric
     ? CATALOG_SHIRTS.filter((s) => s.fabricId === selectedFabric)
     : CATALOG_SHIRTS;
-
-  const visibleShirts =
-    !selectedFabric && !showAll
-      ? categoryFiltered.filter((s) => CURATED_IDS.has(s.id))
-      : categoryFiltered;
 
   return (
     <section
@@ -251,63 +187,26 @@ export function CatalogSection() {
       className="relative w-full bg-transparent pt-28 pb-16 text-[#111113] dark:text-white"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
-        {/* Compact Header Row */}
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-              <h1
-                id="coleccion-heading"
-                className="font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
-              >
-                Colección · Listas para enviar
-              </h1>
-              <p className="text-sm text-muted">
-                Elegí tu talle comercial o pedila a medida sin cargo.
-              </p>
-            </div>
-          </div>
-
-          {/* Liquid Glass ARS / USD Toggle */}
-          <div
-            role="radiogroup"
-            aria-label="Moneda"
-            className="liquid-glass inline-flex self-start items-center rounded-full p-1 lg:self-end"
+        {/* Clean Editorial Header */}
+        <div className="flex flex-col gap-1.5">
+          <h1
+            id="coleccion-heading"
+            className="font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
           >
-            <button
-              type="button"
-              role="radio"
-              aria-checked={currency === "ARS"}
-              onClick={() => setCurrency("ARS")}
-              className={`cursor-pointer min-h-[38px] rounded-full px-3.5 text-xs font-semibold transition-colors ${
-                currency === "ARS"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
-                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-              }`}
-            >
-              ARS
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={currency === "USD"}
-              onClick={() => setCurrency("USD")}
-              className={`cursor-pointer min-h-[38px] rounded-full px-3.5 text-xs font-semibold transition-colors ${
-                currency === "USD"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
-                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-              }`}
-            >
-              USD (Exterior)
-            </button>
-          </div>
+            Colección
+          </h1>
+          <p className="text-sm text-muted">
+            Prendas listas para enviar o confeccionadas a tu medida sin cargo.
+          </p>
         </div>
 
-        {/* Compact Filter Bar */}
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+        {/* Top Control Bar: Fabric Gama Filters + Visual Mode (Camisa/Tela) + Grid (3/4 cols) */}
+        <div className="mt-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          {/* Category Filter Pills */}
           <div
             role="tablist"
             aria-label="Filtrar por gama de tela"
-            className="flex flex-wrap items-center gap-1.5"
+            className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5"
           >
             {FILTER_OPTIONS.map((option) => {
               const isActive = selectedFabric === option.id;
@@ -319,9 +218,9 @@ export function CatalogSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setSelectedFabric(option.id)}
-                  className={`cursor-pointer relative min-h-[40px] rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
+                  className={`cursor-pointer relative min-h-[40px] shrink-0 rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
                     isActive
-                      ? "text-white font-semibold dark:text-[#0B0B0E]"
+                      ? "font-semibold text-white dark:text-[#0B0B0E]"
                       : "border border-black/10 bg-white/60 text-[#111113]/75 hover:bg-white dark:border-white/10 dark:bg-white/[0.05] dark:text-white/70 dark:hover:bg-white/[0.1] dark:hover:text-white"
                   }`}
                 >
@@ -344,14 +243,85 @@ export function CatalogSection() {
             })}
           </div>
 
-          <span className="text-xs text-muted tabular-nums">
-            Mostrando {visibleShirts.length} de {categoryFiltered.length}
-          </span>
+          {/* Right Controls: Visual (Camisa / Tela) + Grid (3 cols / 4 cols) */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Visual Mode Toggle */}
+            <div
+              role="radiogroup"
+              aria-label="Modo de visualización"
+              className="liquid-glass inline-flex items-center rounded-full p-1"
+            >
+              <button
+                type="button"
+                role="radio"
+                aria-checked={visualMode === "camisa"}
+                onClick={() => setVisualMode("camisa")}
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                  visualMode === "camisa"
+                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                }`}
+              >
+                <Shirt className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Camisa</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={visualMode === "tela"}
+                onClick={() => setVisualMode("tela")}
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                  visualMode === "tela"
+                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                }`}
+              >
+                <SwatchBook className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>Tela</span>
+              </button>
+            </div>
+
+            {/* Grid Columns Toggle (Desktop) */}
+            <div
+              role="radiogroup"
+              aria-label="Columnas de la grilla"
+              className="liquid-glass hidden items-center rounded-full p-1 lg:inline-flex"
+            >
+              <button
+                type="button"
+                role="radio"
+                aria-checked={gridCols === 3}
+                onClick={() => setGridCols(3)}
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                  gridCols === 3
+                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                }`}
+              >
+                <Grid2x2 className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>3 cols</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={gridCols === 4}
+                onClick={() => setGridCols(4)}
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                  gridCols === 4
+                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                }`}
+              >
+                <Grid3x3 className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>4 cols</span>
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* 4-Column Compact Grid */}
+        {/* Minimal Product Grid */}
         {visibleShirts.length === 0 ? (
-          <div className="liquid-glass mt-6 rounded-2xl p-8 text-center">
+          <div className="liquid-glass mt-8 rounded-2xl p-8 text-center">
             <p className="text-sm text-muted">No hay telas en esta gama.</p>
             <button
               type="button"
@@ -362,34 +332,19 @@ export function CatalogSection() {
             </button>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            className={`mt-7 grid grid-cols-2 gap-4 sm:gap-5 ${
+              gridCols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
+            }`}
+          >
             {visibleShirts.map((shirt) => (
-              <CommercialShirtCard key={shirt.id} shirt={shirt} />
-            ))}
-          </div>
-        )}
-
-        {/* Discreet Toggle when showing all */}
-        {!selectedFabric && (
-          <div className="mt-7 flex justify-center">
-            <button
-              id="catalog-toggle-all-btn"
-              type="button"
-              onClick={() => setShowAll((prev) => !prev)}
-              className="cursor-pointer liquid-glass inline-flex min-h-[42px] items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold tracking-[0.04em] text-[#111113] transition-all hover:bg-white dark:text-white dark:hover:bg-white/[0.12]"
-            >
-              <span>
-                {showAll
-                  ? "Ver selección destacada (4)"
-                  : `Ver las ${CATALOG_SHIRTS.length} telas`}
-              </span>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${
-                  showAll ? "rotate-180" : ""
-                }`}
-                aria-hidden="true"
+              <MinimalShirtCard
+                key={shirt.id}
+                shirt={shirt}
+                visualMode={visualMode}
+                isWide={gridCols === 3}
               />
-            </button>
+            ))}
           </div>
         )}
       </div>
