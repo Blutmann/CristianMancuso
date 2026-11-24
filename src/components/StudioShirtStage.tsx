@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
-import { Rotate3d } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
@@ -76,7 +75,7 @@ export function StudioShirtStage({
       />
 
       <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with 360° Orbit & Live Fabric Projection */}
+        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with 360° Orbit & Manual Zoom Controls */}
         {(step === 1 || step === 4) && (
           <motion.div
             key="stage-glb-3d"
@@ -92,12 +91,6 @@ export function StudioShirtStage({
               step={step}
               isMotionPaused={isMotionPaused}
             />
-
-            {/* 360° Drag Hint Pill */}
-            <div className="liquid-glass pointer-events-none absolute bottom-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-[#111113]/75 sm:bottom-4 sm:left-4 dark:text-white/75">
-              <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Arrastrá para rotar 360°</span>
-            </div>
           </motion.div>
         )}
 

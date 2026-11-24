@@ -1,15 +1,16 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
   Environment,
   Lightformer,
   OrbitControls,
-  useGLTF,
 } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
+import { Minus, Plus, Rotate3d, RotateCcw } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   type ButtonOption,
@@ -17,6 +18,10 @@ import {
 } from "@/data/catalog";
 
 const MODEL_PATH = "/models/shirt.glb";
+const DEFAULT_CAMERA_Z = 3.45;
+const MIN_CAMERA_DIST = 1.6;
+const MAX_CAMERA_DIST = 5.0;
+const ZOOM_STEP = 0.45;
 
 export interface ShirtGLBViewerProps {
   shirt: CatalogShirt;
@@ -25,9 +30,17 @@ export interface ShirtGLBViewerProps {
   isMotionPaused: boolean;
 }
 
+interface WindowpaneUniforms {
+  uWindowpane: { value: number };
+  uLineColor: { value: THREE.Color };
+}
+
 /**
  * Generates a tileable procedural fabric CanvasTexture matching the 5 real weaves
  * while preserving the CLO3D normalMap folds & stitching.
+ * Note: For "windowpane", only the woven linen-cotton base is drawn here; the
+ * check lines themselves are projected seamlessly in 3D local space via shader
+ * so left/right placket UV islands align with zero seam offset.
  */
 function createFabricCanvasTexture(shirt: CatalogShirt): THREE.CanvasTexture {
   const size = 512;
@@ -83,28 +96,18 @@ function createFabricCanvasTexture(shirt: CatalogShirt): THREE.CanvasTexture {
         }
       }
     } else if (shirt.weaveKind === "windowpane") {
-      // Subtle warm windowpane check over dark navy blend
+      // Subtle linen-cotton woven base (check lines projected in 3D local space)
       ctx.strokeStyle = shirt.secondaryHex;
-      ctx.globalAlpha = 0.38;
-      ctx.lineWidth = 1.5;
-      for (let i = 0; i < size; i += 10) {
+      ctx.globalAlpha = 0.36;
+      ctx.lineWidth = 1.4;
+      for (let i = 0; i < size; i += 8) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
         ctx.lineTo(i, size);
         ctx.stroke();
-      }
-      ctx.strokeStyle = "#D6C3A5";
-      ctx.globalAlpha = 0.62;
-      ctx.lineWidth = 2.4;
-      const cell = 128;
-      for (let p = cell / 2; p < size; p += cell) {
         ctx.beginPath();
-        ctx.moveTo(p, 0);
-        ctx.lineTo(p, size);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(0, p);
-        ctx.lineTo(size, p);
+        ctx.moveTo(0, i);
+        ctx.lineTo(size, i);
         ctx.stroke();
       }
     } else if (shirt.weaveKind === "mineral-stripe") {
@@ -134,11 +137,147 @@ function createFabricCanvasTexture(shirt: CatalogShirt): THREE.CanvasTexture {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  const repeatFactor = shirt.weaveKind === "windowpane" ? 5 : 10;
+  const repeatFactor = shirt.weaveKind === "windowpane" ? 8 : 10;
   texture.repeat.set(repeatFactor, repeatFactor);
   texture.anisotropy = 8;
   texture.needsUpdate = true;
   return texture;
+}
+
+/**
+ * Patches a cloth MeshStandardMaterial with a seamless 3D local-space windowpane
+ * check overlay so horizontal & vertical lines align perfectly across the center placket.
+ */
+function attachSeamlessWindowpaneShader(
+  mat: THREE.MeshStandardMaterial,
+  uniforms: WindowpaneUniforms
+) {
+  mat.customProgramCacheKey = () => "cm-seamless-windowpane-v1";
+  mat.onBeforeCompile = (shader) => {
+    shader.uniforms.uWindowpane = uniforms.uWindowpane;
+    shader.uniforms.uLineColor = uniforms.uLineColor;
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+        varying vec3 vShirtLocalPos;
+        varying vec3 vShirtLocalNormal;`
+      )
+      .replace(
+        "#include <begin_vertex>",
+        `#include <begin_vertex>
+        vShirtLocalPos = position;
+        vShirtLocalNormal = normalize(normal);`
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        "#include <common>",
+        `#include <common>
+        uniform float uWindowpane;
+        uniform vec3 uLineColor;
+        varying vec3 vShirtLocalPos;
+        varying vec3 vShirtLocalNormal;`
+      )
+      .replace(
+        "#include <map_fragment>",
+        `#include <map_fragment>
+        if (uWindowpane > 0.5) {
+          // CLO3D model coordinates are in cm: ~4.4 cm windowpane grid
+          float spacing = 4.4;
+          // Use X on front/back and blend to Z on side seams so checks wrap cleanly
+          float sideBlend = smoothstep(0.55, 0.85, abs(vShirtLocalNormal.x));
+          float horizCoord = mix(vShirtLocalPos.x, vShirtLocalPos.z, sideBlend);
+          float vertCoord = vShirtLocalPos.y;
+
+          float gx = abs(fract((horizCoord + spacing * 0.5) / spacing) - 0.5) * spacing;
+          float gy = abs(fract((vertCoord + spacing * 0.5) / spacing) - 0.5) * spacing;
+
+          float fwX = max(fwidth(horizCoord), 0.04);
+          float fwY = max(fwidth(vertCoord), 0.04);
+          float halfWidth = 0.095;
+
+          float lineX = 1.0 - smoothstep(halfWidth - fwX, halfWidth + fwX, gx);
+          float lineY = 1.0 - smoothstep(halfWidth - fwY, halfWidth + fwY, gy);
+          float checkMask = clamp(max(lineX, lineY), 0.0, 1.0);
+
+          diffuseColor.rgb = mix(diffuseColor.rgb, uLineColor, checkMask * 0.62);
+        }`
+      );
+  };
+}
+
+function CameraZoomRig({
+  targetDistance,
+  resetSignal,
+  isMotionPaused,
+}: {
+  targetDistance: number;
+  resetSignal: number;
+  isMotionPaused: boolean;
+}) {
+  const { camera } = useThree();
+  const controlsRef =
+    useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
+  const lastResetRef = useRef(resetSignal);
+
+  useFrame((_, delta) => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    // Handle explicit Reset button: smoothly return to front-facing default position
+    if (lastResetRef.current !== resetSignal) {
+      lastResetRef.current = resetSignal;
+      if (isMotionPaused) {
+        camera.position.set(0, 0.02, DEFAULT_CAMERA_Z);
+        controls.target.set(0, 0, 0);
+        controls.update();
+        return;
+      }
+    }
+
+    const offset = camera.position.clone().sub(controls.target);
+    const currentDist = offset.length();
+    if (currentDist > 0.001 && Math.abs(currentDist - targetDistance) > 0.005) {
+      const nextDist = isMotionPaused
+        ? targetDistance
+        : THREE.MathUtils.lerp(
+            currentDist,
+            targetDistance,
+            Math.min(1, delta * 7)
+          );
+      offset.setLength(nextDist);
+      camera.position.copy(controls.target).add(offset);
+      controls.update();
+    }
+  });
+
+  useEffect(() => {
+    const controls = controlsRef.current;
+    if (!controls || resetSignal === 0) return;
+    camera.position.set(0, 0.02, DEFAULT_CAMERA_Z);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }, [resetSignal, camera]);
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      enableZoom={false}
+      enablePan={false}
+      minDistance={MIN_CAMERA_DIST}
+      maxDistance={MAX_CAMERA_DIST}
+      minPolarAngle={Math.PI / 2.9}
+      maxPolarAngle={Math.PI / 1.72}
+      dampingFactor={0.07}
+      enableDamping
+      touches={{
+        ONE: THREE.TOUCH.ROTATE,
+        TWO: THREE.TOUCH.DOLLY_ROTATE,
+      }}
+    />
+  );
 }
 
 function Clo3DShirtModel({
@@ -146,7 +285,8 @@ function Clo3DShirtModel({
   buttonId,
   step,
   isMotionPaused,
-}: ShirtGLBViewerProps) {
+  resetSignal,
+}: ShirtGLBViewerProps & { resetSignal: number }) {
   const { scene } = useGLTF(MODEL_PATH, true);
   const groupRef = useRef<THREE.Group | null>(null);
 
@@ -157,10 +297,35 @@ function Clo3DShirtModel({
       if (child instanceof THREE.Mesh) {
         child.castShadow = true;
         child.receiveShadow = true;
+        const meshName = child.name.toLowerCase();
+        const isButtonMesh = meshName.includes("button");
+        const isStitchMesh =
+          meshName.includes("topstitch") ||
+          meshName.includes("bindedtrim") ||
+          meshName.includes("bartack");
+
+        const cloneAndPatch = (m: THREE.Material) => {
+          const clonedMat = m.clone();
+          if (
+            clonedMat instanceof THREE.MeshStandardMaterial &&
+            !isButtonMesh &&
+            !isStitchMesh &&
+            !clonedMat.name.toLowerCase().includes("button")
+          ) {
+            const uniforms: WindowpaneUniforms = {
+              uWindowpane: { value: 0 },
+              uLineColor: { value: new THREE.Color("#D6C3A5") },
+            };
+            clonedMat.userData.windowpaneUniforms = uniforms;
+            attachSeamlessWindowpaneShader(clonedMat, uniforms);
+          }
+          return clonedMat;
+        };
+
         if (Array.isArray(child.material)) {
-          child.material = child.material.map((m) => m.clone());
+          child.material = child.material.map(cloneAndPatch);
         } else if (child.material) {
-          child.material = child.material.clone();
+          child.material = cloneAndPatch(child.material);
         }
       }
     });
@@ -191,8 +356,17 @@ function Clo3DShirtModel({
     };
   }, [fabricTexture]);
 
+  // Reset turntable rotation when user clicks Reset
+  useEffect(() => {
+    if (resetSignal > 0 && groupRef.current) {
+      groupRef.current.rotation.y = 0;
+    }
+  }, [resetSignal]);
+
   // Project fabric & button materials onto CLO3D meshes while preserving original normalMap folds
   useEffect(() => {
+    const isWindowpane = shirt.weaveKind === "windowpane" ? 1 : 0;
+
     const btnOption =
       BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
     const buttonColorHex =
@@ -248,7 +422,13 @@ function Clo3DShirtModel({
           mat.envMapIntensity = 0.4;
           mat.needsUpdate = true;
         } else {
-          // Main garment cloth (Cloth_mesh / solid_2580): natural matte sartorial weave
+          // Main garment cloth (Cloth_mesh / Cotton_50s_Poplin): natural matte sartorial weave
+          const uniforms = mat.userData.windowpaneUniforms as
+            | WindowpaneUniforms
+            | undefined;
+          if (uniforms) {
+            uniforms.uWindowpane.value = isWindowpane;
+          }
           mat.map = fabricTexture;
           mat.roughnessMap = null;
           mat.metalnessMap = null;
@@ -276,7 +456,6 @@ function Clo3DShirtModel({
     if (step === 1) {
       group.rotation.y += delta * 0.22;
     } else if (step === 4) {
-      // Normalize angle cleanly to [-PI, PI] and lerp smoothly to front
       const current =
         ((group.rotation.y + Math.PI) % (Math.PI * 2) + Math.PI * 2) %
           (Math.PI * 2) -
@@ -304,12 +483,28 @@ export default function ShirtGLBViewer({
   step,
   isMotionPaused,
 }: ShirtGLBViewerProps) {
+  const [targetDistance, setTargetDistance] = useState(DEFAULT_CAMERA_Z);
+  const [resetSignal, setResetSignal] = useState(0);
+
+  const handleZoomIn = () => {
+    setTargetDistance((d) => Math.max(MIN_CAMERA_DIST, Number((d - ZOOM_STEP).toFixed(2))));
+  };
+
+  const handleZoomOut = () => {
+    setTargetDistance((d) => Math.min(MAX_CAMERA_DIST, Number((d + ZOOM_STEP).toFixed(2))));
+  };
+
+  const handleReset = () => {
+    setTargetDistance(DEFAULT_CAMERA_Z);
+    setResetSignal((n) => n + 1);
+  };
+
   return (
     <div className="relative h-full w-full cursor-grab active:cursor-grabbing">
       <Canvas
         shadows
         dpr={[1, 2]}
-        camera={{ position: [0, 0.02, 4.4], fov: 36 }}
+        camera={{ position: [0, 0.02, DEFAULT_CAMERA_Z], fov: 36 }}
         gl={{
           antialias: true,
           alpha: true,
@@ -357,26 +552,68 @@ export default function ShirtGLBViewer({
             buttonId={buttonId}
             step={step}
             isMotionPaused={isMotionPaused}
+            resetSignal={resetSignal}
           />
         </Suspense>
 
         <ContactShadows
-          position={[0, -1.06, 0]}
+          position={[0, -1.04, 0]}
           opacity={0.28}
-          scale={3.6}
+          scale={3.4}
           blur={2.5}
           far={2.2}
         />
 
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          minPolarAngle={Math.PI / 2.9}
-          maxPolarAngle={Math.PI / 1.72}
-          dampingFactor={0.07}
-          enableDamping
+        <CameraZoomRig
+          targetDistance={targetDistance}
+          resetSignal={resetSignal}
+          isMotionPaused={isMotionPaused}
         />
       </Canvas>
+
+      {/* Bottom-left: 360° Drag Hint + Discreet Liquid Glass Zoom (+ / - / Reset) */}
+      <div className="pointer-events-none absolute bottom-3 left-3 z-20 flex flex-wrap items-center gap-2 sm:bottom-4 sm:left-4">
+        <div className="liquid-glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-[#111113]/75 dark:text-white/75">
+          <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Arrastrá para rotar 360°</span>
+        </div>
+
+        <div
+          role="group"
+          aria-label="Controles de zoom 3D"
+          className="liquid-glass pointer-events-auto inline-flex items-center gap-0.5 rounded-full p-0.5 text-[#111113] dark:text-white"
+        >
+          <button
+            type="button"
+            onClick={handleZoomOut}
+            disabled={targetDistance >= MAX_CAMERA_DIST}
+            aria-label="Alejar zoom"
+            title="Alejar"
+            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[0.12]"
+          >
+            <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={handleZoomIn}
+            disabled={targetDistance <= MIN_CAMERA_DIST}
+            aria-label="Acercar zoom"
+            title="Acercar"
+            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[0.12]"
+          >
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={handleReset}
+            aria-label="Restablecer vista"
+            title="Restablecer vista"
+            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] dark:hover:bg-white/[0.12]"
+          >
+            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
