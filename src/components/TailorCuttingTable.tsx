@@ -13,12 +13,16 @@ const PHRASES = [
   { step: "03", text: "Cosemos cada detalle a tu medida" },
 ] as const;
 
+const FULL_SHIRT_SILHOUETTE =
+  "M 206 62 Q 260 82 314 62 L 356 82 L 424 330 L 384 342 L 344 176 L 344 366 Q 260 384 176 366 L 176 176 L 136 342 L 96 330 L 164 82 Z";
+
 export function TailorCuttingTable() {
   const { isMotionPaused } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const phase1Ref = useRef<SVGPathElement | null>(null);
   const phase2Ref = useRef<SVGPathElement | null>(null);
   const phase3Ref = useRef<SVGPathElement | null>(null);
+  const fabricMaskRectRef = useRef<SVGRectElement | null>(null);
   const shearsRef = useRef<SVGGElement | null>(null);
   const monogramRef = useRef<SVGTextElement | null>(null);
   const [activePhase, setActivePhase] = useState(0);
@@ -27,6 +31,7 @@ export function TailorCuttingTable() {
     const p1 = phase1Ref.current;
     const p2 = phase2Ref.current;
     const p3 = phase3Ref.current;
+    const fabricMask = fabricMaskRectRef.current;
     const shears = shearsRef.current;
     const mono = monogramRef.current;
 
@@ -37,6 +42,7 @@ export function TailorCuttingTable() {
         path.style.strokeDasharray = "none";
         path.style.strokeDashoffset = "0";
       });
+      if (fabricMask) gsap.set(fabricMask, { attr: { height: 340 } });
       if (mono) gsap.set(mono, { opacity: 1 });
       if (shears) {
         gsap.set(shears, { x: 404, y: 318, rotation: -35, opacity: 0.9 });
@@ -58,6 +64,7 @@ export function TailorCuttingTable() {
       gsap.set(p1, { strokeDasharray: len1, strokeDashoffset: len1 });
       gsap.set(p2, { strokeDasharray: len2, strokeDashoffset: len2 });
       gsap.set(p3, { strokeDasharray: len3, strokeDashoffset: len3 });
+      if (fabricMask) gsap.set(fabricMask, { attr: { height: 0 } });
       if (mono) gsap.set(mono, { opacity: 0 });
       if (shears) {
         const startPt = p1.getPointAtLength(0);
@@ -68,9 +75,9 @@ export function TailorCuttingTable() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
-          end: "+=680",
+          end: "+=950",
           pin: true,
-          scrub: 0.5,
+          scrub: 0.55,
           anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
@@ -97,7 +104,7 @@ export function TailorCuttingTable() {
               );
               const angle =
                 (Math.atan2(nextPt.y - pt.y, nextPt.x - pt.x) * 180) / Math.PI;
-              const snip = Math.sin(p * Math.PI * 16) * 8;
+              const snip = Math.sin(p * Math.PI * 18) * 8;
 
               gsap.set(shears, {
                 x: pt.x,
@@ -109,12 +116,21 @@ export function TailorCuttingTable() {
         },
       });
 
-      tl.to(p1, { strokeDashoffset: 0, duration: 0.42, ease: "none" })
-        .to(p2, { strokeDashoffset: 0, duration: 0.36, ease: "none" })
-        .to(p3, { strokeDashoffset: 0, duration: 0.22, ease: "none" });
+      tl.to(p1, { strokeDashoffset: 0, duration: 0.42, ease: "none" }, 0)
+        .to(p2, { strokeDashoffset: 0, duration: 0.36, ease: "none" }, 0.38)
+        .to(p3, { strokeDashoffset: 0, duration: 0.24, ease: "none" }, 0.72);
+
+      // Progressively reveal real woven fabric texture inside the cut silhouette
+      if (fabricMask) {
+        tl.to(
+          fabricMask,
+          { attr: { height: 340 }, duration: 0.72, ease: "none" },
+          0.18
+        );
+      }
 
       if (mono) {
-        tl.to(mono, { opacity: 1, duration: 0.12, ease: "power1.out" }, "-=0.1");
+        tl.to(mono, { opacity: 1, duration: 0.12, ease: "power1.out" }, 0.86);
       }
 
       return () => {
@@ -136,10 +152,10 @@ export function TailorCuttingTable() {
       ref={sectionRef}
       id="oficio"
       aria-labelledby="oficio-heading"
-      className="relative w-full border-t border-white/10 bg-[#111113] text-white overflow-hidden"
+      className="relative w-full border-t border-white/10 bg-[#161619] text-[#F5F5F7] overflow-hidden"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 atelier-grain opacity-65" />
+        <div className="absolute inset-0 atelier-grain opacity-60" />
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-[78svh] lg:min-h-[100svh] max-w-7xl flex-col justify-center px-5 py-16 sm:px-8 lg:px-10">
@@ -155,7 +171,7 @@ export function TailorCuttingTable() {
 
             <h2
               id="oficio-heading"
-              className="font-display text-[clamp(1.9rem,3.8vw,3rem)] font-bold leading-[1.05] tracking-[-0.03em] text-white"
+              className="font-display text-[clamp(1.9rem,3.8vw,3rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#F5F5F7]"
             >
               Mesa de corte
             </h2>
@@ -184,7 +200,7 @@ export function TailorCuttingTable() {
                     <span className="block font-mono text-[11px] text-gold">
                       {item.step}
                     </span>
-                    <p className="mt-1 font-display text-xl sm:text-2xl font-bold leading-snug tracking-[-0.02em] text-white">
+                    <p className="mt-1 font-display text-xl sm:text-2xl font-bold leading-snug tracking-[-0.02em] text-[#F5F5F7]">
                       {item.text}
                     </p>
                   </li>
@@ -193,10 +209,9 @@ export function TailorCuttingTable() {
             </ol>
           </div>
 
-          {/* Right Column: Tailor's Chalk Pattern + Animated Tailor's Shears */}
+          {/* Right Column: Cutting Table with Progressive Fabric Texture Reveal & Shears */}
           <div className="lg:col-span-7">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#18181B] p-4 sm:p-8 shadow-[0_30px_90px_rgba(0,0,0,0.65)]">
-              {/* Subtle Tailor Ruler Edge Ticks */}
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#1B1B1F] p-4 sm:p-8 shadow-[0_30px_90px_rgba(0,0,0,0.65)]">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-8 top-3 flex justify-between opacity-30"
@@ -215,8 +230,55 @@ export function TailorCuttingTable() {
                 viewBox="0 0 520 420"
                 className="mx-auto h-auto w-full max-w-[500px]"
                 role="img"
-                aria-label="Molde manga larga trazado con tiza blanca y tijera de sastre animada"
+                aria-label="Molde manga larga con textura textil revelada progresivamente al cortar con tijera de sastre"
               >
+                <defs>
+                  <pattern
+                    id="cutting-pima-texture"
+                    width="9"
+                    height="9"
+                    patternUnits="userSpaceOnUse"
+                    patternTransform="rotate(35)"
+                  >
+                    <rect width="9" height="9" fill="#1F2430" />
+                    <line
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="9"
+                      stroke="rgba(255,255,255,0.09)"
+                      strokeWidth="1.2"
+                    />
+                    <line
+                      x1="4.5"
+                      y1="0"
+                      x2="4.5"
+                      y2="9"
+                      stroke="rgba(200,162,90,0.08)"
+                      strokeWidth="0.9"
+                    />
+                  </pattern>
+
+                  <clipPath id="cutting-fabric-wipe">
+                    <rect
+                      ref={fabricMaskRectRef}
+                      x="80"
+                      y="52"
+                      width="360"
+                      height="340"
+                    />
+                  </clipPath>
+                </defs>
+
+                {/* Progressively Revealed Woven Fabric Inside Shirt Silhouette */}
+                <g clipPath="url(#cutting-fabric-wipe)">
+                  <path
+                    d={FULL_SHIRT_SILHOUETTE}
+                    fill="url(#cutting-pima-texture)"
+                    opacity="0.92"
+                  />
+                </g>
+
                 {/* Phase 1 Chalk: Shoulders, Collar Neckline & Torso Pattern */}
                 <path
                   ref={phase1Ref}
@@ -245,7 +307,7 @@ export function TailorCuttingTable() {
                   d="M 248 88 L 248 372 M 272 88 L 272 372 M 176 196 L 344 196 M 206 46 Q 260 66 314 46 M 366 76 L 434 328 M 86 328 L 154 76"
                   fill="none"
                   stroke="#C8A25A"
-                  strokeWidth="1.45"
+                  strokeWidth="1.5"
                   strokeDasharray="5 4"
                   strokeLinecap="round"
                 />
@@ -256,7 +318,7 @@ export function TailorCuttingTable() {
                   x="396"
                   y="328"
                   textAnchor="middle"
-                  fill="#C8A96E"
+                  fill="#C8A25A"
                   fontSize="12"
                   fontFamily="Georgia, serif"
                   fontStyle="italic"
@@ -265,39 +327,36 @@ export function TailorCuttingTable() {
                   C.M.
                 </text>
 
-                {/* Animated Tailor's Shears (Tijera de Sastre) gliding along the cut contour */}
+                {/* Animated Tailor's Shears gliding along the cut contour */}
                 <g ref={shearsRef}>
-                  {/* Upper & Lower Steel Blades */}
                   <path
-                    d="M -2 0 L 22 -5 L 2 3 Z"
+                    d="M -2 0 L 24 -5.5 L 2 3.2 Z"
                     fill="#FAFAFA"
                     stroke="#111113"
                     strokeWidth="0.6"
                   />
                   <path
-                    d="M -2 0 L 22 5 L 2 -3 Z"
+                    d="M -2 0 L 24 5.5 L 2 -3.2 Z"
                     fill="#D4D4D8"
                     stroke="#111113"
                     strokeWidth="0.6"
                   />
-                  {/* Brass Pivot Screw */}
-                  <circle cx="2" cy="0" r="2.2" fill="#C8A25A" />
-                  {/* Golden Handle Rings */}
+                  <circle cx="2" cy="0" r="2.4" fill="#C8A25A" />
                   <circle
-                    cx="-10"
-                    cy="-6.5"
-                    r="5"
+                    cx="-10.5"
+                    cy="-6.8"
+                    r="5.2"
                     fill="none"
                     stroke="#C8A25A"
-                    strokeWidth="2"
+                    strokeWidth="2.1"
                   />
                   <circle
-                    cx="-10"
-                    cy="6.5"
-                    r="5.5"
+                    cx="-10.5"
+                    cy="6.8"
+                    r="5.6"
                     fill="none"
                     stroke="#C8A25A"
-                    strokeWidth="2"
+                    strokeWidth="2.1"
                   />
                 </g>
               </svg>

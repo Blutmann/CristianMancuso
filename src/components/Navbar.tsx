@@ -65,14 +65,10 @@ export function Navbar() {
               : "border-white/12 bg-[#111113]/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
           }`}
         >
-          {/* Interior Double Topstitch (Shirt Cuff Detail — Top & Bottom) */}
-          <span
+          {/* Full 4-Sided Perimeter Interior Stitch (Shirt Cuff Detail) */}
+          <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 top-[3px] h-0 border-t border-dashed border-gold/35"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-x-4 bottom-[3px] h-0 border-b border-dashed border-gold/35"
+            className="pointer-events-none absolute inset-1.5 rounded-xl border border-dashed border-[#C8A25A]/45"
           />
 
           {/* Brand Monogram + Decorative Cuff Buttonhole & Mother-of-Pearl Button */}

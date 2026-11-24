@@ -114,25 +114,31 @@ export function BespokeProcess() {
   const whatsappUrl = buildWhatsAppUrl(currentModality.whatsappMessage);
 
   const strokeFor = (id: MeasureId) =>
-    activeMeasure === id ? "#C9A96E" : "rgba(9, 9, 11, 0.24)";
+    activeMeasure === id ? "#C8A25A" : "rgba(255, 255, 255, 0.25)";
   const widthFor = (id: MeasureId) => (activeMeasure === id ? 2.4 : 1.2);
 
   return (
     <section
       id="como-medir"
       aria-labelledby="como-medir-heading"
-      className="relative w-full scroll-mt-24 bg-[#F4F4F5] text-[#09090B] py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 border-t border-white/10 bg-[#111113] text-[#F5F5F7] py-20 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         {/* Concise Header */}
         <div className="max-w-xl">
+          <div className="mb-3 flex items-center gap-3">
+            <span aria-hidden="true" className="h-[1px] w-7 bg-gold" />
+            <span className="text-xs font-medium tracking-[0.18em] text-gold uppercase">
+              Guía de medidas
+            </span>
+          </div>
           <h2
             id="como-medir-heading"
-            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#09090B]"
+            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#F5F5F7]"
           >
             ¿Cómo tomar tus medidas?
           </h2>
-          <p className="mt-3 text-base text-[#52525B]">
+          <p className="mt-3 text-base text-muted">
             En nuestro atelier de Buenos Aires o guiado por WhatsApp desde
             donde estés.
           </p>
@@ -143,7 +149,7 @@ export function BespokeProcess() {
           <div
             role="tablist"
             aria-label="Modalidad de toma de medidas"
-            className="inline-flex flex-col sm:flex-row w-full sm:w-auto gap-1.5 rounded-2xl sm:rounded-full border border-[#E4E4E7] bg-white p-1"
+            className="inline-flex flex-col sm:flex-row w-full sm:w-auto gap-1.5 rounded-2xl sm:rounded-full border border-white/12 bg-[#1B1B1F] p-1"
           >
             {(
               [
@@ -171,8 +177,8 @@ export function BespokeProcess() {
                   onClick={() => setModality(tab.id)}
                   className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl sm:rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
                     isActive
-                      ? "text-white"
-                      : "text-[#52525B] hover:text-[#09090B]"
+                      ? "text-[#111113]"
+                      : "text-muted hover:text-[#F5F5F7]"
                   }`}
                 >
                   {isActive && (
@@ -185,7 +191,7 @@ export function BespokeProcess() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-xl sm:rounded-full bg-[#09090B]"
+                      className="absolute inset-0 rounded-xl sm:rounded-full bg-[#F5F5F7]"
                     />
                   )}
                   <Icon
@@ -207,17 +213,17 @@ export function BespokeProcess() {
               {currentModality.steps.map((step) => (
                 <li
                   key={`${modality}-${step.number}`}
-                  className="rounded-2xl border border-[#E4E4E7] bg-white p-5"
+                  className="rounded-2xl border border-white/10 bg-[#1B1B1F] p-5"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#09090B] text-xs font-semibold text-stitch">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/35 bg-[#111113] text-xs font-semibold text-gold">
                       {step.number}
                     </span>
                     <div>
-                      <h3 className="font-display text-lg font-bold text-[#09090B]">
+                      <h3 className="font-display text-lg font-bold text-[#F5F5F7]">
                         {step.title}
                       </h3>
-                      <p className="mt-1 text-sm text-[#52525B]">
+                      <p className="mt-1 text-sm text-muted">
                         {step.description}
                       </p>
                     </div>
@@ -232,19 +238,16 @@ export function BespokeProcess() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-[#09090B] px-7 py-3 text-xs font-semibold tracking-[0.06em] text-white uppercase transition-transform duration-200 hover:-translate-y-0.5"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-gold px-7 py-3 text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold-hover"
               >
-                <MessageCircle
-                  className="h-4 w-4 text-stitch"
-                  aria-hidden="true"
-                />
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Coordinar medidas por WhatsApp</span>
               </a>
             </div>
           </div>
 
-          {/* Right: Clean Interactive Long-Sleeve 4-Measurement Schematic */}
-          <div className="lg:col-span-6 rounded-3xl border border-[#E4E4E7] bg-white p-5 sm:p-6">
+          {/* Right: Unified Dark Interactive Long-Sleeve 4-Measurement Schematic */}
+          <div className="lg:col-span-6 rounded-3xl border border-white/10 bg-[#1B1B1F] p-5 sm:p-6">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {MEASURE_ORDER.map((id) => {
                 const m = MEASURES[id];
@@ -260,8 +263,8 @@ export function BespokeProcess() {
                     aria-pressed={isActive}
                     className={`cursor-pointer min-h-[44px] rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all ${
                       isActive
-                        ? "border-[#09090B] bg-[#09090B] text-white"
-                        : "border-[#E4E4E7] bg-[#F4F4F5] text-[#52525B] hover:border-[#09090B]/40 hover:text-[#09090B]"
+                        ? "border-gold bg-gold text-[#111113]"
+                        : "border-white/12 bg-[#141417] text-muted hover:border-white/35 hover:text-[#F5F5F7]"
                     }`}
                   >
                     {m.label}
@@ -270,7 +273,7 @@ export function BespokeProcess() {
               })}
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl border border-[#E4E4E7] bg-[#F4F4F5] px-3 py-4">
+            <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#141417] px-3 py-4">
               <svg
                 viewBox="0 0 420 355"
                 className="mx-auto h-auto w-full max-w-[375px]"
@@ -280,8 +283,8 @@ export function BespokeProcess() {
                 {/* Full Long-Sleeve Dress Shirt Flat Silhouette */}
                 <path
                   d="M 166 44 Q 210 60 254 44 L 288 60 L 346 282 L 312 292 L 278 150 L 278 318 Q 210 332 142 318 L 142 150 L 108 292 L 74 282 L 132 60 Z"
-                  fill="#FFFFFF"
-                  stroke="rgba(15, 23, 42, 0.25)"
+                  fill="#1B1B1F"
+                  stroke="rgba(255, 255, 255, 0.25)"
                   strokeWidth="1.4"
                   strokeLinejoin="round"
                 />
@@ -289,19 +292,19 @@ export function BespokeProcess() {
                 <path
                   d="M 166 44 L 184 74 L 210 62 L 236 74 L 254 44"
                   fill="none"
-                  stroke="rgba(15, 23, 42, 0.35)"
+                  stroke="rgba(255, 255, 255, 0.35)"
                   strokeWidth="1.2"
                 />
                 <path
                   d="M 80 258 L 114 268 L 108 292 L 74 282 Z"
-                  fill="#FAF8F5"
-                  stroke="rgba(15, 23, 42, 0.22)"
+                  fill="#141417"
+                  stroke="rgba(255, 255, 255, 0.22)"
                   strokeWidth="1.1"
                 />
                 <path
                   d="M 306 268 L 340 258 L 346 282 L 312 292 Z"
-                  fill="#FAF8F5"
-                  stroke="rgba(15, 23, 42, 0.22)"
+                  fill="#141417"
+                  stroke="rgba(255, 255, 255, 0.22)"
                   strokeWidth="1.1"
                 />
 
@@ -322,7 +325,7 @@ export function BespokeProcess() {
                     x="210"
                     y="21"
                     textAnchor="middle"
-                    fill={activeMeasure === "cuello" ? "#9C753B" : "#64748B"}
+                    fill={activeMeasure === "cuello" ? "#C8A25A" : "#A1A1AA"}
                     fontSize="10"
                     fontWeight="600"
                   >
@@ -350,7 +353,7 @@ export function BespokeProcess() {
                     x="210"
                     y="148"
                     textAnchor="middle"
-                    fill={activeMeasure === "pecho" ? "#9C753B" : "#64748B"}
+                    fill={activeMeasure === "pecho" ? "#C8A25A" : "#A1A1AA"}
                     fontSize="10"
                     fontWeight="600"
                   >
@@ -358,7 +361,7 @@ export function BespokeProcess() {
                   </text>
                 </g>
 
-                {/* Manga Larga (Hombro hasta Puño) */}
+                {/* Manga Larga */}
                 <g
                   onClick={() => setActiveMeasure("manga")}
                   className="cursor-pointer"
@@ -377,7 +380,7 @@ export function BespokeProcess() {
                     x="362"
                     y="162"
                     textAnchor="middle"
-                    fill={activeMeasure === "manga" ? "#9C753B" : "#64748B"}
+                    fill={activeMeasure === "manga" ? "#C8A25A" : "#A1A1AA"}
                     fontSize="10"
                     fontWeight="600"
                   >
@@ -405,7 +408,7 @@ export function BespokeProcess() {
                     x="34"
                     y="192"
                     textAnchor="middle"
-                    fill={activeMeasure === "largo" ? "#9C753B" : "#64748B"}
+                    fill={activeMeasure === "largo" ? "#C8A25A" : "#A1A1AA"}
                     fontSize="10"
                     fontWeight="600"
                   >
@@ -415,16 +418,16 @@ export function BespokeProcess() {
               </svg>
             </div>
 
-            <div className="mt-4 flex items-start justify-between gap-4 rounded-2xl bg-[#FAF8F5] p-4">
+            <div className="mt-4 flex items-start justify-between gap-4 rounded-2xl border border-white/10 bg-[#141417] p-4">
               <div>
-                <p className="text-sm font-semibold text-[#0F172A]">
+                <p className="text-sm font-semibold text-[#F5F5F7]">
                   {currentMeasure.label}
                 </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#475569]">
+                <p className="mt-1 text-xs leading-relaxed text-muted">
                   {currentMeasure.instruction}
                 </p>
               </div>
-              <span className="shrink-0 font-mono text-xs font-medium text-[#9C753B] tabular-nums">
+              <span className="shrink-0 font-mono text-xs font-medium text-gold tabular-nums">
                 {currentMeasure.rangeCm}
               </span>
             </div>

@@ -266,16 +266,16 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Prominent Live Needle & Gold Thread Cross-Stitching */}
+          {/* Right Column: Large Protagonist Needle & Gold Cross-Stitching Placket */}
           <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
             <div
               ref={specimenRef}
-              className="relative aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-3xl border border-white/10 bg-[#18181B] shadow-[0_30px_80px_rgba(0,0,0,0.7)] will-change-transform"
+              className="relative aspect-[4/4.8] w-full max-w-[460px] overflow-hidden rounded-3xl border border-white/12 bg-[#1B1B1F] shadow-[0_32px_90px_rgba(0,0,0,0.75)] will-change-transform"
             >
               <svg
                 aria-hidden="true"
                 className="absolute inset-0 h-full w-full"
-                viewBox="0 0 400 500"
+                viewBox="0 0 400 490"
                 preserveAspectRatio="xMidYMid slice"
               >
                 <defs>
@@ -291,18 +291,18 @@ export function Hero() {
                       y1="0"
                       x2="0"
                       y2="10"
-                      stroke="rgba(255, 255, 255, 0.045)"
-                      strokeWidth="1"
+                      stroke="rgba(255, 255, 255, 0.05)"
+                      strokeWidth="1.1"
                     />
                   </pattern>
 
-                  <radialGradient id="hero-charcoal-sheen" cx="68%" cy="26%" r="74%">
-                    <stop offset="0%" stopColor="#26262C" />
-                    <stop offset="55%" stopColor="#18181B" />
+                  <radialGradient id="hero-charcoal-sheen" cx="65%" cy="25%" r="74%">
+                    <stop offset="0%" stopColor="#2A2A32" />
+                    <stop offset="55%" stopColor="#1B1B1F" />
                     <stop offset="100%" stopColor="#111113" />
                   </radialGradient>
 
-                  <radialGradient id="hero-pearl-v5" cx="38%" cy="34%" r="65%">
+                  <radialGradient id="hero-pearl-v6" cx="38%" cy="34%" r="65%">
                     <stop offset="0%" stopColor="#FFFFFF" />
                     <stop offset="45%" stopColor="#F4F4F5" />
                     <stop offset="85%" stopColor="#D4D4D8" />
@@ -310,79 +310,79 @@ export function Hero() {
                   </radialGradient>
                 </defs>
 
-                <rect width="400" height="500" fill="url(#hero-charcoal-sheen)" />
-                <rect width="400" height="500" fill="url(#hero-charcoal-twill)" />
+                <rect width="400" height="490" fill="url(#hero-charcoal-sheen)" />
+                <rect width="400" height="490" fill="url(#hero-charcoal-twill)" />
 
-                {/* Tailored Center Placket */}
+                {/* Wide Protagonist Center Placket */}
                 <rect
-                  x="156"
+                  x="136"
                   y="0"
-                  width="88"
-                  height="500"
-                  fill="rgba(17, 17, 19, 0.55)"
+                  width="128"
+                  height="490"
+                  fill="rgba(17, 17, 19, 0.58)"
                 />
                 <line
-                  x1="166"
+                  x1="148"
                   y1="0"
-                  x2="166"
-                  y2="500"
-                  stroke="rgba(200, 162, 90, 0.48)"
-                  strokeWidth="1"
-                  strokeDasharray="3 3"
+                  x2="148"
+                  y2="490"
+                  stroke="rgba(200, 162, 90, 0.55)"
+                  strokeWidth="1.2"
+                  strokeDasharray="4 3"
                 />
                 <line
-                  x1="234"
+                  x1="252"
                   y1="0"
-                  x2="234"
-                  y2="500"
-                  stroke="rgba(200, 162, 90, 0.48)"
-                  strokeWidth="1"
-                  strokeDasharray="3 3"
-                />
-
-                {/* Prominent Golden Sewing Thread connecting all 4 buttons */}
-                <path
-                  ref={trailPathRef}
-                  d="M 200 66 C 230 96, 174 152, 200 196 C 228 240, 172 324, 200 372 L 200 416"
-                  fill="none"
-                  stroke="#C8A25A"
-                  strokeOpacity="0.72"
-                  strokeWidth="1.8"
+                  x2="252"
+                  y2="490"
+                  stroke="rgba(200, 162, 90, 0.55)"
+                  strokeWidth="1.2"
                   strokeDasharray="4 3"
                 />
 
-                {/* 4 Mother-of-Pearl Buttons with Prominent Gold Cross-Stitch (X) */}
+                {/* Bold Golden Sewing Thread connecting all 4 buttons */}
+                <path
+                  ref={trailPathRef}
+                  d="M 200 58 C 244 96, 162 152, 200 196 C 240 242, 160 326, 200 372 L 200 416"
+                  fill="none"
+                  stroke="#C8A25A"
+                  strokeOpacity="0.82"
+                  strokeWidth="2.2"
+                  strokeDasharray="5 3"
+                />
+
+                {/* 4 Large Mother-of-Pearl Buttons with Bold Gold Cross-Stitch (X) */}
                 {BUTTON_Y.map((cy, idx) => (
                   <g key={cy} transform={`translate(200, ${cy})`}>
                     <circle
-                      r="24"
-                      fill="rgba(0,0,0,0.55)"
-                      transform="translate(2, 5)"
+                      r="30"
+                      fill="rgba(0,0,0,0.6)"
+                      transform="translate(3, 6)"
                     />
-                    <circle r="23" fill="url(#hero-pearl-v5)" />
+                    <circle r="29" fill="url(#hero-pearl-v6)" />
                     <circle
-                      r="17"
+                      r="22"
                       fill="none"
-                      stroke="rgba(255,255,255,0.85)"
-                      strokeWidth="0.9"
+                      stroke="rgba(255,255,255,0.88)"
+                      strokeWidth="1"
                     />
                     {/* 4 Buttonholes */}
-                    <circle cx="-5" cy="-5" r="1.9" fill="#111113" />
-                    <circle cx="5" cy="-5" r="1.9" fill="#111113" />
-                    <circle cx="-5" cy="5" r="1.9" fill="#111113" />
-                    <circle cx="5" cy="5" r="1.9" fill="#111113" />
+                    <circle cx="-6.5" cy="-6.5" r="2.3" fill="#111113" />
+                    <circle cx="6.5" cy="-6.5" r="2.3" fill="#111113" />
+                    <circle cx="-6.5" cy="6.5" r="2.3" fill="#111113" />
+                    <circle cx="6.5" cy="6.5" r="2.3" fill="#111113" />
 
                     {/* Animated Cross-Stitch Diagonal A (\) */}
                     <line
                       ref={(el) => {
                         stitchARefs.current[idx] = el;
                       }}
-                      x1="-5"
-                      y1="-5"
-                      x2="5"
-                      y2="5"
+                      x1="-6.5"
+                      y1="-6.5"
+                      x2="6.5"
+                      y2="6.5"
                       stroke="#C8A25A"
-                      strokeWidth="2.8"
+                      strokeWidth="3.6"
                       strokeLinecap="round"
                       strokeDasharray={STITCH_LEN}
                       strokeDashoffset={STITCH_LEN}
@@ -393,12 +393,12 @@ export function Hero() {
                       ref={(el) => {
                         stitchBRefs.current[idx] = el;
                       }}
-                      x1="5"
-                      y1="-5"
-                      x2="-5"
-                      y2="5"
+                      x1="6.5"
+                      y1="-6.5"
+                      x2="-6.5"
+                      y2="6.5"
                       stroke="#C8A25A"
-                      strokeWidth="2.8"
+                      strokeWidth="3.6"
                       strokeLinecap="round"
                       strokeDasharray={STITCH_LEN}
                       strokeDashoffset={STITCH_LEN}
@@ -406,39 +406,37 @@ export function Hero() {
                   </g>
                 ))}
 
-                {/* Prominent Tailor's Silver Needle & Flowing Gold Thread */}
-                <g ref={needleRef} transform="translate(240, 108)">
+                {/* Large Protagonist Silver Tailor's Needle & Flowing Gold Thread */}
+                <g ref={needleRef} transform="translate(242, 108)">
                   <line
                     x1="0"
                     y1="0"
-                    x2="54"
-                    y2="-30"
-                    stroke="#FAFAFA"
-                    strokeWidth="2.8"
+                    x2="68"
+                    y2="-38"
+                    stroke="#FFFFFF"
+                    strokeWidth="3.4"
                     strokeLinecap="round"
                   />
-                  {/* Eye of the needle */}
                   <ellipse
-                    cx="44"
-                    cy="-24.5"
-                    rx="3.8"
-                    ry="1.4"
-                    transform="rotate(-29 44 -24.5)"
+                    cx="56"
+                    cy="-31.5"
+                    rx="4.4"
+                    ry="1.7"
+                    transform="rotate(-29 56 -31.5)"
                     fill="#111113"
                   />
-                  {/* Flowing Champagne Gold Thread from Needle Eye */}
                   <path
-                    d="M 46 -25.5 C 82 -42, 92 -8, 66 24"
+                    d="M 59 -33 C 96 -52, 108 -10, 74 30"
                     fill="none"
                     stroke="#C8A25A"
-                    strokeWidth="1.9"
+                    strokeWidth="2.4"
                     strokeLinecap="round"
                   />
                 </g>
               </svg>
 
               {/* Quiet Editorial Caption */}
-              <div className="absolute inset-x-5 bottom-5 z-10 flex items-end justify-between border-t border-white/10 pt-4">
+              <div className="absolute inset-x-5 bottom-4 z-10 flex items-end justify-between border-t border-white/10 pt-3.5">
                 <div>
                   <p className="font-display text-base font-bold text-white">
                     Pima Piura Noche
