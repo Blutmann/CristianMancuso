@@ -1,23 +1,34 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { ArrowUpRight, MessageCircle, Pause, Play } from "lucide-react";
 import { buildWhatsAppUrl } from "@/data/config";
+import { useMotion } from "@/context/MotionContext";
 
 const DIRECT_WHATSAPP_URL = buildWhatsAppUrl(
   "Hola Cristian Mancuso Atelier, quisiera realizar una consulta sobre camisas a medida."
 );
 
 export function Footer() {
+  const { isMotionPaused, toggleMotion } = useMotion();
+
   return (
-    <footer className="relative w-full border-t border-white/[0.08] bg-obsidian text-primary">
+    <footer className="relative w-full border-t border-dashed border-white/15 bg-[#09090B] text-primary">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 lg:px-10 lg:py-20">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
           {/* Brand Column */}
           <div className="md:col-span-5">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg border border-champagne/40 bg-elevated font-display text-xs font-bold tracking-[0.08em] text-champagne">
+            <Link
+              href="/"
+              className="relative inline-flex items-center gap-3 border border-dashed border-stitch/55 bg-[#09090B] px-3.5 py-2"
+            >
+              <span className="font-display text-xs font-bold tracking-[0.14em] text-stitch">
                 CM
               </span>
-              <span className="font-display text-sm font-bold tracking-[0.16em] text-primary uppercase">
+              <span aria-hidden="true" className="text-white/25 text-[10px]">
+                {"//"}
+              </span>
+              <span className="font-display text-xs font-bold tracking-[0.18em] text-white uppercase">
                 Cristian Mancuso
               </span>
             </Link>
@@ -25,10 +36,6 @@ export function Footer() {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
               Alta camisería a medida sin costo extra. Envíos a Argentina,
               México, EE. UU. y España.
-            </p>
-
-            <p className="mt-5 font-mono text-[10px] tracking-[0.2em] text-champagne/90 uppercase">
-              BUENOS AIRES · SASTRERÍA DE AUTOR
             </p>
           </div>
 
@@ -41,7 +48,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/#coleccion"
-                  className="text-primary/80 transition-colors hover:text-champagne"
+                  className="text-white/80 transition-colors hover:text-white"
                 >
                   Colección
                 </Link>
@@ -49,7 +56,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/#arma-tu-camisa"
-                  className="text-primary/80 transition-colors hover:text-champagne"
+                  className="text-white/80 transition-colors hover:text-white"
                 >
                   Armá tu camisa
                 </Link>
@@ -57,7 +64,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/#como-medir"
-                  className="text-primary/80 transition-colors hover:text-champagne"
+                  className="text-white/80 transition-colors hover:text-white"
                 >
                   Cómo medir
                 </Link>
@@ -65,7 +72,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/empresas"
-                  className="inline-flex items-center gap-1 text-primary/80 transition-colors hover:text-champagne"
+                  className="inline-flex items-center gap-1 text-white/80 transition-colors hover:text-white"
                 >
                   <span>Empresas y Mayoristas</span>
                   <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -76,7 +83,7 @@ export function Footer() {
 
           {/* Direct Channel Column */}
           <div className="md:col-span-4">
-            <h3 className="font-mono text-[10px] tracking-[0.22em] text-muted uppercase">
+            <h3 className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">
               Canal Directo
             </h3>
             <p className="mt-4 text-sm leading-relaxed text-muted">
@@ -89,22 +96,38 @@ export function Footer() {
               href={DIRECT_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-champagne/45 bg-champagne/[0.08] px-5 py-2.5 text-xs font-semibold tracking-[0.06em] text-primary uppercase transition-colors hover:border-champagne hover:bg-champagne hover:text-obsidian"
+              className="mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/25 bg-white/[0.04] px-5 py-2.5 text-xs font-semibold tracking-[0.06em] text-white uppercase transition-colors hover:border-white hover:bg-white hover:text-[#09090B]"
             >
               <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Escribir por WhatsApp</span>
             </a>
 
-            <p className="mt-4 font-mono text-[10px] tracking-[0.16em] text-champagne uppercase">
+            <p className="mt-4 text-xs text-stitch">
               ✓ 3 cuotas sin interés · Confección a medida sin cargo
             </p>
           </div>
         </div>
 
-        {/* Bottom Strip */}
-        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-white/[0.08] pt-6 font-mono text-[10px] tracking-[0.18em] text-muted uppercase">
+        {/* Bottom Strip with Discreet Motion Accessibility Toggle */}
+        <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6 text-xs text-muted">
           <span>© {new Date().getFullYear()} Cristian Mancuso Atelier</span>
-          <span>Pima 120/2 · Lino Italiano · Nácar Australiano</span>
+
+          <button
+            id="footer-motion-toggle"
+            type="button"
+            onClick={toggleMotion}
+            aria-pressed={isMotionPaused}
+            className="cursor-pointer inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/12 px-4 py-1.5 text-xs text-muted transition-colors hover:border-white/35 hover:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stitch"
+          >
+            {isMotionPaused ? (
+              <Play className="h-3.5 w-3.5 text-stitch" aria-hidden="true" />
+            ) : (
+              <Pause className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+            <span>
+              {isMotionPaused ? "Reanudar movimiento" : "Pausar movimiento"}
+            </span>
+          </button>
         </div>
       </div>
     </footer>

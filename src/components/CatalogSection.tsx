@@ -21,13 +21,13 @@ import { ShirtArtwork } from "@/components/ShirtArtwork";
 
 const FILTER_OPTIONS: { id: FabricCategoryId | null; label: string }[] = [
   { id: null, label: "Todas" },
-  { id: "urbano", label: "Algodón Urbano" },
-  { id: "pima", label: "Algodón Peruano" },
-  { id: "italiano", label: "Lino Italiano" },
+  { id: "urbano", label: "Algodón 100%" },
+  { id: "pima", label: "Algodón Pima Peruano" },
+  { id: "italiano", label: "Algodón Italiano" },
   { id: "donna", label: "Mancuso Donna" },
 ];
 
-/** 4 telas curadas principales (1 por gama) para mantener la vista limpia por defecto */
+/** 4 telas curadas principales (1 por gama) por defecto */
 const CURATED_IDS = new Set([
   "pima-piura-noche",
   "biella-lino-marfil",
@@ -38,14 +38,14 @@ const CURATED_IDS = new Set([
 function getBadgeStyle(badge: ShirtBadge): string {
   switch (badge) {
     case "DESTACADO":
-      return "bg-navy text-bronze";
+      return "bg-[#09090B] text-stitch";
     case "EDICIÓN LIMITADA":
-      return "bg-navy text-primary";
+      return "bg-[#09090B] text-white";
     case "OFERTA":
-      return "bg-bronze text-navy";
+      return "bg-stitch text-[#09090B]";
     case "NOVEDAD":
     default:
-      return "bg-white/95 text-navy border border-[#E6E2DA]";
+      return "bg-white/95 text-[#09090B] border border-[#E4E4E7]";
   }
 }
 
@@ -76,9 +76,9 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
   };
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#E6E2DA] bg-white text-[#0F172A] transition-all duration-300 hover:border-bronze/70 hover:shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-      {/* Visual Stage (Full Long-Sleeve Shirt) */}
-      <div className="relative aspect-[4/4.05] w-full overflow-hidden border-b border-[#E6E2DA]">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#E4E4E7] bg-white text-[#09090B] transition-all duration-300 hover:border-[#09090B]/40 hover:shadow-[0_20px_50px_rgba(9,9,11,0.08)]">
+      {/* Visual Stage */}
+      <div className="relative aspect-[4/4.05] w-full overflow-hidden border-b border-[#E4E4E7] bg-[#F4F4F5]">
         <div
           className={`h-full w-full ${
             isMotionPaused
@@ -91,7 +91,7 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
 
         {/* Minimal Top Tags */}
         <div className="pointer-events-none absolute inset-x-3.5 top-3.5 flex items-start justify-between gap-2">
-          <span className="rounded-full bg-navy/85 px-2.5 py-1 font-mono text-[10px] text-primary backdrop-blur-sm">
+          <span className="rounded-full bg-[#09090B]/88 px-2.5 py-1 font-mono text-[10px] text-white backdrop-blur-sm">
             {shirt.refCode}
           </span>
 
@@ -110,37 +110,41 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
       {/* Card Body */}
       <div className="flex flex-1 flex-col justify-between p-5">
         <div>
-          <p className="text-xs font-medium text-[#8C6A3B]">
+          <p className="text-xs font-medium text-[#71717A]">
             {shirt.fabricLabel}
           </p>
 
-          <h3 className="mt-1 font-display text-xl font-bold leading-snug tracking-[-0.02em] text-[#0F172A]">
+          <h3 className="mt-1 font-display text-lg font-bold leading-snug tracking-[-0.02em] text-[#09090B]">
             {shirt.name}
           </h3>
 
           <div className="mt-2.5 flex items-baseline gap-2">
-            <span className="text-lg font-semibold text-[#0F172A] tabular-nums">
+            <span className="text-lg font-semibold text-[#09090B] tabular-nums">
               {formattedPrice}
             </span>
             {formattedCompare && (
-              <span className="text-xs text-[#64748B] line-through tabular-nums">
+              <span className="text-xs text-[#71717A] line-through tabular-nums">
                 {formattedCompare}
               </span>
             )}
           </div>
 
-          <p className="mt-0.5 text-xs text-[#64748B]">
+          <p className="mt-0.5 text-xs text-[#71717A]">
             {currency === "ARS"
               ? `3 cuotas sin interés de ARS $${installmentArs.toLocaleString("es-AR")}`
               : "3 cuotas sin interés en ARS"}
           </p>
 
-          {/* Direct Commercial Size Selector */}
+          {/* Direct Commercial Size Selector — STRICTLY 1 SINGLE ROW */}
           <div className="mt-4">
-            <span className="block text-[11px] font-medium text-[#475569]">
+            <span className="block text-[11px] font-medium text-[#52525B]">
               Talle comercial
             </span>
-            <div className="mt-2 flex flex-wrap gap-1.5">
+            <div
+              className={`mt-2 grid gap-1.5 ${
+                shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
+              }`}
+            >
               {sizes.map((size) => {
                 const active = selectedSize === size;
                 return (
@@ -149,10 +153,10 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer min-h-[44px] min-w-[44px] rounded-xl border px-2.5 text-xs font-medium transition-all ${
+                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-xl border text-xs font-medium transition-all ${
                       active
-                        ? "border-navy bg-navy text-primary"
-                        : "border-[#E6E2DA] bg-[#FAF8F5] text-[#0F172A] hover:border-navy/45"
+                        ? "border-[#09090B] bg-[#09090B] text-white"
+                        : "border-[#E4E4E7] bg-[#F4F4F5] text-[#09090B] hover:border-[#09090B]/50"
                     }`}
                   >
                     {size}
@@ -164,15 +168,15 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
         </div>
 
         {/* Actions: Direct Cart Add + Bespoke Shortcut */}
-        <div className="mt-5 space-y-2 border-t border-[#E6E2DA] pt-4">
+        <div className="mt-5 space-y-2 border-t border-[#E4E4E7] pt-4">
           <button
             id={`add-cart-btn-${shirt.id}`}
             type="button"
             onClick={handleAddDirect}
             className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold tracking-[0.04em] uppercase transition-all ${
               justAdded
-                ? "bg-bronze text-navy"
-                : "bg-navy text-primary hover:bg-[#1E293B]"
+                ? "bg-stitch text-[#09090B]"
+                : "bg-[#09090B] text-white hover:bg-[#27272A]"
             }`}
           >
             {justAdded ? (
@@ -191,7 +195,7 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
           <button
             type="button"
             onClick={() => goToBuilderWithShirt(shirt.id)}
-            className="cursor-pointer inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-full px-3 text-xs font-medium text-[#8C6A3B] transition-colors hover:bg-[#FAF8F5] hover:text-[#0F172A]"
+            className="cursor-pointer inline-flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-full px-3 text-xs font-medium text-[#52525B] transition-colors hover:bg-[#F4F4F5] hover:text-[#09090B]"
           >
             <span>¿La querés a medida? Armala sin cargo</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -221,7 +225,7 @@ export function CatalogSection() {
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full scroll-mt-24 bg-ivory text-[#0F172A] py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 bg-white text-[#09090B] py-20 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         {/* Header */}
@@ -229,11 +233,11 @@ export function CatalogSection() {
           <div className="max-w-xl">
             <h2
               id="coleccion-heading"
-              className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#0F172A]"
+              className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#09090B]"
             >
               Listas para enviar
             </h2>
-            <p className="mt-3 text-base text-[#475569]">
+            <p className="mt-3 text-base text-[#52525B]">
               Elegí tu talle comercial o pedila a medida sin cargo.
             </p>
           </div>
@@ -242,7 +246,7 @@ export function CatalogSection() {
           <div
             role="radiogroup"
             aria-label="Moneda"
-            className="inline-flex self-start lg:self-end items-center rounded-full border border-[#E6E2DA] bg-white p-1"
+            className="inline-flex self-start lg:self-end items-center rounded-full border border-[#E4E4E7] bg-[#F4F4F5] p-1"
           >
             <button
               type="button"
@@ -251,8 +255,8 @@ export function CatalogSection() {
               onClick={() => setCurrency("ARS")}
               className={`cursor-pointer min-h-[44px] rounded-full px-4 text-xs font-semibold transition-colors ${
                 currency === "ARS"
-                  ? "bg-navy text-primary"
-                  : "text-[#475569] hover:text-[#0F172A]"
+                  ? "bg-[#09090B] text-white"
+                  : "text-[#52525B] hover:text-[#09090B]"
               }`}
             >
               ARS
@@ -264,8 +268,8 @@ export function CatalogSection() {
               onClick={() => setCurrency("USD")}
               className={`cursor-pointer min-h-[44px] rounded-full px-4 text-xs font-semibold transition-colors ${
                 currency === "USD"
-                  ? "bg-navy text-primary"
-                  : "text-[#475569] hover:text-[#0F172A]"
+                  ? "bg-[#09090B] text-white"
+                  : "text-[#52525B] hover:text-[#09090B]"
               }`}
             >
               USD (Exterior)
@@ -274,7 +278,7 @@ export function CatalogSection() {
         </div>
 
         {/* Category Filter Pills */}
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-[#E6E2DA] py-3.5">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-y border-[#E4E4E7] py-3.5">
           <div
             role="tablist"
             aria-label="Filtrar por gama de tela"
@@ -290,10 +294,10 @@ export function CatalogSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setSelectedFabric(option.id)}
-                  className={`cursor-pointer relative min-h-[44px] rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy ${
+                  className={`cursor-pointer relative min-h-[44px] rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#09090B] ${
                     isActive
-                      ? "text-primary"
-                      : "text-[#475569] hover:text-[#0F172A]"
+                      ? "text-white"
+                      : "text-[#52525B] hover:text-[#09090B]"
                   }`}
                 >
                   {isActive && (
@@ -306,7 +310,7 @@ export function CatalogSection() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-full bg-navy"
+                      className="absolute inset-0 rounded-full bg-[#09090B]"
                     />
                   )}
                   <span className="relative z-10">{option.label}</span>
@@ -315,21 +319,21 @@ export function CatalogSection() {
             })}
           </div>
 
-          <span className="text-xs text-[#64748B] tabular-nums">
+          <span className="text-xs text-[#71717A] tabular-nums">
             Mostrando {visibleShirts.length} de {categoryFiltered.length}
           </span>
         </div>
 
         {/* Curated Grid */}
         {visibleShirts.length === 0 ? (
-          <div className="mt-10 rounded-2xl border border-[#E6E2DA] bg-white p-10 text-center">
-            <p className="text-sm text-[#475569]">
+          <div className="mt-10 rounded-2xl border border-[#E4E4E7] bg-[#F4F4F5] p-10 text-center">
+            <p className="text-sm text-[#52525B]">
               No hay telas en esta gama.
             </p>
             <button
               type="button"
               onClick={() => setSelectedFabric(null)}
-              className="cursor-pointer mt-4 min-h-[44px] rounded-full bg-navy px-5 text-xs font-semibold text-primary"
+              className="cursor-pointer mt-4 min-h-[44px] rounded-full bg-[#09090B] px-5 text-xs font-semibold text-white"
             >
               Ver todas
             </button>
@@ -349,7 +353,7 @@ export function CatalogSection() {
               id="catalog-toggle-all-btn"
               type="button"
               onClick={() => setShowAll((prev) => !prev)}
-              className="cursor-pointer inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#E6E2DA] bg-white px-6 py-2.5 text-xs font-semibold tracking-[0.04em] text-[#0F172A] transition-colors hover:border-navy hover:bg-navy hover:text-primary"
+              className="cursor-pointer inline-flex min-h-[44px] items-center gap-2 rounded-full border border-[#E4E4E7] bg-[#F4F4F5] px-6 py-2.5 text-xs font-semibold tracking-[0.04em] text-[#09090B] transition-colors hover:border-[#09090B] hover:bg-[#09090B] hover:text-white"
             >
               <span>
                 {showAll

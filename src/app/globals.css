@@ -1,38 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  /* V3 Palette: Midnight Navy & Blanco Lino + Hilo Bronce */
-  --bg-navy: #0F172A;
-  --bg-obsidian: #0F172A;
-  --surface-card-dark: #162033;
-  --surface-elevated: #162033;
-  --surface-border: rgba(255, 255, 255, 0.10);
+  /* V4 Palette: Monochrome Editorial B&W + Stitch Champagne Accent */
+  --bg-black: #09090B;
+  --bg-navy: #09090B;
+  --bg-obsidian: #09090B;
+  --surface-card-dark: #141417;
+  --surface-elevated: #141417;
+  --surface-border: rgba(255, 255, 255, 0.12);
 
-  --bg-light: #FAF8F5;
-  --bg-ivory: #FAF8F5;
+  --bg-white: #FFFFFF;
+  --bg-light: #FFFFFF;
+  --bg-ivory: #FFFFFF;
+  --bg-pearl: #F4F4F5;
   --surface-card-light: #FFFFFF;
-  --border-light: #E6E2DA;
+  --border-light: #E4E4E7;
 
-  --text-light: #F8FAFC;
-  --text-primary: #F8FAFC;
-  --text-dark: #0F172A;
-  --text-muted: #94A3B8;
+  --text-light: #FAFAFA;
+  --text-primary: #FAFAFA;
+  --text-dark: #09090B;
+  --text-muted: #A1A1AA;
 
-  --accent-bronze: #C59B5F;
-  --accent-champagne: #C59B5F;
-  --accent-cyan: #38BDF8;
+  /* Reserved strictly for stitches, thread, and embroidered initials */
+  --stitch-accent: #C9A96E;
+  --accent-bronze: #C9A96E;
+  --accent-champagne: #C9A96E;
+  --accent-cyan: #C9A96E;
 }
 
 @theme inline {
-  --color-navy: var(--bg-navy);
-  --color-obsidian: var(--bg-obsidian);
-  --color-elevated: var(--surface-elevated);
-  --color-ivory: var(--bg-ivory);
+  --color-navy: var(--bg-black);
+  --color-obsidian: var(--bg-black);
+  --color-elevated: var(--surface-card-dark);
+  --color-ivory: var(--bg-white);
+  --color-pearl: var(--bg-pearl);
   --color-primary: var(--text-primary);
   --color-muted: var(--text-muted);
-  --color-cyan: var(--accent-cyan);
-  --color-champagne: var(--accent-champagne);
-  --color-bronze: var(--accent-bronze);
+  --color-cyan: var(--stitch-accent);
+  --color-champagne: var(--stitch-accent);
+  --color-bronze: var(--stitch-accent);
+  --color-stitch: var(--stitch-accent);
 
   --font-display: var(--font-syne), system-ui, sans-serif;
   --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
@@ -40,14 +47,14 @@
 }
 
 html {
-  background-color: var(--bg-navy);
+  background-color: var(--bg-black);
   color: var(--text-primary);
   color-scheme: dark;
   overflow-x: clip;
 }
 
 body {
-  background-color: var(--bg-navy);
+  background-color: var(--bg-black);
   color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: clip;
@@ -75,7 +82,7 @@ html.lenis body {
 
 /* Selection styling */
 ::selection {
-  background-color: rgba(197, 155, 95, 0.3);
+  background-color: rgba(201, 169, 110, 0.28);
   color: var(--text-primary);
 }
 
@@ -97,7 +104,7 @@ html.lenis body {
 
 /* Subtle fine weave & film grain atmosphere */
 .atelier-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
 }
 
 /* Paused motion accessibility mode */

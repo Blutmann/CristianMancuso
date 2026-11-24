@@ -23,16 +23,16 @@ export function ShirtArtwork({
 }: ShirtArtworkProps) {
   const pid = `${uidPrefix}-${shirt.id}`;
   const isLight = Boolean(shirt.isLightFabric);
-  const stageBg = isLight ? "#EFECE6" : "#0F172A";
+  const stageBg = isLight ? "#F4F4F5" : "#09090B";
   const seamStroke = isLight
-    ? "rgba(15, 23, 42, 0.24)"
-    : "rgba(248, 250, 252, 0.22)";
+    ? "rgba(9, 9, 11, 0.24)"
+    : "rgba(255, 255, 255, 0.22)";
   const placketShade = isLight
-    ? "rgba(15, 23, 42, 0.06)"
-    : "rgba(15, 23, 42, 0.35)";
-  const buttonFill = isLight ? "#FFFFFF" : "#F1F5F9";
+    ? "rgba(9, 9, 11, 0.06)"
+    : "rgba(9, 9, 11, 0.42)";
+  const buttonFill = isLight ? "#FFFFFF" : "#F4F4F5";
   const buttonRing = isLight
-    ? "rgba(15, 23, 42, 0.22)"
+    ? "rgba(9, 9, 11, 0.22)"
     : "rgba(255, 255, 255, 0.5)";
 
   return (

@@ -20,10 +20,21 @@ import {
   type CollarOption,
   type MonogramPlacement,
 } from "@/data/catalog";
-import { formatFabricPrice } from "@/data/fabrics";
+import {
+  formatFabricPrice,
+  type FabricCategoryId,
+} from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
 
 type MeasureKey = keyof BespokeMeasurements;
+
+const BUILDER_CATEGORIES: { id: FabricCategoryId | null; label: string }[] = [
+  { id: null, label: "Todas" },
+  { id: "urbano", label: "Algodón 100%" },
+  { id: "pima", label: "Algodón Pima Peruano" },
+  { id: "italiano", label: "Algodón Italiano" },
+  { id: "donna", label: "Donna" },
+];
 
 const MEASURE_FIELDS: {
   key: MeasureKey;
@@ -45,7 +56,7 @@ function CollarMiniIcon({
   collar: CollarOption;
   active: boolean;
 }) {
-  const stroke = active ? "#C59B5F" : "#94A3B8";
+  const stroke = active ? "#C9A96E" : "#A1A1AA";
   return (
     <svg
       aria-hidden="true"
@@ -110,6 +121,8 @@ export function ShirtBuilderSection() {
   } = useAtelier();
 
   const fabricRailRef = useRef<HTMLDivElement | null>(null);
+  const [fabricCategory, setFabricCategory] =
+    useState<FabricCategoryId | null>(null);
   const [collar, setCollar] = useState<CollarOption>("Italiano");
   const [buttonId, setButtonId] = useState<ButtonOption>("Nácar Blanco");
   const [measurements, setMeasurements] = useState<BespokeMeasurements>({
@@ -123,6 +136,10 @@ export function ShirtBuilderSection() {
   const [monogramPlacement, setMonogramPlacement] =
     useState<MonogramPlacement>("Puño izquierdo");
   const [justAdded, setJustAdded] = useState(false);
+
+  const visibleFabrics = fabricCategory
+    ? CATALOG_SHIRTS.filter((s) => s.fabricId === fabricCategory)
+    : CATALOG_SHIRTS;
 
   const selectedShirt =
     CATALOG_SHIRTS.find((s) => s.id === builderShirtId) ?? CATALOG_SHIRTS[0];
@@ -168,39 +185,39 @@ export function ShirtBuilderSection() {
 
   const lineStroke = (key: MeasureKey) =>
     focusedMeasure === key || measurements[key]
-      ? "#C59B5F"
-      : "rgba(248, 250, 252, 0.28)";
+      ? "#C9A96E"
+      : "rgba(255, 255, 255, 0.28)";
 
   const isLight = Boolean(selectedShirt.isLightFabric);
   const seamColor = isLight
-    ? "rgba(15, 23, 42, 0.28)"
-    : "rgba(248, 250, 252, 0.24)";
+    ? "rgba(9, 9, 11, 0.28)"
+    : "rgba(255, 255, 255, 0.24)";
   const cuffShade = isLight
-    ? "rgba(15, 23, 42, 0.08)"
-    : "rgba(15, 23, 42, 0.36)";
+    ? "rgba(9, 9, 11, 0.08)"
+    : "rgba(9, 9, 11, 0.42)";
 
   return (
     <section
       id="arma-tu-camisa"
       aria-labelledby="builder-heading"
-      className="relative w-full scroll-mt-24 bg-navy text-primary py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 bg-[#09090B] text-white py-20 sm:py-24 lg:py-28"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 atelier-grain opacity-70" />
+        <div className="absolute inset-0 atelier-grain opacity-65" />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         {/* Section Header */}
         <div className="max-w-2xl">
           <div className="mb-3 flex items-center gap-3">
-            <span aria-hidden="true" className="h-[1px] w-7 bg-bronze" />
-            <span className="text-xs font-medium tracking-[0.18em] text-bronze uppercase">
+            <span aria-hidden="true" className="h-[1px] w-7 bg-stitch" />
+            <span className="text-xs font-medium tracking-[0.18em] text-stitch uppercase">
               Confección a medida sin cargo
             </span>
           </div>
           <h2
             id="builder-heading"
-            className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.03] tracking-[-0.035em] text-primary"
+            className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-bold leading-[1.03] tracking-[-0.035em] text-white"
           >
             Armá tu camisa
           </h2>
@@ -211,12 +228,12 @@ export function ShirtBuilderSection() {
 
         {/* 2-Column Main Split */}
         <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start lg:gap-12">
-          {/* LEFT COLUMN: 4 Steps with Compact Swatches & Scroll-Snap Strips */}
+          {/* LEFT COLUMN: 4 Steps with Sectorized Square Swatches + Price */}
           <div className="lg:col-span-7 space-y-8 min-w-0">
-            {/* Step 1: Compact Square Fabric Swatches (w-24 / 96x96px) */}
+            {/* Step 1: Sectorized Square Fabric Swatches + Price */}
             <div>
               <div className="mb-3 flex items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-primary">
+                <h3 className="text-sm font-semibold text-white">
                   1. Elegí el tipo de tela
                 </h3>
 
@@ -225,7 +242,7 @@ export function ShirtBuilderSection() {
                     type="button"
                     aria-label="Desplazar telas a la izquierda"
                     onClick={() => scrollFabricRail(-1)}
-                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-elevated text-muted transition-colors hover:border-bronze/60 hover:text-primary"
+                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-[#141417] text-muted transition-colors hover:border-white/40 hover:text-white"
                   >
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                   </button>
@@ -233,18 +250,55 @@ export function ShirtBuilderSection() {
                     type="button"
                     aria-label="Desplazar telas a la derecha"
                     onClick={() => scrollFabricRail(1)}
-                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-elevated text-muted transition-colors hover:border-bronze/60 hover:text-primary"
+                    className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-[#141417] text-muted transition-colors hover:border-white/40 hover:text-white"
                   >
                     <ChevronRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </div>
               </div>
 
+              {/* Sectorized Fabric Category Mini-Tabs */}
+              <div
+                role="tablist"
+                aria-label="Categorías de tela"
+                className="scrollbar-none -mx-1 mb-4 flex gap-1.5 overflow-x-auto px-1 pb-1"
+              >
+                {BUILDER_CATEGORIES.map((cat) => {
+                  const active = fabricCategory === cat.id;
+                  return (
+                    <button
+                      key={cat.label}
+                      id={`builder-cat-${cat.id ?? "all"}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => {
+                        setFabricCategory(cat.id);
+                        if (cat.id) {
+                          const firstInCat = CATALOG_SHIRTS.find(
+                            (s) => s.fabricId === cat.id
+                          );
+                          if (firstInCat) setBuilderShirtId(firstInCat.id);
+                        }
+                      }}
+                      className={`cursor-pointer shrink-0 min-h-[44px] rounded-full border px-3.5 text-xs font-medium transition-colors ${
+                        active
+                          ? "border-white bg-white text-[#09090B] font-semibold"
+                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
+                      }`}
+                    >
+                      {cat.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Compact Square Swatches with Name + Ref. Art. + Price */}
               <div
                 ref={fabricRailRef}
                 className="scrollbar-none -mx-1 flex gap-3.5 overflow-x-auto px-1 pb-1 snap-x snap-mandatory"
               >
-                {CATALOG_SHIRTS.map((shirt) => {
+                {visibleFabrics.map((shirt) => {
                   const active = shirt.id === selectedShirt.id;
                   const shortName = shirt.name.split(" ").slice(0, 2).join(" ");
                   return (
@@ -254,35 +308,38 @@ export function ShirtBuilderSection() {
                       type="button"
                       aria-pressed={active}
                       onClick={() => setBuilderShirtId(shirt.id)}
-                      className="cursor-pointer group snap-start shrink-0 w-24 text-left focus-visible:outline-none"
+                      className="cursor-pointer group snap-start shrink-0 w-[108px] text-left focus-visible:outline-none"
                     >
-                      {/* 96x96px Square Textile Swatch */}
+                      {/* Square Textile Swatch */}
                       <div
                         className={`relative h-24 w-24 rounded-2xl border transition-all ${
                           active
-                            ? "border-bronze ring-2 ring-bronze/40 shadow-[0_10px_24px_rgba(0,0,0,0.45)]"
-                            : "border-white/12 group-hover:border-white/30"
+                            ? "border-stitch ring-2 ring-stitch/40 shadow-[0_10px_24px_rgba(0,0,0,0.6)]"
+                            : "border-white/15 group-hover:border-white/40"
                         }`}
                         style={{
                           background: `linear-gradient(135deg, ${shirt.secondaryHex} 0%, ${shirt.baseHex} 100%)`,
                         }}
                       >
                         {active && (
-                          <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-bronze text-navy">
+                          <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-white text-[#09090B]">
                             <Check className="h-3 w-3" aria-hidden="true" />
                           </span>
                         )}
                       </div>
 
                       <p
-                        className={`mt-2 text-xs font-medium leading-tight line-clamp-1 ${
-                          active ? "text-primary" : "text-primary/80"
+                        className={`mt-2 text-xs font-semibold leading-tight line-clamp-1 ${
+                          active ? "text-white" : "text-white/80"
                         }`}
                       >
                         {shortName}
                       </p>
                       <p className="mt-0.5 font-mono text-[10px] text-muted line-clamp-1">
                         {shirt.refCode}
+                      </p>
+                      <p className="mt-1 text-xs font-medium text-stitch tabular-nums">
+                        {formatFabricPrice(shirt.priceArs, currency)}
                       </p>
                     </button>
                   );
@@ -292,7 +349,7 @@ export function ShirtBuilderSection() {
 
             {/* Step 2: Tipo de Cuello */}
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-primary">
+              <h3 className="mb-3 text-sm font-semibold text-white">
                 2. Elegí el tipo de cuello
               </h3>
               <div className="scrollbar-none -mx-1 flex gap-3 overflow-x-auto px-1 pb-1 snap-x snap-mandatory">
@@ -307,8 +364,8 @@ export function ShirtBuilderSection() {
                       onClick={() => setCollar(option)}
                       className={`cursor-pointer snap-start shrink-0 min-h-[76px] min-w-[126px] flex flex-col items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 transition-all ${
                         active
-                          ? "border-bronze bg-bronze/15 text-primary"
-                          : "border-white/10 bg-elevated text-muted hover:border-white/25 hover:text-primary"
+                          ? "border-white bg-white/[0.08] text-white"
+                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
                       }`}
                     >
                       <CollarMiniIcon collar={option} active={active} />
@@ -321,7 +378,7 @@ export function ShirtBuilderSection() {
 
             {/* Step 3: Tipo de Botón */}
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-primary">
+              <h3 className="mb-3 text-sm font-semibold text-white">
                 3. Elegí el tipo de botón
               </h3>
               <div className="scrollbar-none -mx-1 flex gap-3 overflow-x-auto px-1 pb-1 snap-x snap-mandatory">
@@ -336,8 +393,8 @@ export function ShirtBuilderSection() {
                       onClick={() => setButtonId(btn.id)}
                       className={`cursor-pointer snap-start shrink-0 min-h-[56px] min-w-[144px] flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-all ${
                         active
-                          ? "border-bronze bg-bronze/15 text-primary"
-                          : "border-white/10 bg-elevated text-muted hover:border-white/25 hover:text-primary"
+                          ? "border-white bg-white/[0.08] text-white"
+                          : "border-white/12 bg-[#141417] text-muted hover:border-white/30 hover:text-white"
                       }`}
                     >
                       <span
@@ -361,14 +418,14 @@ export function ShirtBuilderSection() {
             </div>
 
             {/* Step 4: Medidas en cm + Iniciales opcionales */}
-            <div className="rounded-2xl border border-white/10 bg-elevated p-5">
+            <div className="rounded-2xl border border-white/12 bg-[#141417] p-5">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="text-sm font-semibold text-primary">
+                <h3 className="text-sm font-semibold text-white">
                   4. Ingresá tus medidas (cm)
                 </h3>
                 <Link
                   href="/#como-medir"
-                  className="text-xs font-medium text-bronze hover:underline"
+                  className="text-xs font-medium text-stitch hover:underline"
                 >
                   ¿Cómo me mido?
                 </Link>
@@ -387,8 +444,8 @@ export function ShirtBuilderSection() {
                         {field.label}
                       </label>
                       <div
-                        className={`mt-1.5 flex min-h-[44px] items-center rounded-xl border bg-navy px-3 transition-colors ${
-                          isFocused ? "border-bronze" : "border-white/12"
+                        className={`mt-1.5 flex min-h-[44px] items-center rounded-xl border bg-[#09090B] px-3 transition-colors ${
+                          isFocused ? "border-stitch" : "border-white/15"
                         }`}
                       >
                         <input
@@ -402,7 +459,7 @@ export function ShirtBuilderSection() {
                             handleMeasureChange(field.key, e.target.value)
                           }
                           placeholder={field.placeholder}
-                          className="w-full bg-transparent font-mono text-sm text-primary placeholder:text-muted/40 focus:outline-none"
+                          className="w-full bg-transparent font-mono text-sm text-white placeholder:text-muted/40 focus:outline-none"
                         />
                         <span className="font-mono text-xs text-muted">cm</span>
                       </div>
@@ -445,7 +502,7 @@ export function ShirtBuilderSection() {
                         )
                       }
                       placeholder="Ej. CM"
-                      className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/12 bg-navy px-3.5 text-sm tracking-[0.22em] text-bronze uppercase placeholder:tracking-normal placeholder:text-muted/40 focus:border-bronze focus:outline-none"
+                      className="mt-1.5 min-h-[44px] w-full rounded-xl border border-white/15 bg-[#09090B] px-3.5 text-sm tracking-[0.22em] text-stitch uppercase placeholder:tracking-normal placeholder:text-muted/40 focus:border-stitch focus:outline-none"
                     />
                   </div>
 
@@ -460,8 +517,8 @@ export function ShirtBuilderSection() {
                           onClick={() => setMonogramPlacement(place)}
                           className={`cursor-pointer min-h-[44px] rounded-xl border px-3 text-xs font-medium transition-colors ${
                             active
-                              ? "border-bronze bg-bronze/15 text-primary"
-                              : "border-white/10 bg-navy/70 text-muted hover:text-primary"
+                              ? "border-white bg-white/[0.1] text-white"
+                              : "border-white/12 bg-[#09090B] text-muted hover:text-white"
                           }`}
                         >
                           {place}
@@ -476,11 +533,11 @@ export function ShirtBuilderSection() {
 
           {/* RIGHT COLUMN: Live Full Long-Sleeve Shirt Model + Real-Time cm Callouts */}
           <div className="lg:col-span-5 lg:sticky lg:top-24">
-            <div className="rounded-3xl border border-white/10 bg-elevated p-5 sm:p-6 shadow-[0_28px_80px_rgba(7,12,24,0.55)]">
+            <div className="rounded-3xl border border-white/12 bg-[#141417] p-5 sm:p-6 shadow-[0_28px_80px_rgba(0,0,0,0.65)]">
               {/* Top Title + Ref */}
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-display text-lg font-bold text-primary">
+                  <p className="font-display text-lg font-bold text-white">
                     {selectedShirt.name}
                   </p>
                   <p className="mt-0.5 text-xs text-muted">
@@ -488,7 +545,7 @@ export function ShirtBuilderSection() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-base font-semibold text-primary tabular-nums">
+                  <p className="text-base font-semibold text-white tabular-nums">
                     {formatFabricPrice(selectedShirt.priceArs, currency)}
                   </p>
                   <p className="font-mono text-[10px] text-muted">
@@ -498,7 +555,7 @@ export function ShirtBuilderSection() {
               </div>
 
               {/* Live Long-Sleeve SVG Shirt Schematic */}
-              <div className="relative mt-4 overflow-hidden rounded-2xl border border-white/10 bg-navy px-2 py-4">
+              <div className="relative mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#09090B] px-2 py-4">
                 <svg
                   viewBox="0 0 420 385"
                   className="mx-auto h-auto w-full max-w-[395px]"
@@ -666,7 +723,7 @@ export function ShirtBuilderSection() {
                       x={monogramPlacement === "Pechera" ? 248 : 319}
                       y={monogramPlacement === "Pechera" ? 140 : 296}
                       textAnchor="middle"
-                      fill="#C59B5F"
+                      fill="#C9A96E"
                       fontSize={monogramPlacement === "Pechera" ? "13" : "9.5"}
                       fontFamily="Georgia, serif"
                       fontStyle="italic"
@@ -690,7 +747,7 @@ export function ShirtBuilderSection() {
                       width="80"
                       height="22"
                       rx="11"
-                      fill="#162033"
+                      fill="#141417"
                       stroke={lineStroke("cuello")}
                       strokeWidth="1"
                     />
@@ -700,8 +757,8 @@ export function ShirtBuilderSection() {
                       textAnchor="middle"
                       fill={
                         measurements.cuello || focusedMeasure === "cuello"
-                          ? "#C59B5F"
-                          : "#94A3B8"
+                          ? "#C9A96E"
+                          : "#A1A1AA"
                       }
                       fontSize="10.5"
                       fontFamily="monospace"
@@ -727,7 +784,7 @@ export function ShirtBuilderSection() {
                       width="80"
                       height="22"
                       rx="11"
-                      fill="#162033"
+                      fill="#141417"
                       stroke={lineStroke("pecho")}
                       strokeWidth="1"
                     />
@@ -737,8 +794,8 @@ export function ShirtBuilderSection() {
                       textAnchor="middle"
                       fill={
                         measurements.pecho || focusedMeasure === "pecho"
-                          ? "#C59B5F"
-                          : "#94A3B8"
+                          ? "#C9A96E"
+                          : "#A1A1AA"
                       }
                       fontSize="10.5"
                       fontFamily="monospace"
@@ -747,7 +804,7 @@ export function ShirtBuilderSection() {
                     </text>
                   </g>
 
-                  {/* LIVE MEASUREMENT 3: MANGA LARGA (Hombro hasta Puño) */}
+                  {/* LIVE MEASUREMENT 3: MANGA LARGA */}
                   <g>
                     <line
                       x1="296"
@@ -763,7 +820,7 @@ export function ShirtBuilderSection() {
                       width="76"
                       height="22"
                       rx="11"
-                      fill="#162033"
+                      fill="#141417"
                       stroke={lineStroke("manga")}
                       strokeWidth="1"
                     />
@@ -773,8 +830,8 @@ export function ShirtBuilderSection() {
                       textAnchor="middle"
                       fill={
                         measurements.manga || focusedMeasure === "manga"
-                          ? "#C59B5F"
-                          : "#94A3B8"
+                          ? "#C9A96E"
+                          : "#A1A1AA"
                       }
                       fontSize="10.5"
                       fontFamily="monospace"
@@ -800,7 +857,7 @@ export function ShirtBuilderSection() {
                       width="74"
                       height="22"
                       rx="11"
-                      fill="#162033"
+                      fill="#141417"
                       stroke={lineStroke("largo")}
                       strokeWidth="1"
                     />
@@ -810,8 +867,8 @@ export function ShirtBuilderSection() {
                       textAnchor="middle"
                       fill={
                         measurements.largo || focusedMeasure === "largo"
-                          ? "#C59B5F"
-                          : "#94A3B8"
+                          ? "#C9A96E"
+                          : "#A1A1AA"
                       }
                       fontSize="10.5"
                       fontFamily="monospace"
@@ -829,11 +886,11 @@ export function ShirtBuilderSection() {
                   type="button"
                   disabled={Boolean(invalidField)}
                   onClick={handleAddBespoke}
-                  className="cursor-pointer flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-bronze px-6 py-3 text-xs font-semibold tracking-[0.06em] text-navy uppercase transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="cursor-pointer flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-xs font-semibold tracking-[0.06em] text-[#09090B] uppercase transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {justAdded ? (
                     <>
-                      <Check className="h-4 w-4" aria-hidden="true" />
+                      <Check className="h-4 w-4 text-stitch" aria-hidden="true" />
                       <span>Agregada a tu selección</span>
                     </>
                   ) : (
@@ -846,7 +903,7 @@ export function ShirtBuilderSection() {
 
                 <Link
                   href="/#como-medir"
-                  className="flex min-h-[44px] w-full items-center justify-center gap-1.5 text-xs font-medium text-muted transition-colors hover:text-bronze"
+                  className="flex min-h-[44px] w-full items-center justify-center gap-1.5 text-xs font-medium text-muted transition-colors hover:text-white"
                 >
                   <span>¿No sabés cómo tomar tus medidas? Ver guía rápida</span>
                   <ArrowDown className="h-3.5 w-3.5" aria-hidden="true" />
