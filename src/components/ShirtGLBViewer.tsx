@@ -172,7 +172,7 @@ function Clo3DShirtModel({
     box.getCenter(center);
 
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const scale = 2.65 / maxDim;
+    const scale = 1.85 / maxDim;
     const offset = center.multiplyScalar(-scale);
 
     return {
@@ -200,12 +200,10 @@ function Clo3DShirtModel({
 
     const fabricRoughness =
       shirt.weaveKind === "linen"
-        ? 0.9
-        : shirt.weaveKind === "oxford"
-          ? 0.85
-          : shirt.weaveKind === "twill"
-            ? 0.68
-            : 0.8;
+        ? 0.92
+        : shirt.weaveKind === "twill"
+          ? 0.78
+          : 0.85;
 
     clonedScene.traverse((child) => {
       if (!(child instanceof THREE.Mesh)) return;
@@ -237,19 +235,29 @@ function Clo3DShirtModel({
           mat.color.set(buttonColorHex);
           mat.roughness = buttonId === "Nácar blanco" ? 0.18 : 0.42;
           mat.metalness = buttonId === "Nácar blanco" ? 0.16 : 0.04;
+          mat.envMapIntensity = 0.85;
           mat.needsUpdate = true;
         } else if (isStitchMat) {
           mat.map = null;
+          mat.roughnessMap = null;
           mat.color.set(shirt.secondaryHex);
-          mat.roughness = 0.72;
-          mat.metalness = 0.04;
+          mat.roughness = 0.88;
+          mat.metalness = 0;
+          mat.envMapIntensity = 0.4;
           mat.needsUpdate = true;
         } else {
-          // Main garment cloth (Cloth_mesh / solid_2580)
+          // Main garment cloth (Cloth_mesh / solid_2580): natural matte sartorial weave
           mat.map = fabricTexture;
+          mat.roughnessMap = null;
+          mat.metalnessMap = null;
           mat.color.set("#FFFFFF");
           mat.roughness = fabricRoughness;
-          mat.metalness = 0.02;
+          mat.metalness = 0;
+          mat.envMapIntensity = 0.45;
+          if (mat instanceof THREE.MeshPhysicalMaterial) {
+            mat.clearcoat = 0;
+            mat.specularIntensity = 0.18;
+          }
           if (mat.normalMap) {
             mat.normalScale.set(1.15, 1.15);
           }
@@ -299,42 +307,42 @@ export default function ShirtGLBViewer({
       <Canvas
         shadows
         dpr={[1, 2]}
-        camera={{ position: [0, 0.06, 3.65], fov: 34 }}
+        camera={{ position: [0, 0.02, 4.4], fov: 36 }}
         gl={{
           antialias: true,
           alpha: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.06,
+          toneMappingExposure: 1.02,
         }}
       >
-        <ambientLight intensity={0.48} />
+        <ambientLight intensity={0.55} />
         <directionalLight
           position={[3.5, 4.5, 4.5]}
-          intensity={1.35}
+          intensity={1.15}
           castShadow
           shadow-mapSize={[1024, 1024]}
         />
-        <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.65} />
+        <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.55} />
 
         {/* Offline procedural studio softboxes (Cloudflare Pages static-safe) */}
         <Environment resolution={256}>
           <Lightformer
             form="rect"
-            intensity={1.8}
+            intensity={1.4}
             position={[0, 4, 3]}
             rotation={[Math.PI / 4, 0, 0]}
             scale={[8, 4, 1]}
           />
           <Lightformer
             form="rect"
-            intensity={1.2}
+            intensity={1.0}
             position={[-5, 1.5, 2]}
             rotation={[0, Math.PI / 2.2, 0]}
             scale={[5, 5, 1]}
           />
           <Lightformer
             form="rect"
-            intensity={0.95}
+            intensity={0.8}
             position={[5, 1.5, -1]}
             rotation={[0, -Math.PI / 2, 0]}
             scale={[5, 5, 1]}
@@ -351,11 +359,11 @@ export default function ShirtGLBViewer({
         </Suspense>
 
         <ContactShadows
-          position={[0, -1.28, 0]}
-          opacity={0.3}
-          scale={4.2}
+          position={[0, -1.06, 0]}
+          opacity={0.28}
+          scale={3.6}
           blur={2.5}
-          far={2.4}
+          far={2.2}
         />
 
         <OrbitControls
