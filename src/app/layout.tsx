@@ -5,7 +5,6 @@ import { AtelierProvider } from "@/context/AtelierContext";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { Preloader } from "@/components/Preloader";
 import { Navbar } from "@/components/Navbar";
-import { ShirtCustomizerModal } from "@/components/ShirtCustomizerModal";
 import { SelectionDrawer } from "@/components/SelectionDrawer";
 import "./globals.css";
 
@@ -33,7 +32,7 @@ const jetBrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Cristian Mancuso — Sastrería de Autor · Camisas a Medida Buenos Aires",
   description:
-    "Tu camisa a medida, sin costo extra. Confección artesanal con ajuste personalizado, elección de cuello, puños e iniciales bordadas en todas nuestras gamas — desde algodón urbano hasta lino italiano.",
+    "Tu camisa a medida, sin costo extra. Elegí tela, cuello y medidas. Envío a todo el país y exterior.",
 };
 
 export default function RootLayout({
@@ -53,7 +52,6 @@ export default function RootLayout({
               <Preloader />
               <Navbar />
               <main>{children}</main>
-              <ShirtCustomizerModal />
               <SelectionDrawer />
             </SmoothScrollProvider>
           </AtelierProvider>

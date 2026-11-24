@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowUpRight,
+  Check,
+  Copy,
   MessageCircle,
   Minus,
   Plus,
@@ -13,9 +15,10 @@ import {
   X,
 } from "lucide-react";
 import {
+  buildSelectionPlainText,
   buildSelectionWhatsAppUrl,
+  formatMeasurementsInline,
   formatMonogramDisplay,
-  formatSizingLabel,
 } from "@/data/catalog";
 import { formatFabricPrice } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
@@ -32,6 +35,8 @@ export function SelectionDrawer() {
     removeItem,
   } = useAtelier();
 
+  const [copied, setCopied] = useState(false);
+
   useEffect(() => {
     if (!isDrawerOpen) return;
 
@@ -47,6 +52,18 @@ export function SelectionDrawer() {
 
   const whatsappUrl = buildSelectionWhatsAppUrl(selectionItems, currency);
 
+  const handleCopyOrder = async () => {
+    try {
+      await navigator.clipboard.writeText(
+        buildSelectionPlainText(selectionItems, currency)
+      );
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Clipboard API unavailable
+    }
+  };
+
   return (
     <AnimatePresence>
       {isDrawerOpen && (
@@ -55,7 +72,7 @@ export function SelectionDrawer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.22 }}
+          transition={{ duration: 0.2 }}
           onClick={(e) => {
             if (e.target === e.currentTarget) closeDrawer();
           }}
@@ -69,10 +86,10 @@ export function SelectionDrawer() {
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="flex h-full w-full max-w-md flex-col border-l border-white/[0.1] bg-obsidian text-primary shadow-[0_0_80px_rgba(0,0,0,0.8)]"
           >
-            {/* Drawer Header */}
+            {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-5">
               <div className="flex items-center gap-3">
                 <ShoppingBag
@@ -82,14 +99,13 @@ export function SelectionDrawer() {
                 <div>
                   <h2
                     id="selection-drawer-title"
-                    className="font-display text-lg font-bold tracking-[-0.02em] text-primary"
+                    className="font-display text-lg font-bold text-primary"
                   >
                     Mi Selección
                   </h2>
-                  <p className="font-mono text-[10px] tracking-[0.16em] text-muted uppercase tabular-nums">
+                  <p className="text-xs text-muted tabular-nums">
                     {totalSelectionCount}{" "}
-                    {totalSelectionCount === 1 ? "prenda" : "prendas"} en el
-                    atelier
+                    {totalSelectionCount === 1 ? "prenda" : "prendas"}
                   </p>
                 </div>
               </div>
@@ -105,7 +121,7 @@ export function SelectionDrawer() {
               </button>
             </div>
 
-            {/* Drawer Body */}
+            {/* Body */}
             <div className="flex-1 overflow-y-auto px-6 py-5">
               {selectionItems.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-center py-12">
@@ -115,19 +131,19 @@ export function SelectionDrawer() {
                       aria-hidden="true"
                     />
                   </div>
-                  <h3 className="mt-5 font-display text-xl font-bold tracking-[-0.02em] text-primary">
-                    Tu selección está vacía
+                  <h3 className="mt-5 font-display text-xl font-bold text-primary">
+                    Tu bolsa está vacía
                   </h3>
-                  <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">
-                    Elegí una camisa de la colección, configurá cuello, puños e
-                    iniciales bordadas sin cargo y armá tu pedido a medida.
+                  <p className="mt-2 max-w-xs text-sm text-muted">
+                    Elegí una camisa lista para enviar o armala a medida sin
+                    costo extra.
                   </p>
                   <Link
                     href="/#coleccion"
                     onClick={closeDrawer}
-                    className="mt-7 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ivory px-6 py-3 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform hover:-translate-y-0.5"
+                    className="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ivory px-6 py-3 text-xs font-semibold tracking-[0.06em] text-obsidian uppercase"
                   >
-                    <span>Explorar Colección</span>
+                    <span>Ir al catálogo</span>
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </Link>
                 </div>
@@ -135,7 +151,7 @@ export function SelectionDrawer() {
                 <ul className="space-y-4">
                   {selectionItems.map((item) => {
                     const monogram = formatMonogramDisplay(
-                      item.customization.monogramText
+                      item.config.monogramText
                     );
                     const linePrice = formatFabricPrice(
                       item.shirt.priceArs * item.quantity,
@@ -158,8 +174,8 @@ export function SelectionDrawer() {
                               <h3 className="font-display text-base font-bold leading-snug text-primary">
                                 {item.shirt.name}
                               </h3>
-                              <p className="font-mono text-[10px] tracking-[0.14em] text-champagne uppercase">
-                                {item.shirt.refCode} · {item.shirt.fabricLabel}
+                              <p className="font-mono text-[10px] text-champagne">
+                                {item.shirt.refCode}
                               </p>
                             </div>
                           </div>
@@ -174,42 +190,55 @@ export function SelectionDrawer() {
                           </button>
                         </div>
 
-                        {/* Full Bespoke Summary */}
-                        <p className="mt-3 text-xs leading-relaxed text-muted">
-                          {item.customization.fit} · Cuello{" "}
-                          {item.customization.collar} · Puño{" "}
-                          {item.customization.cuff}
-                          {monogram
-                            ? ` · Iniciales: ${monogram} (${item.customization.monogramPlacement})`
-                            : " · Sin iniciales"}{" "}
-                          · {formatSizingLabel(item.customization)}
-                        </p>
+                        {item.config.mode === "commercial" ? (
+                          <p className="mt-2.5 text-xs text-muted">
+                            Talle comercial{" "}
+                            <span className="font-semibold text-primary">
+                              {item.config.commercialSize}
+                            </span>{" "}
+                            · Lista para enviar
+                          </p>
+                        ) : (
+                          <div className="mt-2.5 space-y-1 text-xs text-muted">
+                            <p>
+                              A medida · Cuello {item.config.collar} · Botón{" "}
+                              {item.config.button}
+                              {monogram
+                                ? ` · Iniciales ${monogram} (${item.config.monogramPlacement})`
+                                : ""}
+                            </p>
+                            <p className="font-mono text-[11px] text-primary/85">
+                              {formatMeasurementsInline(
+                                item.config.measurements
+                              )}
+                            </p>
+                          </div>
+                        )}
 
-                        {/* Quantity Controls & Line Price */}
                         <div className="mt-4 flex items-center justify-between border-t border-white/[0.07] pt-3">
                           <div className="inline-flex items-center rounded-full border border-white/[0.1] bg-obsidian">
                             <button
                               type="button"
                               aria-label="Disminuir cantidad"
                               onClick={() => updateItemQuantity(item.key, -1)}
-                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-primary"
+                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted hover:text-primary"
                             >
                               <Minus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
-                            <span className="min-w-7 text-center font-mono text-xs text-primary tabular-nums">
+                            <span className="min-w-7 text-center text-xs font-medium text-primary tabular-nums">
                               {item.quantity}
                             </span>
                             <button
                               type="button"
                               aria-label="Aumentar cantidad"
                               onClick={() => updateItemQuantity(item.key, 1)}
-                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-primary"
+                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted hover:text-primary"
                             >
                               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
                           </div>
 
-                          <span className="font-mono text-sm font-medium text-primary tabular-nums">
+                          <span className="text-sm font-semibold text-primary tabular-nums">
                             {linePrice}
                           </span>
                         </div>
@@ -220,35 +249,51 @@ export function SelectionDrawer() {
               )}
             </div>
 
-            {/* Drawer Footer */}
+            {/* Footer */}
             {selectionItems.length > 0 && (
               <div className="border-t border-white/[0.08] bg-elevated/80 px-6 py-5">
                 <div className="flex items-center justify-between text-xs text-muted">
                   <span>Confección a medida e iniciales</span>
-                  <span className="font-mono text-champagne uppercase">
-                    Bonificado ($0)
-                  </span>
+                  <span className="font-medium text-champagne">Sin cargo</span>
                 </div>
 
-                <div className="mt-2.5 flex items-baseline justify-between">
-                  <span className="font-mono text-[11px] tracking-[0.16em] text-muted uppercase">
-                    Total estimado
-                  </span>
-                  <span className="font-mono text-xl font-medium text-primary tabular-nums">
+                <div className="mt-2 flex items-baseline justify-between">
+                  <span className="text-xs text-muted">Total estimado</span>
+                  <span className="text-xl font-semibold text-primary tabular-nums">
                     {formatFabricPrice(totalSelectionArs, currency)}
                   </span>
                 </div>
 
-                <a
-                  id="drawer-whatsapp-order-btn"
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-full bg-champagne px-6 py-3.5 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
-                >
-                  <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                  <span>Enviar Pedido por WhatsApp</span>
-                </a>
+                <div className="mt-4 space-y-2.5">
+                  <a
+                    id="drawer-whatsapp-order-btn"
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-champagne px-6 py-3 text-xs font-semibold tracking-[0.06em] text-obsidian uppercase transition-transform hover:-translate-y-0.5"
+                  >
+                    <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                    <span>Enviar Pedido por WhatsApp</span>
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyOrder}
+                    className="cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-white/[0.12] px-5 text-xs font-medium text-muted transition-colors hover:border-white/[0.25] hover:text-primary"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="h-3.5 w-3.5 text-champagne" aria-hidden="true" />
+                        <span>Pedido copiado al portapapeles</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                        <span>Copiar resumen del pedido</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
           </motion.aside>

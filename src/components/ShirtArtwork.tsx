@@ -3,14 +3,13 @@
 import type {
   CatalogShirt,
   CollarOption,
-  CuffOption,
   MonogramPlacement,
 } from "@/data/catalog";
 
 interface ShirtArtworkProps {
   shirt: CatalogShirt;
   collar?: CollarOption;
-  cuff?: CuffOption;
+  cuff?: "Simple Biselado" | "Doble (para gemelos)";
   monogramDisplay?: string;
   monogramPlacement?: MonogramPlacement;
   interactivePreview?: boolean;

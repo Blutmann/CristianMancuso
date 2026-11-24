@@ -8,10 +8,11 @@ import React, {
   useState,
 } from "react";
 import type { Currency, FabricCategoryId } from "@/data/fabrics";
-import type {
-  CatalogShirt,
-  SelectionItem,
-  ShirtCustomization,
+import {
+  CATALOG_SHIRTS,
+  type CatalogShirt,
+  type SelectionItem,
+  type ShirtConfiguration,
 } from "@/data/catalog";
 
 interface AtelierContextValue {
@@ -19,12 +20,11 @@ interface AtelierContextValue {
   setCurrency: (currency: Currency) => void;
   selectedFabric: FabricCategoryId | null;
   setSelectedFabric: (fabric: FabricCategoryId | null) => void;
-  toggleSelectedFabric: (fabric: FabricCategoryId) => void;
 
-  // Customizer modal state
-  customizingShirt: CatalogShirt | null;
-  openCustomizer: (shirt: CatalogShirt) => void;
-  closeCustomizer: () => void;
+  // Bespoke Builder (Block B) preselected shirt
+  builderShirtId: string;
+  setBuilderShirtId: (shirtId: string) => void;
+  goToBuilderWithShirt: (shirtId: string) => void;
 
   // Selection drawer state
   selectionItems: SelectionItem[];
@@ -33,8 +33,7 @@ interface AtelierContextValue {
   isDrawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
-  toggleDrawer: () => void;
-  addToSelection: (shirt: CatalogShirt, customization: ShirtCustomization) => void;
+  addToSelection: (shirt: CatalogShirt, config: ShirtConfiguration) => void;
   updateItemQuantity: (key: string, delta: number) => void;
   removeItem: (key: string) => void;
   clearSelection: () => void;
@@ -42,16 +41,22 @@ interface AtelierContextValue {
 
 const AtelierContext = createContext<AtelierContextValue | null>(null);
 
-function makeItemKey(shirtId: string, c: ShirtCustomization): string {
+function makeItemKey(shirtId: string, c: ShirtConfiguration): string {
+  if (c.mode === "commercial") {
+    return `${shirtId}|commercial|${c.commercialSize ?? "40"}`;
+  }
+  const m = c.measurements;
   return [
     shirtId,
-    c.fit,
-    c.collar,
-    c.cuff,
-    c.monogramText.trim().toUpperCase(),
-    c.monogramPlacement,
-    c.sizingMode,
-    c.sizingMode === "standard" ? c.standardSize : "bespoke",
+    "bespoke",
+    c.collar ?? "Italiano",
+    c.button ?? "Nácar Blanco",
+    (c.monogramText ?? "").trim().toUpperCase(),
+    c.monogramPlacement ?? "Puño izquierdo",
+    m?.cuello ?? "",
+    m?.pecho ?? "",
+    m?.manga ?? "",
+    m?.largo ?? "",
   ].join("|");
 }
 
@@ -59,30 +64,26 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrency] = useState<Currency>("ARS");
   const [selectedFabric, setSelectedFabric] =
     useState<FabricCategoryId | null>(null);
-  const [customizingShirt, setCustomizingShirt] =
-    useState<CatalogShirt | null>(null);
+  const [builderShirtId, setBuilderShirtId] = useState<string>(
+    CATALOG_SHIRTS[0].id
+  );
   const [selectionItems, setSelectionItems] = useState<SelectionItem[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const toggleSelectedFabric = useCallback((fabric: FabricCategoryId) => {
-    setSelectedFabric((prev) => (prev === fabric ? null : fabric));
-  }, []);
-
-  const openCustomizer = useCallback((shirt: CatalogShirt) => {
-    setCustomizingShirt(shirt);
-  }, []);
-
-  const closeCustomizer = useCallback(() => {
-    setCustomizingShirt(null);
-  }, []);
-
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
-  const toggleDrawer = useCallback(() => setIsDrawerOpen((o) => !o), []);
+
+  const goToBuilderWithShirt = useCallback((shirtId: string) => {
+    setBuilderShirtId(shirtId);
+    const el = document.getElementById("arma-tu-camisa");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   const addToSelection = useCallback(
-    (shirt: CatalogShirt, customization: ShirtCustomization) => {
-      const key = makeItemKey(shirt.id, customization);
+    (shirt: CatalogShirt, config: ShirtConfiguration) => {
+      const key = makeItemKey(shirt.id, config);
       setSelectionItems((prev) => {
         const existing = prev.find((item) => item.key === key);
         if (existing) {
@@ -92,7 +93,7 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
               : item
           );
         }
-        return [...prev, { key, shirt, customization, quantity: 1 }];
+        return [...prev, { key, shirt, config, quantity: 1 }];
       });
     },
     []
@@ -138,17 +139,15 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
       setCurrency,
       selectedFabric,
       setSelectedFabric,
-      toggleSelectedFabric,
-      customizingShirt,
-      openCustomizer,
-      closeCustomizer,
+      builderShirtId,
+      setBuilderShirtId,
+      goToBuilderWithShirt,
       selectionItems,
       totalSelectionCount,
       totalSelectionArs,
       isDrawerOpen,
       openDrawer,
       closeDrawer,
-      toggleDrawer,
       addToSelection,
       updateItemQuantity,
       removeItem,
@@ -157,17 +156,14 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
     [
       currency,
       selectedFabric,
-      toggleSelectedFabric,
-      customizingShirt,
-      openCustomizer,
-      closeCustomizer,
+      builderShirtId,
+      goToBuilderWithShirt,
       selectionItems,
       totalSelectionCount,
       totalSelectionArs,
       isDrawerOpen,
       openDrawer,
       closeDrawer,
-      toggleDrawer,
       addToSelection,
       updateItemQuantity,
       removeItem,

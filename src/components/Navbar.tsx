@@ -8,9 +8,9 @@ import { useMotion } from "@/context/MotionContext";
 import { useAtelier } from "@/context/AtelierContext";
 
 const NAV_LINKS = [
-  { label: "Telas", href: "/#telas" },
   { label: "Colección", href: "/#coleccion" },
-  { label: "Cómo Pedir", href: "/#como-pedir" },
+  { label: "Armá tu camisa", href: "/#arma-tu-camisa" },
+  { label: "Cómo medir", href: "/#como-medir" },
   { label: "Empresas", href: "/empresas" },
 ] as const;
 

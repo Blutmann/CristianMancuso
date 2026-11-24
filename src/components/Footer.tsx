@@ -34,18 +34,10 @@ export function Footer() {
 
           {/* Navigation Column */}
           <div className="md:col-span-3">
-            <h3 className="font-mono text-[10px] tracking-[0.22em] text-muted uppercase">
+            <h3 className="text-xs font-semibold tracking-[0.14em] text-muted uppercase">
               Navegación
             </h3>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li>
-                <Link
-                  href="/#telas"
-                  className="text-primary/80 transition-colors hover:text-champagne"
-                >
-                  Telas
-                </Link>
-              </li>
               <li>
                 <Link
                   href="/#coleccion"
@@ -56,10 +48,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/#como-pedir"
+                  href="/#arma-tu-camisa"
                   className="text-primary/80 transition-colors hover:text-champagne"
                 >
-                  Cómo Pedir
+                  Armá tu camisa
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#como-medir"
+                  className="text-primary/80 transition-colors hover:text-champagne"
+                >
+                  Cómo medir
                 </Link>
               </li>
               <li>

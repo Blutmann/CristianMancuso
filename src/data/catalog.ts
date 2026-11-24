@@ -32,6 +32,7 @@ export interface CatalogShirt {
   accentLineHex: string;
   isLightFabric?: boolean;
   composition: string;
+  sizeType: "numeric" | "alpha";
 }
 
 export const CATALOG_SHIRTS: CatalogShirt[] = [
@@ -48,7 +49,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     baseHex: "#101A2B",
     secondaryHex: "#1B2C47",
     accentLineHex: "rgba(147, 197, 253, 0.14)",
-    composition: "100% Algodón Pima Peruano · Hilado 120/2",
+    composition: "Algodón Pima Peruano 120/2",
+    sizeType: "numeric",
   },
   {
     id: "pima-piura-acero",
@@ -62,28 +64,30 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     baseHex: "#2C394B",
     secondaryHex: "#44576D",
     accentLineHex: "rgba(226, 232, 240, 0.16)",
-    composition: "100% Algodón Pima Peruano · Hilado 120/2",
+    composition: "Algodón Pima Peruano 120/2",
+    sizeType: "numeric",
   },
   {
     id: "biella-lino-negro",
     name: "Biella Lino Puro Negro",
     refCode: "Ref. Art. Lino 01",
     fabricId: "italiano",
-    fabricLabel: "Algodón & Lino Italiano",
+    fabricLabel: "Lino Italiano",
     priceArs: 200000,
     badge: "EDICIÓN LIMITADA",
     weaveKind: "linen",
     baseHex: "#141518",
     secondaryHex: "#24262B",
     accentLineHex: "rgba(200, 169, 126, 0.16)",
-    composition: "100% Lino Italiano de Biella · Fibra Larga",
+    composition: "100% Lino Italiano de Biella",
+    sizeType: "numeric",
   },
   {
     id: "biella-lino-marfil",
     name: "Biella Lino Puro Marfil",
     refCode: "Ref. Art. Lino 02",
     fabricId: "italiano",
-    fabricLabel: "Algodón & Lino Italiano",
+    fabricLabel: "Lino Italiano",
     priceArs: 200000,
     badge: "NOVEDAD",
     weaveKind: "linen",
@@ -91,7 +95,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     secondaryHex: "#D6CBB8",
     accentLineHex: "rgba(122, 102, 74, 0.18)",
     isLightFabric: true,
-    composition: "100% Lino Italiano de Biella · Frescura Superior",
+    composition: "100% Lino Italiano de Biella",
+    sizeType: "numeric",
   },
   {
     id: "urbano-oxford-grafito",
@@ -104,7 +109,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     baseHex: "#2A2D34",
     secondaryHex: "#3C414B",
     accentLineHex: "rgba(245, 242, 235, 0.12)",
-    composition: "Algodón Urbano Oxford · Easy Care",
+    composition: "Algodón Urbano Oxford Easy Care",
+    sizeType: "numeric",
   },
   {
     id: "cuadros-ventana-lino-algodon",
@@ -119,7 +125,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     baseHex: "#1C2430",
     secondaryHex: "#273345",
     accentLineHex: "rgba(200, 169, 126, 0.28)",
-    composition: "Blend Lino & Algodón Urbano · Cuadro Ventana",
+    composition: "Blend Lino & Algodón Urbano",
+    sizeType: "numeric",
   },
   {
     id: "donna-cloque-raya-mineral",
@@ -134,15 +141,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     secondaryHex: "#C5BEB5",
     accentLineHex: "rgba(56, 70, 88, 0.24)",
     isLightFabric: true,
-    composition: "Cloqué Texturado & Algodón Liviano · Corte Donna",
+    composition: "Cloqué liviano · Corte femenino",
+    sizeType: "alpha",
   },
 ];
-
-export const FIT_OPTIONS = [
-  "Slim Sartorial",
-  "Clásico Anatómico",
-  "Relajado",
-] as const;
 
 export const COLLAR_OPTIONS = [
   "Italiano",
@@ -151,49 +153,75 @@ export const COLLAR_OPTIONS = [
   "Mao",
 ] as const;
 
-export const CUFF_OPTIONS = [
-  "Simple Biselado",
-  "Doble (para gemelos)",
+export const BUTTON_OPTIONS = [
+  {
+    id: "Nácar Blanco",
+    label: "Nácar Blanco",
+    fill: "#F4F7FA",
+    ring: "rgba(18, 18, 21, 0.22)",
+    thread: "#C8A97E",
+  },
+  {
+    id: "Nácar Humo",
+    label: "Nácar Humo",
+    fill: "#58606E",
+    ring: "rgba(255, 255, 255, 0.35)",
+    thread: "#D4D4D8",
+  },
+  {
+    id: "Mate Oscuro",
+    label: "Mate Oscuro",
+    fill: "#1B1D22",
+    ring: "rgba(255, 255, 255, 0.22)",
+    thread: "#9CA3AF",
+  },
+  {
+    id: "Champagne",
+    label: "Champagne",
+    fill: "#C8A97E",
+    ring: "rgba(255, 255, 255, 0.45)",
+    thread: "#121215",
+  },
 ] as const;
 
 export const MONOGRAM_PLACEMENTS = ["Puño izquierdo", "Pechera"] as const;
 
-export const STANDARD_SIZES = [
-  "38",
-  "40",
-  "42",
-  "44",
-  "46",
-  "S",
-  "M",
-  "L",
-  "XL",
-] as const;
+export const NUMERIC_SIZES = ["38", "40", "42", "44", "46"] as const;
+export const ALPHA_SIZES = ["S", "M", "L", "XL"] as const;
 
-export type FitOption = (typeof FIT_OPTIONS)[number];
 export type CollarOption = (typeof COLLAR_OPTIONS)[number];
-export type CuffOption = (typeof CUFF_OPTIONS)[number];
+export type ButtonOption = (typeof BUTTON_OPTIONS)[number]["id"];
 export type MonogramPlacement = (typeof MONOGRAM_PLACEMENTS)[number];
-export type StandardSize = (typeof STANDARD_SIZES)[number];
+export type CommercialSize =
+  | (typeof NUMERIC_SIZES)[number]
+  | (typeof ALPHA_SIZES)[number];
 
-export interface ShirtCustomization {
-  fit: FitOption;
-  collar: CollarOption;
-  cuff: CuffOption;
-  monogramText: string;
-  monogramPlacement: MonogramPlacement;
-  sizingMode: "bespoke" | "standard";
-  standardSize: StandardSize;
+export interface BespokeMeasurements {
+  cuello: string;
+  pecho: string;
+  manga: string;
+  largo: string;
+}
+
+export interface ShirtConfiguration {
+  mode: "commercial" | "bespoke";
+  commercialSize?: CommercialSize;
+  collar?: CollarOption;
+  button?: ButtonOption;
+  monogramText?: string;
+  monogramPlacement?: MonogramPlacement;
+  measurements?: BespokeMeasurements;
 }
 
 export interface SelectionItem {
   key: string;
   shirt: CatalogShirt;
-  customization: ShirtCustomization;
+  config: ShirtConfiguration;
   quantity: number;
 }
 
-export function formatMonogramDisplay(raw: string): string {
+export function formatMonogramDisplay(raw?: string): string {
+  if (!raw) return "";
   const cleaned = raw
     .toUpperCase()
     .replace(/[^A-ZÁÉÍÓÚÑ]/g, "")
@@ -202,39 +230,17 @@ export function formatMonogramDisplay(raw: string): string {
   return cleaned.split("").join(".") + ".";
 }
 
-export function formatSizingLabel(c: ShirtCustomization): string {
-  return c.sizingMode === "bespoke"
-    ? "Confección A Medida (Sin costo extra)"
-    : `Talle Estándar ${c.standardSize}`;
+export function formatMeasurementsInline(m?: BespokeMeasurements): string {
+  if (!m) return "A coordinar con el atelier";
+  const parts: string[] = [];
+  if (m.cuello) parts.push(`Cuello ${m.cuello}cm`);
+  if (m.pecho) parts.push(`Pecho ${m.pecho}cm`);
+  if (m.manga) parts.push(`Manga ${m.manga}cm`);
+  if (m.largo) parts.push(`Largo ${m.largo}cm`);
+  return parts.length > 0 ? parts.join(", ") : "A coordinar con el atelier";
 }
 
-export function buildSingleShirtWhatsAppUrl(
-  shirt: CatalogShirt,
-  customization: ShirtCustomization,
-  currency: Currency
-): string {
-  const monogram = formatMonogramDisplay(customization.monogramText);
-  const monogramLine = monogram
-    ? `${monogram} (${customization.monogramPlacement})`
-    : "Sin iniciales";
-
-  const lines = [
-    "Hola Cristian Mancuso Atelier, quisiera consultar por esta camisa personalizada:",
-    "",
-    `• Modelo: ${shirt.name} (${shirt.refCode})`,
-    `• Gama: ${shirt.fabricLabel}`,
-    `• Precio ref.: ${formatFabricPrice(shirt.priceArs, currency)}`,
-    `• Calce: ${customization.fit}`,
-    `• Cuello: ${customization.collar}`,
-    `• Puño: ${customization.cuff}`,
-    `• Iniciales bordadas: ${monogramLine}`,
-    `• Medida: ${formatSizingLabel(customization)}`,
-  ];
-
-  return buildWhatsAppUrl(lines.join("\n"));
-}
-
-export function buildSelectionWhatsAppUrl(
+export function buildSelectionPlainText(
   items: SelectionItem[],
   currency: Currency
 ): string {
@@ -243,30 +249,37 @@ export function buildSelectionWhatsAppUrl(
     0
   );
 
-  const header = [
-    "Hola Cristian Mancuso Atelier, envío Mi Selección para coordinar pedido:",
+  const lines: string[] = [
+    "Hola Cristian Mancuso, te envío mi pedido:",
     "",
   ];
 
-  const body = items.flatMap((item, index) => {
-    const monogram = formatMonogramDisplay(item.customization.monogramText);
-    const monogramText = monogram
-      ? `${monogram} en ${item.customization.monogramPlacement}`
-      : "Sin iniciales";
-
-    return [
-      `${index + 1}) ${item.shirt.name} (${item.shirt.refCode}) x${item.quantity}`,
-      `   Calce: ${item.customization.fit} | Cuello: ${item.customization.collar} | Puño: ${item.customization.cuff}`,
-      `   Iniciales: ${monogramText} | ${formatSizingLabel(item.customization)}`,
-      `   Subtotal: ${formatFabricPrice(item.shirt.priceArs * item.quantity, currency)}`,
-      "",
-    ];
+  items.forEach((item, index) => {
+    const qtyLabel = item.quantity > 1 ? ` (x${item.quantity})` : "";
+    if (item.config.mode === "commercial") {
+      lines.push(
+        `${index + 1}) Camisa: ${item.shirt.name} (${item.shirt.refCode})${qtyLabel} | Talle comercial: ${item.config.commercialSize ?? "40"} | ${formatFabricPrice(item.shirt.priceArs * item.quantity, currency)}`
+      );
+    } else {
+      const monogram = formatMonogramDisplay(item.config.monogramText);
+      const monogramPart = monogram
+        ? ` | Iniciales: ${monogram} (${item.config.monogramPlacement ?? "Puño izquierdo"})`
+        : "";
+      lines.push(
+        `${index + 1}) Camisa: ${item.shirt.name} (${item.shirt.refCode})${qtyLabel} | Cuello: ${item.config.collar ?? "Italiano"} | Botón: ${item.config.button ?? "Nácar Blanco"}${monogramPart} | Medidas: ${formatMeasurementsInline(item.config.measurements)} | ${formatFabricPrice(item.shirt.priceArs * item.quantity, currency)}`
+      );
+    }
   });
 
-  const footer = [
-    `Total estimado: ${formatFabricPrice(totalArs, currency)}`,
-    "Confección a medida e iniciales bordadas: Bonificadas sin cargo.",
-  ];
+  lines.push("");
+  lines.push(`Total estimado: ${formatFabricPrice(totalArs, currency)}`);
 
-  return buildWhatsAppUrl([...header, ...body, ...footer].join("\n"));
+  return lines.join("\n");
+}
+
+export function buildSelectionWhatsAppUrl(
+  items: SelectionItem[],
+  currency: Currency
+): string {
+  return buildWhatsAppUrl(buildSelectionPlainText(items, currency));
 }
