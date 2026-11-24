@@ -51,7 +51,7 @@ export function CatalogSection() {
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full border-t border-white/[0.08] bg-obsidian text-primary py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 border-t border-white/[0.08] bg-obsidian text-primary py-20 sm:py-24 lg:py-28"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 atelier-grain opacity-70" />
@@ -95,7 +95,7 @@ export function CatalogSection() {
               role="radio"
               aria-checked={currency === "ARS"}
               onClick={() => setCurrency("ARS")}
-              className={`cursor-pointer rounded-full px-3.5 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase transition-colors ${
+              className={`cursor-pointer min-h-[44px] rounded-full px-4 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase transition-colors ${
                 currency === "ARS"
                   ? "bg-ivory text-obsidian font-medium"
                   : "text-muted hover:text-primary"
@@ -108,7 +108,7 @@ export function CatalogSection() {
               role="radio"
               aria-checked={currency === "USD"}
               onClick={() => setCurrency("USD")}
-              className={`cursor-pointer rounded-full px-3.5 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase transition-colors ${
+              className={`cursor-pointer min-h-[44px] rounded-full px-4 py-1.5 font-mono text-[10px] tracking-[0.16em] uppercase transition-colors ${
                 currency === "USD"
                   ? "bg-ivory text-obsidian font-medium"
                   : "text-muted hover:text-primary"
@@ -136,7 +136,7 @@ export function CatalogSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setSelectedFabric(option.id)}
-                  className={`cursor-pointer relative rounded-full px-4 py-2 font-mono text-[11px] tracking-[0.12em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne ${
+                  className={`cursor-pointer relative min-h-[44px] rounded-full px-4 py-2 font-mono text-[11px] tracking-[0.12em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne ${
                     isActive
                       ? "text-obsidian font-medium"
                       : "text-muted hover:text-primary"

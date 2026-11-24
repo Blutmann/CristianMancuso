@@ -88,7 +88,7 @@ function CustomizerForm({
         type="button"
         onClick={onClose}
         aria-label="Cerrar configurador"
-        className="cursor-pointer absolute top-4 right-4 z-30 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.12] bg-obsidian/85 text-primary backdrop-blur-md transition-colors hover:border-champagne/60 hover:text-champagne focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne"
+        className="cursor-pointer absolute top-4 right-4 z-30 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.12] bg-obsidian/85 text-primary backdrop-blur-md transition-colors hover:border-champagne/60 hover:text-champagne focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne"
       >
         <X className="h-4 w-4" aria-hidden="true" />
       </button>
@@ -190,7 +190,7 @@ function CustomizerForm({
                     type="button"
                     aria-pressed={active}
                     onClick={() => setFit(option)}
-                    className={`cursor-pointer rounded-xl border px-3.5 py-2.5 text-left text-xs font-medium transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-xl border px-3.5 py-2.5 text-left text-xs font-medium transition-all ${
                       active
                         ? "border-champagne bg-champagne/15 text-primary"
                         : "border-white/[0.09] bg-elevated text-muted hover:border-white/[0.2] hover:text-primary"
@@ -217,7 +217,7 @@ function CustomizerForm({
                     type="button"
                     aria-pressed={active}
                     onClick={() => setCollar(option)}
-                    className={`cursor-pointer rounded-xl border px-3 py-2.5 text-center text-xs font-medium transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-xl border px-3 py-2.5 text-center text-xs font-medium transition-all ${
                       active
                         ? "border-champagne bg-champagne/15 text-primary"
                         : "border-white/[0.09] bg-elevated text-muted hover:border-white/[0.2] hover:text-primary"
@@ -244,7 +244,7 @@ function CustomizerForm({
                     type="button"
                     aria-pressed={active}
                     onClick={() => setCuff(option)}
-                    className={`cursor-pointer rounded-xl border px-3.5 py-2.5 text-left text-xs font-medium transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-xl border px-3.5 py-2.5 text-left text-xs font-medium transition-all ${
                       active
                         ? "border-champagne bg-champagne/15 text-primary"
                         : "border-white/[0.09] bg-elevated text-muted hover:border-white/[0.2] hover:text-primary"
@@ -288,7 +288,7 @@ function CustomizerForm({
                     )
                   }
                   placeholder="Ej. CM"
-                  className="w-full rounded-xl border border-white/[0.14] bg-obsidian px-3.5 py-2.5 font-mono text-sm tracking-[0.28em] text-champagne uppercase placeholder:text-muted/50 focus:border-champagne focus:outline-none"
+                  className="min-h-[44px] w-full rounded-xl border border-white/[0.14] bg-obsidian px-3.5 py-2.5 font-mono text-sm tracking-[0.28em] text-champagne uppercase placeholder:text-muted/50 focus:border-champagne focus:outline-none"
                 />
               </div>
 
@@ -301,7 +301,7 @@ function CustomizerForm({
                       type="button"
                       aria-pressed={active}
                       onClick={() => setMonogramPlacement(place)}
-                      className={`cursor-pointer rounded-xl border px-3 py-2.5 text-xs font-medium transition-all ${
+                      className={`cursor-pointer min-h-[44px] rounded-xl border px-3 py-2.5 text-xs font-medium transition-all ${
                         active
                           ? "border-champagne bg-champagne/20 text-primary"
                           : "border-white/[0.09] bg-obsidian/70 text-muted hover:border-white/[0.2] hover:text-primary"
@@ -383,7 +383,7 @@ function CustomizerForm({
                       type="button"
                       aria-pressed={active}
                       onClick={() => setStandardSize(size)}
-                      className={`cursor-pointer min-w-[44px] rounded-lg border px-3 py-1.5 font-mono text-xs transition-all ${
+                      className={`cursor-pointer min-h-[44px] min-w-[44px] rounded-lg border px-3 py-1.5 font-mono text-xs transition-all ${
                         active
                           ? "border-cyan bg-cyan/20 text-primary font-medium"
                           : "border-white/[0.1] bg-elevated text-muted hover:border-white/[0.25] hover:text-primary"

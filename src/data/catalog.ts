@@ -1,7 +1,8 @@
 import type { Currency, FabricCategoryId } from "./fabrics";
 import { formatFabricPrice } from "./fabrics";
+import { buildWhatsAppUrl } from "./config";
 
-export const WHATSAPP_NUMBER = "5491100000000";
+export { WHATSAPP_NUMBER } from "./config";
 
 export type ShirtBadge =
   | "DESTACADO"
@@ -230,7 +231,7 @@ export function buildSingleShirtWhatsAppUrl(
     `• Medida: ${formatSizingLabel(customization)}`,
   ];
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lines.join("\n"))}`;
+  return buildWhatsAppUrl(lines.join("\n"));
 }
 
 export function buildSelectionWhatsAppUrl(
@@ -267,7 +268,5 @@ export function buildSelectionWhatsAppUrl(
     "Confección a medida e iniciales bordadas: Bonificadas sin cargo.",
   ];
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    [...header, ...body, ...footer].join("\n")
-  )}`;
+  return buildWhatsAppUrl([...header, ...body, ...footer].join("\n"));
 }

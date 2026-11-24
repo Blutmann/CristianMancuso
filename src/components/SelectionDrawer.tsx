@@ -99,7 +99,7 @@ export function SelectionDrawer() {
                 type="button"
                 onClick={closeDrawer}
                 aria-label="Cerrar Mi Selección"
-                className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.1] bg-elevated text-primary transition-colors hover:border-champagne/60 hover:text-champagne"
+                className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.1] bg-elevated text-primary transition-colors hover:border-champagne/60 hover:text-champagne"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -125,7 +125,7 @@ export function SelectionDrawer() {
                   <Link
                     href="/#coleccion"
                     onClick={closeDrawer}
-                    className="mt-7 inline-flex items-center gap-2 rounded-full bg-ivory px-6 py-3 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform hover:-translate-y-0.5"
+                    className="mt-7 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ivory px-6 py-3 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform hover:-translate-y-0.5"
                   >
                     <span>Explorar Colección</span>
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -168,9 +168,9 @@ export function SelectionDrawer() {
                             type="button"
                             onClick={() => removeItem(item.key)}
                             aria-label={`Eliminar ${item.shirt.name}`}
-                            className="cursor-pointer rounded-lg p-1.5 text-muted transition-colors hover:bg-white/[0.06] hover:text-primary"
+                            className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted transition-colors hover:bg-white/[0.06] hover:text-primary"
                           >
-                            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                            <Trash2 className="h-4 w-4" aria-hidden="true" />
                           </button>
                         </div>
 
@@ -192,9 +192,9 @@ export function SelectionDrawer() {
                               type="button"
                               aria-label="Disminuir cantidad"
                               onClick={() => updateItemQuantity(item.key, -1)}
-                              className="cursor-pointer px-2.5 py-1.5 text-muted transition-colors hover:text-primary"
+                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-primary"
                             >
-                              <Minus className="h-3 w-3" aria-hidden="true" />
+                              <Minus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
                             <span className="min-w-7 text-center font-mono text-xs text-primary tabular-nums">
                               {item.quantity}
@@ -203,9 +203,9 @@ export function SelectionDrawer() {
                               type="button"
                               aria-label="Aumentar cantidad"
                               onClick={() => updateItemQuantity(item.key, 1)}
-                              className="cursor-pointer px-2.5 py-1.5 text-muted transition-colors hover:text-primary"
+                              className="cursor-pointer inline-flex h-11 w-11 items-center justify-center text-muted transition-colors hover:text-primary"
                             >
-                              <Plus className="h-3 w-3" aria-hidden="true" />
+                              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
                             </button>
                           </div>
 

@@ -216,7 +216,7 @@ export function FabricComparator() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 75%",
+            start: "top 90%",
             once: true,
           },
         }
@@ -233,7 +233,7 @@ export function FabricComparator() {
       ref={sectionRef}
       id="telas"
       aria-labelledby="telas-heading"
-      className="relative w-full bg-ivory text-[#121215] overflow-hidden"
+      className="relative w-full scroll-mt-24 bg-ivory text-[#121215] overflow-hidden"
     >
       {/* Top Kinetic Marquee Ribbon */}
       <div
@@ -298,7 +298,7 @@ export function FabricComparator() {
                 role="radio"
                 aria-checked={currency === "ARS"}
                 onClick={() => setCurrency("ARS")}
-                className={`cursor-pointer rounded-full px-4 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121215] ${
+                className={`cursor-pointer min-h-[44px] rounded-full px-4 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121215] ${
                   currency === "ARS"
                     ? "bg-[#121215] text-[#F5F2EB] shadow-sm"
                     : "text-[#4B4D55] hover:text-[#121215]"
@@ -312,7 +312,7 @@ export function FabricComparator() {
                 role="radio"
                 aria-checked={currency === "USD"}
                 onClick={() => setCurrency("USD")}
-                className={`cursor-pointer rounded-full px-4 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121215] ${
+                className={`cursor-pointer min-h-[44px] rounded-full px-4 py-1.5 font-mono text-[11px] font-medium tracking-[0.14em] uppercase transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#121215] ${
                   currency === "USD"
                     ? "bg-[#121215] text-[#F5F2EB] shadow-sm"
                     : "text-[#4B4D55] hover:text-[#121215]"
@@ -450,9 +450,9 @@ export function FabricComparator() {
               id="fabric-clear-filter-btn"
               type="button"
               onClick={() => setSelectedFabric(null)}
-              className="cursor-pointer inline-flex items-center gap-1.5 rounded-full border border-[#121215]/20 px-3 py-1 font-mono text-[10px] tracking-[0.14em] text-[#121215] uppercase transition-colors hover:bg-[#121215] hover:text-[#F5F2EB]"
+              className="cursor-pointer inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-[#121215]/20 px-4 py-1.5 font-mono text-[10px] tracking-[0.14em] text-[#121215] uppercase transition-colors hover:bg-[#121215] hover:text-[#F5F2EB]"
             >
-              <X className="h-3 w-3" aria-hidden="true" />
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Ver todas</span>
             </button>
           )}

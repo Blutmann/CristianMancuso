@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { CheckCircle2, MessageCircle, RotateCcw, Send } from "lucide-react";
-import { WHATSAPP_NUMBER } from "@/data/catalog";
+import { buildWhatsAppUrl } from "@/data/config";
 
 type InquiryType = "Corporativo" | "Mayorista";
 
@@ -33,7 +33,7 @@ export function EmpresasInquiryForm() {
     setSubmitted(true);
   };
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+  const whatsappUrl = buildWhatsAppUrl(
     [
       `Hola Cristian Mancuso — Consulta ${form.inquiryType}:`,
       "",
@@ -44,7 +44,7 @@ export function EmpresasInquiryForm() {
       `• Cantidad estimada: ${form.estimatedQty}`,
       `• Contacto: ${form.contact}`,
     ].join("\n")
-  )}`;
+  );
 
   if (submitted) {
     return (
@@ -144,7 +144,7 @@ export function EmpresasInquiryForm() {
                 type="button"
                 aria-pressed={active}
                 onClick={() => setForm((f) => ({ ...f, inquiryType: type }))}
-                className={`cursor-pointer rounded-xl border px-4 py-2.5 text-xs font-semibold tracking-[0.06em] uppercase transition-all ${
+                className={`cursor-pointer min-h-[44px] rounded-xl border px-4 py-2.5 text-xs font-semibold tracking-[0.06em] uppercase transition-all ${
                   active
                     ? "border-champagne bg-champagne/15 text-primary"
                     : "border-white/[0.09] bg-obsidian/70 text-muted hover:border-white/[0.2] hover:text-primary"

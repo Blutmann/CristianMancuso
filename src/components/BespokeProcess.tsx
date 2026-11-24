@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Globe, MapPin, MessageCircle, Ruler } from "lucide-react";
-import { WHATSAPP_NUMBER } from "@/data/catalog";
+import { buildWhatsAppUrl } from "@/data/config";
 import { useMotion } from "@/context/MotionContext";
 
 type Modality = "presencial" | "distancia";
@@ -125,9 +125,7 @@ export function BespokeProcess() {
 
   const currentModality = MODALITIES[modality];
   const currentMeasure = MEASURES[activeMeasure];
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-    currentModality.whatsappMessage
-  )}`;
+  const whatsappUrl = buildWhatsAppUrl(currentModality.whatsappMessage);
 
   const strokeFor = (id: MeasureId) =>
     activeMeasure === id ? "#38BDF8" : "rgba(194, 163, 107, 0.45)";
@@ -137,7 +135,7 @@ export function BespokeProcess() {
     <section
       id="como-pedir"
       aria-labelledby="como-pedir-heading"
-      className="relative w-full border-t border-white/[0.08] bg-obsidian text-primary py-20 sm:py-24 lg:py-28 overflow-hidden"
+      className="relative w-full scroll-mt-24 border-t border-white/[0.08] bg-obsidian text-primary py-20 sm:py-24 lg:py-28 overflow-hidden"
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div
@@ -207,7 +205,7 @@ export function BespokeProcess() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setModality(tab.id)}
-                  className={`cursor-pointer relative flex items-center justify-center gap-2 rounded-xl sm:rounded-full px-4 py-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne ${
+                  className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl sm:rounded-full px-4 py-2.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne ${
                     isActive
                       ? "text-obsidian font-semibold"
                       : "text-muted hover:text-primary"
@@ -270,7 +268,7 @@ export function BespokeProcess() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2.5 rounded-full bg-champagne px-6 py-3.5 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
+                className="inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-full bg-champagne px-6 py-3 text-xs font-semibold tracking-[0.08em] text-obsidian uppercase transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ivory"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Coordinar medidas por WhatsApp</span>
@@ -310,7 +308,7 @@ export function BespokeProcess() {
                     onFocus={() => setActiveMeasure(id)}
                     onClick={() => setActiveMeasure(id)}
                     aria-pressed={isActive}
-                    className={`cursor-pointer rounded-xl border px-3 py-2 text-left transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-xl border px-3 py-2 text-left transition-all ${
                       isActive
                         ? "border-cyan bg-cyan/12 text-primary"
                         : "border-white/[0.08] bg-obsidian/70 text-muted hover:border-champagne/40 hover:text-primary"

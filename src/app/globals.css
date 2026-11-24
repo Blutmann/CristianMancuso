@@ -29,13 +29,14 @@ html {
   background-color: var(--bg-obsidian);
   color: var(--text-primary);
   color-scheme: dark;
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--bg-obsidian);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

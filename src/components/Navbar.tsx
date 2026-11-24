@@ -127,16 +127,16 @@ export function Navbar() {
               title={
                 isMotionPaused ? "Reanudar movimiento" : "Pausar movimiento"
               }
-              className={`cursor-pointer inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan ${
+              className={`cursor-pointer inline-flex min-h-[44px] min-w-[44px] sm:min-w-0 items-center justify-center gap-1.5 rounded-full border px-3 py-1.5 font-mono text-[10px] tracking-[0.12em] uppercase transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-cyan ${
                 isMotionPaused
                   ? "border-cyan/40 bg-cyan/10 text-cyan"
                   : "border-white/[0.08] bg-white/[0.03] text-muted hover:border-white/[0.16] hover:text-primary"
               }`}
             >
               {isMotionPaused ? (
-                <Play className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <Play className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               ) : (
-                <Pause className="h-3 w-3 shrink-0" aria-hidden="true" />
+                <Pause className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               )}
               <span className="hidden xl:inline">
                 {isMotionPaused ? "Reanudar" : "Pausar movimiento"}
@@ -148,14 +148,14 @@ export function Navbar() {
               type="button"
               onClick={openDrawer}
               aria-label={`Mi Selección, ${totalSelectionCount} prendas`}
-              className="cursor-pointer group inline-flex items-center gap-2 rounded-full border border-champagne/35 bg-champagne/[0.08] px-3.5 py-1.5 text-xs font-medium text-primary transition-all duration-200 hover:border-champagne/70 hover:bg-champagne/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne"
+              className="cursor-pointer group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-champagne/35 bg-champagne/[0.08] px-3.5 py-1.5 text-xs font-medium text-primary transition-all duration-200 hover:border-champagne/70 hover:bg-champagne/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne"
             >
               <ShoppingBag
                 className="h-3.5 w-3.5 text-champagne transition-transform duration-200 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
               <span className="hidden sm:inline">Mi Selección</span>
-              <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-champagne px-1 font-mono text-[10px] font-medium text-obsidian tabular-nums">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-champagne px-1.5 font-mono text-[10px] font-medium text-obsidian tabular-nums">
                 {totalSelectionCount}
               </span>
             </button>
@@ -166,7 +166,7 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen((open) => !open)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-              className="cursor-pointer inline-flex md:hidden h-8 w-8 items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] text-primary transition-colors hover:border-white/[0.18]"
+              className="cursor-pointer inline-flex md:hidden h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.03] text-primary transition-colors hover:border-white/[0.18]"
             >
               {mobileMenuOpen ? (
                 <X className="h-4 w-4" aria-hidden="true" />
@@ -179,8 +179,8 @@ export function Navbar() {
 
         {/* Mobile Dropdown Navigation */}
         {mobileMenuOpen && (
-          <div className="pointer-events-auto mx-auto mt-2 max-w-7xl rounded-2xl border border-white/[0.1] bg-obsidian/95 p-5 backdrop-blur-xl md:hidden">
-            <ul className="flex flex-col gap-3">
+          <div className="pointer-events-auto mx-auto mt-2 max-w-7xl rounded-2xl border border-white/[0.1] bg-obsidian/95 p-4 backdrop-blur-xl md:hidden">
+            <ul className="flex flex-col gap-1.5">
               {NAV_LINKS.map((item) => {
                 const isActive =
                   item.href === "/empresas" && pathname.startsWith("/empresas");
@@ -189,7 +189,7 @@ export function Navbar() {
                     <Link
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`block rounded-lg px-3 py-2 text-sm font-medium tracking-[0.06em] uppercase transition-colors ${
+                      className={`flex min-h-[44px] items-center rounded-xl px-3.5 py-2 text-sm font-medium tracking-[0.06em] uppercase transition-colors ${
                         isActive
                           ? "bg-champagne/10 text-champagne"
                           : "text-primary/85 hover:bg-white/[0.04] hover:text-primary"
@@ -201,12 +201,12 @@ export function Navbar() {
                 );
               })}
             </ul>
-            <div className="mt-4 border-t border-white/[0.08] pt-3">
+            <div className="mt-3 border-t border-white/[0.08] pt-3">
               <button
                 type="button"
                 onClick={toggleMotion}
                 aria-pressed={isMotionPaused}
-                className="cursor-pointer flex w-full items-center justify-between rounded-lg px-3 py-2 font-mono text-[11px] tracking-[0.14em] text-muted uppercase hover:bg-white/[0.04] hover:text-primary"
+                className="cursor-pointer flex min-h-[44px] w-full items-center justify-between rounded-xl px-3.5 py-2 font-mono text-[11px] tracking-[0.14em] text-muted uppercase hover:bg-white/[0.04] hover:text-primary"
               >
                 <span>
                   {isMotionPaused ? "Reanudar movimiento" : "Pausar movimiento"}

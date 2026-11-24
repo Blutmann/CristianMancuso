@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
-import { WHATSAPP_NUMBER } from "@/data/catalog";
+import { buildWhatsAppUrl } from "@/data/config";
 
-const DIRECT_WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+const DIRECT_WHATSAPP_URL = buildWhatsAppUrl(
   "Hola Cristian Mancuso Atelier, quisiera realizar una consulta sobre camisas a medida."
-)}`;
+);
 
 export function Footer() {
   return (

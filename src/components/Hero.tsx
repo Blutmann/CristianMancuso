@@ -268,7 +268,7 @@ export function Hero() {
             {/* Giant Kinetic H1 */}
             <h1
               id="hero-heading"
-              className="font-display text-[clamp(2.65rem,6.4vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-primary"
+              className="font-display text-[clamp(2.15rem,6.4vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-primary"
             >
               {HERO_LINES.map((line, index) => (
                 <span key={line.text} className="block overflow-hidden pb-1">
@@ -326,7 +326,7 @@ export function Hero() {
               <Link
                 id="hero-cta-collection"
                 href="/#coleccion"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-ivory px-6 py-3.5 text-sm font-semibold tracking-[0.01em] text-obsidian transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-ivory px-6 py-3 text-sm font-semibold tracking-[0.01em] text-obsidian transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
               >
                 <span>Explorar Colección</span>
                 <ArrowUpRight
@@ -338,7 +338,7 @@ export function Hero() {
               <Link
                 id="hero-cta-bespoke"
                 href="/#como-pedir"
-                className="group inline-flex items-center gap-2.5 rounded-full border border-white/[0.14] bg-elevated/80 px-6 py-3.5 text-sm font-medium text-primary backdrop-blur-md transition-all duration-300 hover:border-champagne/60 hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/[0.14] bg-elevated/80 px-6 py-3 text-sm font-medium text-primary backdrop-blur-md transition-all duration-300 hover:border-champagne/60 hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
               >
                 <Ruler
                   className="h-4 w-4 text-champagne transition-transform duration-300 group-hover:rotate-12"
