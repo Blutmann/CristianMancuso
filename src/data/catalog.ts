@@ -137,7 +137,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "donna-cloque-raya-mineral",
-    name: "Donna Cloque Raya Mineral",
+    name: "Donna Raya Mineral",
     refCode: "Ref. Donna 027",
     fabricId: "donna",
     fabricLabel: "Mancuso Donna",
@@ -157,49 +157,98 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
 export const COLLAR_OPTIONS = [
   "Italiano",
   "Francés",
-  "Button-Down",
+  "Oxford",
+  "Americano",
   "Mao",
 ] as const;
 
+export type CollarOption = (typeof COLLAR_OPTIONS)[number];
+
+export const COLLAR_META: Record<
+  CollarOption,
+  { note: string; detail: string; macroImage: string }
+> = {
+  Italiano: {
+    note: "Clásico versátil",
+    detail: "Puntas equilibradas · Ideal con o sin corbata",
+    macroImage: "/images/collars/italiano.png",
+  },
+  Francés: {
+    note: "Puntas abiertas",
+    detail: "Apertura amplia · Elegancia sastrera clásica",
+    macroImage: "/images/collars/frances.png",
+  },
+  Oxford: {
+    note: "Caída suave",
+    detail: "Estructura relajada · Perfecto uso diario",
+    macroImage: "/images/collars/oxford.png",
+  },
+  Americano: {
+    note: "Button-down",
+    detail: "Puntas abotonadas · Estilo smart-casual",
+    macroImage: "/images/collars/americano.png",
+  },
+  Mao: {
+    note: "Sin solapa",
+    detail: "Cuello tirilla limpio · Silueta minimalista",
+    macroImage: "/images/collars/mao.png",
+  },
+};
+
 export const BUTTON_OPTIONS = [
   {
-    id: "Nácar Blanco",
-    label: "Nácar Blanco",
-    fill: "#F4F7FA",
-    ring: "rgba(18, 18, 21, 0.22)",
-    thread: "#C8A97E",
+    id: "Blanco",
+    label: "Blanco",
+    shortLabel: "Blanco",
+    fill: "#F8F8FA",
+    ring: "rgba(17, 17, 19, 0.22)",
+    thread: "#B08D57",
+    macroImage: "/images/buttons/blanco.png",
   },
   {
-    id: "Nácar Humo",
-    label: "Nácar Humo",
-    fill: "#58606E",
-    ring: "rgba(255, 255, 255, 0.35)",
-    thread: "#D4D4D8",
-  },
-  {
-    id: "Mate Oscuro",
-    label: "Mate Oscuro",
-    fill: "#1B1D22",
-    ring: "rgba(255, 255, 255, 0.22)",
+    id: "Negro",
+    label: "Negro",
+    shortLabel: "Negro",
+    fill: "#18191D",
+    ring: "rgba(255, 255, 255, 0.28)",
     thread: "#9CA3AF",
+    macroImage: "/images/buttons/negro.png",
   },
   {
-    id: "Champagne",
-    label: "Champagne",
-    fill: "#C8A97E",
-    ring: "rgba(255, 255, 255, 0.45)",
-    thread: "#121215",
+    id: "Mismo tono que la camisa",
+    label: "Mismo tono que la camisa",
+    shortLabel: "Al tono",
+    fill: "#46586F",
+    ring: "rgba(255, 255, 255, 0.32)",
+    thread: "#E2E8F0",
+    macroImage: "/images/buttons/mismo-tono.png",
+  },
+  {
+    id: "Nácar blanco",
+    label: "Nácar blanco",
+    shortLabel: "Nácar blanco",
+    fill: "#F2EFE9",
+    ring: "rgba(176, 141, 87, 0.45)",
+    thread: "#C8A97E",
+    macroImage: "/images/buttons/nacar-blanco.png",
   },
 ] as const;
 
 export const MONOGRAM_PLACEMENTS = ["Puño izquierdo", "Pechera"] as const;
 
+export const MONOGRAM_THREAD_OPTIONS = [
+  { id: "Blanco", label: "Blanco", hex: "#F8F8FA", ring: "rgba(17,17,19,0.22)" },
+  { id: "Negro", label: "Negro", hex: "#141518", ring: "rgba(255,255,255,0.28)" },
+  { id: "Champagne", label: "Champagne", hex: "#D6C3A5", ring: "rgba(176,141,87,0.5)" },
+  { id: "Azul Noche", label: "Azul Noche", hex: "#1B2E4B", ring: "rgba(147,197,253,0.35)" },
+] as const;
+
 export const NUMERIC_SIZES = ["38", "40", "42", "44", "46"] as const;
 export const ALPHA_SIZES = ["S", "M", "L", "XL"] as const;
 
-export type CollarOption = (typeof COLLAR_OPTIONS)[number];
 export type ButtonOption = (typeof BUTTON_OPTIONS)[number]["id"];
 export type MonogramPlacement = (typeof MONOGRAM_PLACEMENTS)[number];
+export type MonogramThreadOption = (typeof MONOGRAM_THREAD_OPTIONS)[number]["id"];
 export type CommercialSize =
   | (typeof NUMERIC_SIZES)[number]
   | (typeof ALPHA_SIZES)[number];
@@ -218,6 +267,7 @@ export interface ShirtConfiguration {
   button?: ButtonOption;
   monogramText?: string;
   monogramPlacement?: MonogramPlacement;
+  monogramThread?: MonogramThreadOption;
   measurements?: BespokeMeasurements;
 }
 
@@ -270,11 +320,14 @@ export function buildSelectionPlainText(
       );
     } else {
       const monogram = formatMonogramDisplay(item.config.monogramText);
+      const threadPart = item.config.monogramThread
+        ? ` · hilo ${item.config.monogramThread}`
+        : "";
       const monogramPart = monogram
-        ? ` | Iniciales: ${monogram} (${item.config.monogramPlacement ?? "Puño izquierdo"})`
+        ? ` | Iniciales: ${monogram} (${item.config.monogramPlacement ?? "Puño izquierdo"}${threadPart})`
         : "";
       lines.push(
-        `${index + 1}) Camisa: ${item.shirt.name} (${item.shirt.refCode})${qtyLabel} | Cuello: ${item.config.collar ?? "Italiano"} | Botón: ${item.config.button ?? "Nácar Blanco"}${monogramPart} | Medidas: ${formatMeasurementsInline(item.config.measurements)} | ${formatFabricPrice(item.shirt.priceArs * item.quantity, currency)}`
+        `${index + 1}) Camisa: ${item.shirt.name} (${item.shirt.refCode})${qtyLabel} | Cuello: ${item.config.collar ?? "Italiano"} | Botón: ${item.config.button ?? "Nácar blanco"}${monogramPart} | Medidas: ${formatMeasurementsInline(item.config.measurements)} | ${formatFabricPrice(item.shirt.priceArs * item.quantity, currency)}`
       );
     }
   });

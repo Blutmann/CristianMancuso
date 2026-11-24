@@ -4,11 +4,14 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BUTTON_OPTIONS,
+  COLLAR_META,
+  MONOGRAM_THREAD_OPTIONS,
   type BespokeMeasurements,
   type ButtonOption,
   type CatalogShirt,
   type CollarOption,
   type MonogramPlacement,
+  type MonogramThreadOption,
 } from "@/data/catalog";
 
 type MeasureKey = keyof BespokeMeasurements;
@@ -19,18 +22,12 @@ export interface StudioShirtStageProps {
   buttonId: ButtonOption;
   monogramDisplay: string;
   monogramPlacement: MonogramPlacement;
+  monogramThread: MonogramThreadOption;
   step: 1 | 2 | 3 | 4;
   measurements: BespokeMeasurements;
   focusedMeasure: MeasureKey | null;
   isMotionPaused: boolean;
 }
-
-const COLLAR_DESCRIPTIONS: Record<CollarOption, string> = {
-  Italiano: "Puntas equilibradas · Ideal con o sin corbata",
-  Francés: "Apertura amplia · Elegancia clásica de sastrería",
-  "Button-Down": "Puntas abotonadas · Estructura relajada",
-  Mao: "Limpio sin solapa · Silueta minimalista",
-};
 
 export function StudioShirtStage({
   shirt,
@@ -38,14 +35,20 @@ export function StudioShirtStage({
   buttonId,
   monogramDisplay,
   monogramPlacement,
+  monogramThread,
   step,
   measurements,
   focusedMeasure,
   isMotionPaused,
 }: StudioShirtStageProps) {
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+
   const selectedButton =
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[0];
+  const selectedThread =
+    MONOGRAM_THREAD_OPTIONS.find((t) => t.id === monogramThread) ??
+    MONOGRAM_THREAD_OPTIONS[2];
+  const collarMeta = COLLAR_META[collar];
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isMotionPaused || step !== 1 || e.pointerType !== "mouse") return;
@@ -62,36 +65,7 @@ export function StudioShirtStage({
     setTilt({ rotateX: 0, rotateY: 0 });
   };
 
-  // Dynamic studio camera zoom per step
-  const cameraTarget = (() => {
-    if (step === 2) {
-      // Macro zoom into the upper collar zone
-      return { scale: 2.15, x: "0%", y: "34%", rotateX: 0, rotateY: 0 };
-    }
-    if (step === 3) {
-      // Macro zoom into left cuff (viewer's right lower cuff) or chest placket
-      return monogramPlacement === "Puño izquierdo"
-        ? { scale: 1.95, x: "-26%", y: "-28%", rotateX: 0, rotateY: 0 }
-        : { scale: 1.95, x: "-10%", y: "12%", rotateX: 0, rotateY: 0 };
-    }
-    if (step === 1 && !isMotionPaused) {
-      return {
-        scale: 1,
-        x: "0%",
-        y: "0%",
-        rotateX: tilt.rotateX,
-        rotateY: tilt.rotateY,
-      };
-    }
-    return { scale: 1, x: "0%", y: "0%", rotateX: 0, rotateY: 0 };
-  })();
-
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
-
-  // Thread ink color contrasts cleanly against light vs dark studio fabrics
-  const embroideryColor = shirt.isLightFabric
-    ? "rgba(24, 30, 42, 0.88)"
-    : "rgba(232, 218, 193, 0.92)";
 
   return (
     <div
@@ -100,205 +74,234 @@ export function StudioShirtStage({
       className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent"
       style={{ perspective: "1100px" }}
     >
-      {/* Subtle studio softbox halo behind the floating garment */}
+      {/* Subtle studio softbox halo behind the floating garment / macro */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 44%, rgba(255,255,255,0.10) 0%, rgba(148,163,184,0.03) 44%, transparent 74%)",
+            "radial-gradient(circle at 50% 44%, rgba(255,255,255,0.22) 0%, rgba(148,163,184,0.06) 44%, transparent 74%)",
         }}
       />
 
-      {/* Camera-transformed photorealistic garment container */}
-      <motion.div
-        animate={cameraTarget}
-        transition={
-          isMotionPaused
-            ? { duration: 0 }
-            : { type: "spring", stiffness: 120, damping: 22, mass: 0.9 }
-        }
-        style={{ transformStyle: "preserve-3d" }}
-        className="relative flex aspect-[3/4] h-[94%] max-h-[500px] max-w-full items-center justify-center select-none"
-      >
-        {/* Crossfading photorealistic studio shirt (transparent RGBA) */}
-        <AnimatePresence mode="sync">
-          <motion.img
-            key={shirt.id}
-            src={shirt.studioImage}
-            alt={`${shirt.name} — ${shirt.composition}`}
-            draggable={false}
-            initial={isMotionPaused ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0 }}
-            transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_38px_rgba(0,0,0,0.6)]"
-          />
-        </AnimatePresence>
-
-        {/* Live embroidered monogram directly on the real fabric (cuff or chest) */}
-        {monogramDisplay && (
-          <motion.span
-            key={`${monogramPlacement}-${monogramDisplay}`}
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.25 }}
-            aria-label={`Iniciales bordadas ${monogramDisplay} en ${monogramPlacement}`}
-            className="pointer-events-none absolute z-20 font-serif italic tracking-[0.14em]"
-            style={{
-              color: embroideryColor,
-              textShadow: shirt.isLightFabric
-                ? "0 1px 1px rgba(255,255,255,0.45)"
-                : "0 1px 2px rgba(0,0,0,0.75)",
-              ...(monogramPlacement === "Puño izquierdo"
-                ? {
-                    right: "11.5%",
-                    bottom: "13.5%",
-                    fontSize: "clamp(8px, 1.15vw, 11px)",
-                    transform: "rotate(-3deg)",
-                  }
-                : {
-                    left: "59%",
-                    top: "35.5%",
-                    fontSize: "clamp(8px, 1.15vw, 11px)",
-                  }),
-            }}
-          >
-            {monogramDisplay}
-          </motion.span>
-        )}
-
-        {/* Step 4 tailored measurement lines anchored to the garment silhouette */}
-        <AnimatePresence>
-          {step === 4 && (
-            <motion.svg
-              aria-hidden="true"
-              viewBox="0 0 300 400"
-              initial={isMotionPaused ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.28 }}
-              className="pointer-events-none absolute inset-0 z-20 h-full w-full"
-              fill="none"
-            >
-              {/* Cuello */}
-              <line
-                x1="116"
-                y1="62"
-                x2="184"
-                y2="62"
-                stroke={
-                  focusedMeasure === "cuello" || measurements.cuello
-                    ? "#FFFFFF"
-                    : "rgba(255,255,255,0.38)"
-                }
-                strokeWidth="1.2"
-                strokeDasharray="3 3"
-              />
-              {/* Pecho */}
-              <line
-                x1="78"
-                y1="176"
-                x2="222"
-                y2="176"
-                stroke={
-                  focusedMeasure === "pecho" || measurements.pecho
-                    ? "#FFFFFF"
-                    : "rgba(255,255,255,0.38)"
-                }
-                strokeWidth="1.2"
-                strokeDasharray="3 3"
-              />
-              {/* Manga */}
-              <line
-                x1="60"
-                y1="92"
-                x2="44"
-                y2="342"
-                stroke={
-                  focusedMeasure === "manga" || measurements.manga
-                    ? "#FFFFFF"
-                    : "rgba(255,255,255,0.38)"
-                }
-                strokeWidth="1.2"
-                strokeDasharray="3 3"
-              />
-              {/* Largo */}
-              <line
-                x1="150"
-                y1="72"
-                x2="150"
-                y2="360"
-                stroke={
-                  focusedMeasure === "largo" || measurements.largo
-                    ? "#FFFFFF"
-                    : "rgba(255,255,255,0.28)"
-                }
-                strokeWidth="1.1"
-                strokeDasharray="3 3"
-              />
-            </motion.svg>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* STEP 2 OVERLAY: Floating Collar Detail Pill */}
-      <AnimatePresence>
-        {step === 2 && (
+      <AnimatePresence mode="wait">
+        {/* STEP 1 & STEP 4: Full Transparent RGBA Studio Shirt */}
+        {(step === 1 || step === 4) && (
           <motion.div
-            key={`collar-badge-${collar}`}
-            initial={isMotionPaused ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="liquid-glass pointer-events-none absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3 rounded-full px-4 py-2 text-xs text-white"
+            key="stage-full-shirt"
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.97 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              rotateX: step === 1 && !isMotionPaused ? tilt.rotateX : 0,
+              rotateY: step === 1 && !isMotionPaused ? tilt.rotateY : 0,
+            }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97 }}
+            transition={
+              isMotionPaused
+                ? { duration: 0 }
+                : { type: "spring", stiffness: 140, damping: 22 }
+            }
+            style={{ transformStyle: "preserve-3d" }}
+            className="relative flex aspect-[3/4] h-[94%] max-h-[500px] max-w-full items-center justify-center select-none"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            <span className="font-medium">Cuello {collar}</span>
-            <span aria-hidden="true" className="hidden text-white/30 sm:inline">
-              ·
-            </span>
-            <span className="hidden text-white/70 sm:inline">
-              {COLLAR_DESCRIPTIONS[collar]}
-            </span>
+            <AnimatePresence mode="sync">
+              <motion.img
+                key={shirt.id}
+                src={shirt.studioImage}
+                alt={`${shirt.name} — ${shirt.composition}`}
+                draggable={false}
+                initial={isMotionPaused ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={isMotionPaused ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
+              />
+            </AnimatePresence>
+
+            {/* Step 4 tailored measurement lines anchored to the garment silhouette */}
+            {step === 4 && (
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 300 400"
+                className="pointer-events-none absolute inset-0 z-20 h-full w-full"
+                fill="none"
+              >
+                <line
+                  x1="116"
+                  y1="62"
+                  x2="184"
+                  y2="62"
+                  stroke={
+                    focusedMeasure === "cuello" || measurements.cuello
+                      ? "currentColor"
+                      : "rgba(128,128,140,0.55)"
+                  }
+                  strokeWidth="1.3"
+                  strokeDasharray="3 3"
+                />
+                <line
+                  x1="78"
+                  y1="176"
+                  x2="222"
+                  y2="176"
+                  stroke={
+                    focusedMeasure === "pecho" || measurements.pecho
+                      ? "currentColor"
+                      : "rgba(128,128,140,0.55)"
+                  }
+                  strokeWidth="1.3"
+                  strokeDasharray="3 3"
+                />
+                <line
+                  x1="60"
+                  y1="92"
+                  x2="44"
+                  y2="342"
+                  stroke={
+                    focusedMeasure === "manga" || measurements.manga
+                      ? "currentColor"
+                      : "rgba(128,128,140,0.55)"
+                  }
+                  strokeWidth="1.3"
+                  strokeDasharray="3 3"
+                />
+                <line
+                  x1="150"
+                  y1="72"
+                  x2="150"
+                  y2="360"
+                  stroke={
+                    focusedMeasure === "largo" || measurements.largo
+                      ? "currentColor"
+                      : "rgba(128,128,140,0.42)"
+                  }
+                  strokeWidth="1.2"
+                  strokeDasharray="3 3"
+                />
+              </svg>
+            )}
           </motion.div>
         )}
-      </AnimatePresence>
 
-      {/* STEP 3 OVERLAY: Live Button & Monogram Macro Preview Card */}
-      <AnimatePresence>
+        {/* STEP 2: Real Macro Collar Studio Photograph */}
+        {step === 2 && (
+          <motion.div
+            key="stage-collar-macro"
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
+          >
+            <AnimatePresence mode="sync">
+              <motion.img
+                key={collar}
+                src={collarMeta.macroImage}
+                alt={`Macro real Cuello ${collar}`}
+                draggable={false}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={isMotionPaused ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            </AnimatePresence>
+
+            {/* Floating Collar Spec Pill */}
+            <div className="liquid-glass pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-2 text-xs text-[#111113] dark:text-white">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
+              <span className="font-semibold">Cuello {collar}</span>
+              <span
+                aria-hidden="true"
+                className="hidden text-black/25 sm:inline dark:text-white/30"
+              >
+                ·
+              </span>
+              <span className="hidden text-[#111113]/70 sm:inline dark:text-white/75">
+                {collarMeta.detail}
+              </span>
+            </div>
+          </motion.div>
+        )}
+
+        {/* STEP 3: Real Macro Button / Cuff Photograph + Perspective Stitch Embroidery */}
         {step === 3 && (
           <motion.div
-            key={`detail-badge-${buttonId}-${monogramPlacement}`}
-            initial={isMotionPaused ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.25 }}
-            className="liquid-glass pointer-events-none absolute bottom-4 left-4 z-30 flex items-center gap-3.5 rounded-2xl px-4 py-2.5 text-xs text-white"
+            key="stage-button-macro"
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.16)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.68)]"
           >
-            {/* Macro tactile button disc preview */}
-            <span
-              aria-hidden="true"
-              className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border shadow-md"
-              style={{
-                backgroundColor: selectedButton.fill,
-                borderColor: selectedButton.ring,
-              }}
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full border border-dashed opacity-75"
-                style={{ borderColor: selectedButton.thread }}
+            <AnimatePresence mode="sync">
+              <motion.img
+                key={selectedButton.id}
+                src={selectedButton.macroImage}
+                alt={`Macro real Botón ${selectedButton.label}`}
+                draggable={false}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={isMotionPaused ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute inset-0 h-full w-full object-cover"
               />
-            </span>
-            <div className="leading-tight">
-              <p className="font-medium text-white">
-                Botón {selectedButton.label}
-              </p>
-              <p className="mt-0.5 text-[11px] text-white/65">
-                {monogramDisplay
-                  ? `Bordado ${monogramDisplay} · ${monogramPlacement}`
-                  : "Sin iniciales bordadas"}
-              </p>
+            </AnimatePresence>
+
+            {/* Realistic Embroidered Monogram with Perspective Tilt & Raised Stitch Relief */}
+            {monogramDisplay && (
+              <motion.div
+                key={`${monogramDisplay}-${monogramThread}-${monogramPlacement}`}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.25 }}
+                aria-label={`Iniciales bordadas ${monogramDisplay} en hilo ${selectedThread.label}`}
+                className="pointer-events-none absolute right-[12%] bottom-[26%] z-20 select-none"
+                style={{
+                  transform:
+                    "perspective(260px) rotateX(12deg) rotateY(-8deg) rotateZ(-6deg)",
+                }}
+              >
+                <span
+                  className="block font-serif text-xl italic font-semibold tracking-[0.18em] sm:text-2xl"
+                  style={{
+                    color: selectedThread.hex,
+                    textShadow:
+                      selectedThread.id === "Negro"
+                        ? "0 1px 0 rgba(255,255,255,0.22), 0 -0.5px 1px rgba(0,0,0,0.85), 1px 2px 3px rgba(0,0,0,0.65)"
+                        : "0 1px 0 rgba(0,0,0,0.65), 0 -0.5px 0 rgba(255,255,255,0.45), 1px 2px 4px rgba(0,0,0,0.55)",
+                    filter: "contrast(1.08)",
+                  }}
+                >
+                  {monogramDisplay}
+                </span>
+              </motion.div>
+            )}
+
+            {/* Floating Button + Thread Detail Card */}
+            <div className="liquid-glass pointer-events-none absolute bottom-4 left-4 z-20 flex items-center gap-3 rounded-2xl px-3.5 py-2 text-xs text-[#111113] dark:text-white">
+              <span
+                aria-hidden="true"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border shadow-sm"
+                style={{
+                  backgroundColor: selectedButton.fill,
+                  borderColor: selectedButton.ring,
+                }}
+              >
+                <span
+                  className="h-2 w-2 rounded-full border border-dashed opacity-80"
+                  style={{ borderColor: selectedButton.thread }}
+                />
+              </span>
+              <div className="leading-tight">
+                <p className="font-semibold">Botón {selectedButton.label}</p>
+                <p className="mt-0.5 text-[11px] text-[#111113]/70 dark:text-white/70">
+                  {monogramDisplay
+                    ? `${monogramDisplay} · ${monogramPlacement} · Hilo ${selectedThread.label}`
+                    : "Sin iniciales bordadas"}
+                </p>
+              </div>
             </div>
           </motion.div>
         )}
@@ -345,12 +348,12 @@ export function StudioShirtStage({
                   key={item.key}
                   className={`liquid-glass absolute rounded-full px-3 py-1 text-[11px] transition-all ${item.pos} ${
                     active
-                      ? "border-white/55 text-white shadow-[0_0_20px_rgba(255,255,255,0.2)]"
-                      : "text-white/65"
+                      ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
+                      : "text-[#111113]/65 dark:text-white/65"
                   }`}
                 >
-                  <span className="mr-1.5 text-white/60">{item.label}</span>
-                  <span className="font-mono text-white">
+                  <span className="mr-1.5 opacity-70">{item.label}</span>
+                  <span className="font-mono font-semibold text-[#111113] dark:text-white">
                     {formatLiveCm(measurements[item.key])}
                   </span>
                 </div>

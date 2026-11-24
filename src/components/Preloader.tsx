@@ -122,7 +122,7 @@ export function Preloader() {
       />
 
       {/* Top Monogram Row */}
-      <div className="relative z-10 flex items-center justify-between border-b border-white/[0.08] pb-4">
+      <div className="relative z-10 flex items-center justify-between border-b border-black/10 pb-4 dark:border-white/[0.08]">
         <BrandLogo markSize={28} />
         <span className="hidden sm:inline text-xs tracking-[0.18em] text-muted uppercase">
           Buenos Aires · Sastrería de Autor
@@ -142,7 +142,7 @@ export function Preloader() {
           </span>
         </div>
 
-        <div className="mt-8 w-full max-w-md overflow-hidden bg-white/[0.08] h-[1.5px]">
+        <div className="mt-8 w-full max-w-md overflow-hidden bg-black/10 dark:bg-white/[0.08] h-[1.5px]">
           <div
             className="h-full w-full origin-left will-change-transform"
             style={{
@@ -159,7 +159,7 @@ export function Preloader() {
       </div>
 
       {/* Bottom Row with Skip Button */}
-      <div className="relative z-10 flex items-center justify-between border-t border-white/[0.08] pt-4">
+      <div className="relative z-10 flex items-center justify-between border-t border-black/10 pt-4 dark:border-white/[0.08]">
         <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-champagne/90 uppercase">
           A medida · Sin cargo extra
         </span>

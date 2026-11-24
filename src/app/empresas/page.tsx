@@ -62,7 +62,7 @@ export default function EmpresasPage() {
           {/* 2 Differentiated B2B / Wholesale Blocks */}
           <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Block 1: Diseños para tu Empresa */}
-            <article className="flex flex-col justify-between rounded-3xl border border-white/[0.09] bg-elevated p-6 sm:p-8">
+            <article className="flex flex-col justify-between rounded-3xl border border-black/10 dark:border-white/[0.09] bg-elevated p-6 sm:p-8">
               <div>
                 <div className="flex items-center justify-between gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-champagne/35 bg-obsidian text-champagne">
@@ -116,7 +116,7 @@ export default function EmpresasPage() {
             </article>
 
             {/* Block 2: Venta Mayorista / Locales Multimarca */}
-            <article className="flex flex-col justify-between rounded-3xl border border-white/[0.09] bg-elevated p-6 sm:p-8">
+            <article className="flex flex-col justify-between rounded-3xl border border-black/10 dark:border-white/[0.09] bg-elevated p-6 sm:p-8">
               <div>
                 <div className="flex items-center justify-between gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan/35 bg-obsidian text-cyan">

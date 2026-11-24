@@ -9,7 +9,8 @@ interface BrandLogoProps {
 
 /**
  * Monograma vectorial heráldico Cristian Mancuso:
- * M vertical con remates serifados + C envolvente + anillo/ojal central en blanco puro.
+ * M vertical con remates serifados + C envolvente + anillo/ojal central.
+ * Adapta automáticamente negro tinta (#111113) en modo claro y blanco (#FFFFFF) en modo oscuro.
  */
 export function BrandLogo({
   showWordmark = true,
@@ -19,7 +20,7 @@ export function BrandLogo({
 }: BrandLogoProps) {
   return (
     <div
-      className={`inline-flex items-center ${
+      className={`inline-flex items-center text-[#111113] dark:text-white ${
         stacked ? "flex-col gap-3 text-center" : "gap-3"
       } ${className}`}
     >
@@ -35,7 +36,7 @@ export function BrandLogo({
         {/* Outer Enveloping C Crescent */}
         <path
           d="M 46.5 16.5 A 22 22 0 1 0 46.5 47.5"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="3.2"
           strokeLinecap="round"
         />
@@ -45,7 +46,7 @@ export function BrandLogo({
           y1="12.5"
           x2="49"
           y2="19.5"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.4"
           strokeLinecap="round"
         />
@@ -54,7 +55,7 @@ export function BrandLogo({
           y1="51.5"
           x2="49"
           y2="44.5"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.4"
           strokeLinecap="round"
         />
@@ -62,7 +63,7 @@ export function BrandLogo({
         {/* Interlocked Heraldic Vertical M with Serifed Stems */}
         <path
           d="M 20 46 V 19 L 32 33 L 44 19 V 46"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="3.1"
           strokeLinecap="square"
           strokeLinejoin="miter"
@@ -73,7 +74,7 @@ export function BrandLogo({
           y1="19"
           x2="23.5"
           y2="19"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.2"
           strokeLinecap="round"
         />
@@ -82,7 +83,7 @@ export function BrandLogo({
           y1="19"
           x2="47.5"
           y2="19"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.2"
           strokeLinecap="round"
         />
@@ -91,7 +92,7 @@ export function BrandLogo({
           y1="46"
           x2="23.5"
           y2="46"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.2"
           strokeLinecap="round"
         />
@@ -100,7 +101,7 @@ export function BrandLogo({
           y1="46"
           x2="47.5"
           y2="46"
-          stroke="#FFFFFF"
+          stroke="currentColor"
           strokeWidth="2.2"
           strokeLinecap="round"
         />
@@ -110,11 +111,11 @@ export function BrandLogo({
           cx="32"
           cy="33"
           r="6.2"
-          fill="#07080B"
-          stroke="#FFFFFF"
+          fill="var(--bg-page)"
+          stroke="currentColor"
           strokeWidth="2.2"
         />
-        <circle cx="32" cy="33" r="1.8" fill="#D6C3A5" />
+        <circle cx="32" cy="33" r="1.8" fill="var(--accent-gold)" />
       </svg>
 
       {showWordmark && (
@@ -123,11 +124,11 @@ export function BrandLogo({
             stacked ? "items-center gap-1" : "items-start gap-0.5"
           }`}
         >
-          <span className="font-display text-[11px] sm:text-xs font-bold tracking-[0.22em] text-white uppercase">
+          <span className="font-display text-[11px] sm:text-xs font-bold tracking-[0.22em] text-[#111113] dark:text-white uppercase">
             Cristian Mancuso
           </span>
           {stacked && (
-            <span className="text-[10px] tracking-[0.24em] text-white/55 uppercase">
+            <span className="text-[10px] tracking-[0.24em] text-[#111113]/55 dark:text-white/55 uppercase">
               Sastrería de Autor
             </span>
           )}

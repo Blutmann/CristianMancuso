@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
 import { MotionProvider } from "@/context/MotionContext";
 import { AtelierProvider } from "@/context/AtelierContext";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
+import { AmbientStudioBackdrop } from "@/components/AmbientStudioBackdrop";
 import { Preloader } from "@/components/Preloader";
 import { Navbar } from "@/components/Navbar";
 import { SelectionDrawer } from "@/components/SelectionDrawer";
@@ -43,19 +45,22 @@ export default function RootLayout({
   return (
     <html
       lang="es-AR"
-      className={`${syne.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable} dark`}
+      className={`${syne.variable} ${plusJakartaSans.variable} ${jetBrainsMono.variable}`}
     >
-      <body className="min-h-screen bg-obsidian text-primary font-sans antialiased">
-        <MotionProvider>
-          <AtelierProvider>
-            <SmoothScrollProvider>
-              <Preloader />
-              <Navbar />
-              <main>{children}</main>
-              <SelectionDrawer />
-            </SmoothScrollProvider>
-          </AtelierProvider>
-        </MotionProvider>
+      <body className="min-h-screen bg-[#F7F6F3] text-[#111113] font-sans antialiased transition-colors duration-300 dark:bg-[#0B0B0E] dark:text-[#FAFAFA]">
+        <ThemeProvider>
+          <MotionProvider>
+            <AtelierProvider>
+              <SmoothScrollProvider>
+                <AmbientStudioBackdrop />
+                <Preloader />
+                <Navbar />
+                <main className="relative z-10">{children}</main>
+                <SelectionDrawer />
+              </SmoothScrollProvider>
+            </AtelierProvider>
+          </MotionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

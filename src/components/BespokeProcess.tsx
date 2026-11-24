@@ -121,23 +121,26 @@ export function BespokeProcess() {
     <section
       id="como-medir"
       aria-labelledby="como-medir-heading"
-      className="relative w-full scroll-mt-24 bg-transparent text-white py-16 lg:py-20"
+      className="relative w-full scroll-mt-24 bg-transparent py-16 text-[#111113] lg:py-20 dark:text-white"
     >
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 xl:pr-24">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
         {/* Concise Header */}
         <div className="max-w-xl">
           <div className="mb-3 flex items-center gap-3">
-            <span aria-hidden="true" className="h-[1px] w-7 bg-white/35" />
-            <span className="text-xs font-medium tracking-[0.2em] text-white/70 uppercase">
+            <span
+              aria-hidden="true"
+              className="h-[1px] w-7 bg-black/30 dark:bg-white/35"
+            />
+            <span className="text-xs font-medium tracking-[0.2em] text-muted uppercase">
               Guía de medidas
             </span>
           </div>
-          <h2
+          <h1
             id="como-medir-heading"
-            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-white"
+            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#111113] dark:text-white"
           >
             ¿Cómo tomar tus medidas?
-          </h2>
+          </h1>
           <p className="mt-3 text-base text-muted">
             En nuestro atelier de Buenos Aires o guiado por WhatsApp desde
             donde estés.
@@ -149,7 +152,7 @@ export function BespokeProcess() {
           <div
             role="tablist"
             aria-label="Modalidad de toma de medidas"
-            className="liquid-glass inline-flex flex-col sm:flex-row w-full sm:w-auto gap-1.5 rounded-2xl sm:rounded-full p-1"
+            className="liquid-glass inline-flex w-full flex-col gap-1.5 rounded-2xl p-1 sm:w-auto sm:flex-row sm:rounded-full"
           >
             {(
               [
@@ -175,10 +178,10 @@ export function BespokeProcess() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setModality(tab.id)}
-                  className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl sm:rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
+                  className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-2 text-xs font-semibold transition-colors sm:rounded-full ${
                     isActive
-                      ? "text-[#0B0B0E]"
-                      : "text-white/70 hover:text-white"
+                      ? "text-white dark:text-[#0B0B0E]"
+                      : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                   }`}
                 >
                   {isActive && (
@@ -191,7 +194,7 @@ export function BespokeProcess() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-xl sm:rounded-full bg-white"
+                      className="absolute inset-0 rounded-xl bg-[#111113] sm:rounded-full dark:bg-white"
                     />
                   )}
                   <Icon
@@ -208,7 +211,7 @@ export function BespokeProcess() {
         {/* 12-Column Split: 3 Concise Steps + Interactive Long-Sleeve 4-Measure Guide */}
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
           {/* Left: 3 Short Steps + WhatsApp CTA */}
-          <div className="lg:col-span-6 flex flex-col justify-between">
+          <div className="flex flex-col justify-between lg:col-span-6">
             <ol className="space-y-3.5">
               {currentModality.steps.map((step) => (
                 <li
@@ -216,13 +219,13 @@ export function BespokeProcess() {
                   className="liquid-glass rounded-2xl p-5"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-xs font-semibold text-white">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.06] text-xs font-semibold text-[#111113] dark:bg-white/10 dark:text-white">
                       {step.number}
                     </span>
                     <div>
-                      <h3 className="font-display text-lg font-bold text-white">
+                      <h2 className="font-display text-lg font-bold text-[#111113] dark:text-white">
                         {step.title}
-                      </h3>
+                      </h2>
                       <p className="mt-1 text-sm text-muted">
                         {step.description}
                       </p>
@@ -238,7 +241,7 @@ export function BespokeProcess() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3 text-xs font-semibold tracking-[0.06em] text-[#0B0B0E] uppercase shadow-[0_12px_32px_rgba(255,255,255,0.14)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-[#111113] px-7 py-3 text-xs font-semibold tracking-[0.06em] text-white uppercase shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:shadow-[0_12px_32px_rgba(255,255,255,0.14)] dark:hover:bg-white/90"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Coordinar medidas por WhatsApp</span>
@@ -247,7 +250,7 @@ export function BespokeProcess() {
           </div>
 
           {/* Right: Liquid Glass Interactive Long-Sleeve 4-Measurement Schematic */}
-          <div className="liquid-glass lg:col-span-6 rounded-3xl p-5 sm:p-6">
+          <div className="liquid-glass rounded-3xl p-5 sm:p-6 lg:col-span-6">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {MEASURE_ORDER.map((id) => {
                 const m = MEASURES[id];
@@ -263,8 +266,8 @@ export function BespokeProcess() {
                     aria-pressed={isActive}
                     className={`cursor-pointer min-h-[44px] rounded-xl px-3 py-2 text-center text-xs font-semibold transition-all ${
                       isActive
-                        ? "bg-white text-[#0B0B0E]"
-                        : "bg-white/[0.06] text-white/75 border border-white/10 hover:bg-white/[0.12] hover:text-white"
+                        ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                        : "border border-black/10 bg-black/[0.04] text-[#111113]/75 hover:bg-black/[0.08] dark:border-white/10 dark:bg-white/[0.06] dark:text-white/75 dark:hover:bg-white/[0.12] dark:hover:text-white"
                     }`}
                   >
                     {m.label}
@@ -273,7 +276,7 @@ export function BespokeProcess() {
               })}
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl bg-black/25 px-3 py-4">
+            <div className="mt-4 overflow-hidden rounded-2xl bg-[#14161D] px-3 py-4">
               <svg
                 viewBox="0 0 420 355"
                 className="mx-auto h-auto w-full max-w-[375px]"

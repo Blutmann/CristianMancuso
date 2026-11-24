@@ -87,10 +87,10 @@ export function SelectionDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="liquid-glass-active flex h-full w-full max-w-md flex-col border-l border-white/20 text-white"
+            className="liquid-glass-active flex h-full w-full max-w-md flex-col border-l border-black/10 !bg-[#F7F6F3]/95 text-[#111113] dark:border-white/20 dark:!bg-[#0E1016]/95 dark:text-white"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-5">
+            <div className="flex items-center justify-between border-b border-black/10 px-6 py-5 dark:border-white/[0.08]">
               <div className="flex items-center gap-3">
                 <ShoppingBag
                   className="h-4 w-4 text-champagne"
@@ -115,7 +115,7 @@ export function SelectionDrawer() {
                 type="button"
                 onClick={closeDrawer}
                 aria-label="Cerrar Mi Selección"
-                className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.1] bg-elevated text-primary transition-colors hover:border-champagne/60 hover:text-champagne"
+                className="cursor-pointer inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/12 bg-elevated text-primary transition-colors hover:border-champagne/60 hover:text-champagne dark:border-white/[0.1]"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -124,8 +124,8 @@ export function SelectionDrawer() {
             {/* Body */}
             <div className="flex-1 overflow-y-auto px-6 py-5">
               {selectionItems.length === 0 ? (
-                <div className="flex h-full flex-col items-center justify-center text-center py-12">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.1] bg-elevated">
+                <div className="flex h-full flex-col items-center justify-center py-12 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-black/10 bg-elevated dark:border-white/[0.1]">
                     <ShoppingBag
                       className="h-6 w-6 text-champagne/80"
                       aria-hidden="true"
@@ -139,9 +139,9 @@ export function SelectionDrawer() {
                     costo extra.
                   </p>
                   <Link
-                    href="/#coleccion"
+                    href="/coleccion"
                     onClick={closeDrawer}
-                    className="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ivory px-6 py-3 text-xs font-semibold tracking-[0.06em] text-obsidian uppercase"
+                    className="mt-6 inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#111113] px-6 py-3 text-xs font-semibold tracking-[0.06em] text-white uppercase hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E]"
                   >
                     <span>Ir al catálogo</span>
                     <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />

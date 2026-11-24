@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { useRouter } from "next/navigation";
 import type { Currency, FabricCategoryId } from "@/data/fabrics";
 import {
   CATALOG_SHIRTS,
@@ -21,7 +22,7 @@ interface AtelierContextValue {
   selectedFabric: FabricCategoryId | null;
   setSelectedFabric: (fabric: FabricCategoryId | null) => void;
 
-  // Bespoke Builder (Block B) preselected shirt
+  // Bespoke Builder preselected shirt
   builderShirtId: string;
   setBuilderShirtId: (shirtId: string) => void;
   goToBuilderWithShirt: (shirtId: string) => void;
@@ -50,9 +51,10 @@ function makeItemKey(shirtId: string, c: ShirtConfiguration): string {
     shirtId,
     "bespoke",
     c.collar ?? "Italiano",
-    c.button ?? "Nácar Blanco",
+    c.button ?? "Nácar blanco",
     (c.monogramText ?? "").trim().toUpperCase(),
     c.monogramPlacement ?? "Puño izquierdo",
+    c.monogramThread ?? "Champagne",
     m?.cuello ?? "",
     m?.pecho ?? "",
     m?.manga ?? "",
@@ -61,6 +63,7 @@ function makeItemKey(shirtId: string, c: ShirtConfiguration): string {
 }
 
 export function AtelierProvider({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
   const [currency, setCurrency] = useState<Currency>("ARS");
   const [selectedFabric, setSelectedFabric] =
     useState<FabricCategoryId | null>(null);
@@ -73,13 +76,13 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
-  const goToBuilderWithShirt = useCallback((shirtId: string) => {
-    setBuilderShirtId(shirtId);
-    const el = document.getElementById("arma-tu-camisa");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, []);
+  const goToBuilderWithShirt = useCallback(
+    (shirtId: string) => {
+      setBuilderShirtId(shirtId);
+      router.push(`/a-medida?tela=${encodeURIComponent(shirtId)}`);
+    },
+    [router]
+  );
 
   const addToSelection = useCallback(
     (shirt: CatalogShirt, config: ShirtConfiguration) => {
