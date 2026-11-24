@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+import { Rotate3d } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
@@ -13,6 +14,18 @@ import {
   type MonogramPlacement,
   type MonogramThreadOption,
 } from "@/data/catalog";
+
+const ShirtGLBViewer = dynamic(() => import("@/components/ShirtGLBViewer"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="liquid-glass flex items-center gap-2.5 rounded-full px-4 py-2 text-xs text-[#111113]/75 dark:text-white/75">
+        <span className="h-2 w-2 animate-pulse rounded-full bg-[#B08D57]" />
+        <span>Cargando camisa 3D…</span>
+      </div>
+    </div>
+  ),
+});
 
 type MeasureKey = keyof BespokeMeasurements;
 
@@ -41,40 +54,18 @@ export function StudioShirtStage({
   focusedMeasure,
   isMotionPaused,
 }: StudioShirtStageProps) {
-  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
-
   const selectedButton =
-    BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[0];
+    BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
   const selectedThread =
     MONOGRAM_THREAD_OPTIONS.find((t) => t.id === monogramThread) ??
     MONOGRAM_THREAD_OPTIONS[2];
   const collarMeta = COLLAR_META[collar];
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (isMotionPaused || step !== 1 || e.pointerType !== "mouse") return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({
-      rotateX: -ny * 10,
-      rotateY: nx * 13,
-    });
-  };
-
-  const handlePointerLeave = () => {
-    setTilt({ rotateX: 0, rotateY: 0 });
-  };
-
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
 
   return (
-    <div
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent"
-      style={{ perspective: "1100px" }}
-    >
-      {/* Subtle studio softbox halo behind the floating garment / macro */}
+    <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent">
+      {/* Subtle studio softbox halo behind the 3D garment / macro */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -84,195 +75,29 @@ export function StudioShirtStage({
         }}
       />
 
-      {/* Subtle floating ambient particles around the garment */}
-      {!isMotionPaused && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-        >
-          {[
-            { left: "22%", top: "24%", size: 4, dur: 6.2, delay: 0 },
-            { left: "76%", top: "28%", size: 3, dur: 7.4, delay: 0.8 },
-            { left: "28%", top: "68%", size: 3, dur: 6.8, delay: 1.5 },
-            { left: "72%", top: "64%", size: 4, dur: 5.9, delay: 0.4 },
-            { left: "58%", top: "18%", size: 2.5, dur: 7.1, delay: 1.1 },
-          ].map((p, idx) => (
-            <motion.span
-              key={idx}
-              animate={{
-                y: [-14, 14, -14],
-                x: [-6, 6, -6],
-                opacity: [0.15, 0.55, 0.15],
-              }}
-              transition={{
-                duration: p.dur,
-                delay: p.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{
-                left: p.left,
-                top: p.top,
-                width: p.size,
-                height: p.size,
-              }}
-              className="absolute rounded-full bg-[#B08D57]/60 dark:bg-white/50"
-            />
-          ))}
-        </div>
-      )}
-
       <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Full Transparent RGBA Studio Shirt with Magical Levitation */}
+        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with 360° Orbit & Live Fabric Projection */}
         {(step === 1 || step === 4) && (
           <motion.div
-            key="stage-full-shirt"
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.97 }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              rotateX: step === 1 && !isMotionPaused ? tilt.rotateX : 0,
-              rotateY: step === 1 && !isMotionPaused ? tilt.rotateY : 0,
-            }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97 }}
-            transition={
-              isMotionPaused
-                ? { duration: 0 }
-                : { type: "spring", stiffness: 140, damping: 22 }
-            }
-            style={{ transformStyle: "preserve-3d" }}
-            className="relative flex aspect-[3/4] h-[88%] max-h-[470px] max-w-full flex-col items-center justify-center pb-7 select-none"
+            key="stage-glb-3d"
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3 }}
+            className="relative h-full w-full"
           >
-            {/* Organic 5s Magical Levitation Wrapper */}
-            <motion.div
-              animate={
-                isMotionPaused
-                  ? { y: 0, rotate: 0, scale: 1 }
-                  : {
-                      y: [-10, 10, -10],
-                      rotate: [-1.2, 1.2, -1.2],
-                      scale: [1, 1.025, 1],
-                    }
-              }
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="relative h-full w-full"
-            >
-              <AnimatePresence mode="sync">
-                <motion.img
-                  key={shirt.id}
-                  src={shirt.studioImage}
-                  alt={`${shirt.name} — ${shirt.composition}`}
-                  draggable={false}
-                  initial={isMotionPaused ? false : { opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={isMotionPaused ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                  className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
-                />
-              </AnimatePresence>
-
-              {/* Fast Diagonal Specular Shimmer Flash on Fabric Change */}
-              {!isMotionPaused && (
-                <motion.div
-                  key={`shimmer-${shirt.id}`}
-                  aria-hidden="true"
-                  initial={{ x: "-130%", opacity: 0 }}
-                  animate={{ x: "150%", opacity: [0, 0.75, 0] }}
-                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                  className="pointer-events-none absolute inset-y-4 left-0 z-10 w-1/2 -skew-x-20"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.48) 50%, transparent 100%)",
-                  }}
-                />
-              )}
-            </motion.div>
-
-            {/* Synchronized Breathing Elliptical Floor Shadow */}
-            <motion.div
-              aria-hidden="true"
-              animate={
-                isMotionPaused
-                  ? { scale: 1, opacity: 0.28 }
-                  : {
-                      scale: [0.85, 1.12, 0.85],
-                      opacity: [0.18, 0.45, 0.18],
-                    }
-              }
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="pointer-events-none absolute bottom-1 left-1/2 h-4 w-44 -translate-x-1/2 rounded-full bg-[#111113] blur-xl dark:bg-black"
+            <ShirtGLBViewer
+              shirt={shirt}
+              buttonId={buttonId}
+              step={step}
+              isMotionPaused={isMotionPaused}
             />
 
-            {/* Step 4 tailored measurement lines anchored to the garment silhouette */}
-            {step === 4 && (
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 300 400"
-                className="pointer-events-none absolute inset-0 z-20 h-full w-full"
-                fill="none"
-              >
-                <line
-                  x1="116"
-                  y1="62"
-                  x2="184"
-                  y2="62"
-                  stroke={
-                    focusedMeasure === "cuello" || measurements.cuello
-                      ? "currentColor"
-                      : "rgba(128,128,140,0.55)"
-                  }
-                  strokeWidth="1.3"
-                  strokeDasharray="3 3"
-                />
-                <line
-                  x1="78"
-                  y1="176"
-                  x2="222"
-                  y2="176"
-                  stroke={
-                    focusedMeasure === "pecho" || measurements.pecho
-                      ? "currentColor"
-                      : "rgba(128,128,140,0.55)"
-                  }
-                  strokeWidth="1.3"
-                  strokeDasharray="3 3"
-                />
-                <line
-                  x1="60"
-                  y1="92"
-                  x2="44"
-                  y2="342"
-                  stroke={
-                    focusedMeasure === "manga" || measurements.manga
-                      ? "currentColor"
-                      : "rgba(128,128,140,0.55)"
-                  }
-                  strokeWidth="1.3"
-                  strokeDasharray="3 3"
-                />
-                <line
-                  x1="150"
-                  y1="72"
-                  x2="150"
-                  y2="360"
-                  stroke={
-                    focusedMeasure === "largo" || measurements.largo
-                      ? "currentColor"
-                      : "rgba(128,128,140,0.42)"
-                  }
-                  strokeWidth="1.2"
-                  strokeDasharray="3 3"
-                />
-              </svg>
-            )}
+            {/* 360° Drag Hint Pill */}
+            <div className="liquid-glass pointer-events-none absolute bottom-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-[#111113]/75 sm:bottom-4 sm:left-4 dark:text-white/75">
+              <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Arrastrá para rotar 360°</span>
+            </div>
           </motion.div>
         )}
 
@@ -399,7 +224,7 @@ export function StudioShirtStage({
         )}
       </AnimatePresence>
 
-      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts */}
+      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts over the 3D Garment */}
       <AnimatePresence>
         {step === 4 && (
           <motion.div
