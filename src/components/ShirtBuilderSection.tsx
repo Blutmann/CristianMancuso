@@ -211,7 +211,7 @@ export function ShirtBuilderSection() {
 
           <nav
             aria-label="Pasos del configurador"
-            className="liquid-glass inline-flex w-full items-center gap-1 overflow-x-auto rounded-full p-1 lg:w-auto"
+            className="liquid-glass scrollbar-none inline-flex w-full items-center gap-1 overflow-x-auto rounded-full p-1 lg:w-auto"
           >
             {STEPS.map((item) => {
               const isActive = step === item.id;
@@ -306,7 +306,7 @@ export function ShirtBuilderSection() {
                     transition={{ duration: 0.2 }}
                     className="flex flex-col gap-2.5"
                   >
-                    <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
+                    <div className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5">
                       {BUILDER_CATEGORIES.map((cat) => {
                         const active = fabricCategory === cat.id;
                         return (
@@ -330,7 +330,7 @@ export function ShirtBuilderSection() {
                             className={`cursor-pointer min-h-[32px] shrink-0 rounded-full px-3 text-[11px] font-medium transition-colors ${
                               active
                                 ? "bg-[#111113] text-white dark:bg-white dark:text-[#090B10]"
-                                : "border border-black/12 bg-black/[0.03] text-[#111113]/75 hover:bg-black/[0.08] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/70 dark:hover:bg-white/[0.1] dark:hover:text-white"
+                                : "text-[#111113]/65 hover:text-[#111113] dark:text-white/65 dark:hover:text-white"
                             }`}
                           >
                             {cat.label}
@@ -339,10 +339,11 @@ export function ShirtBuilderSection() {
                       })}
                     </div>
 
+                    {/* Boxless floating fabric swatches directly on the single Liquid Glass dock */}
                     <div
                       role="listbox"
                       aria-label="Selector de telas"
-                      className="flex items-center gap-2.5 overflow-x-auto py-1"
+                      className="scrollbar-none flex items-center gap-5 overflow-x-auto py-1"
                     >
                       {visibleFabrics.map((shirt) => {
                         const isSelected = shirt.id === selectedShirt.id;
@@ -354,19 +355,23 @@ export function ShirtBuilderSection() {
                             aria-selected={isSelected}
                             onClick={() => setBuilderShirtId(shirt.id)}
                             title={`${shirt.name} (${shirt.refCode})`}
-                            className={`cursor-pointer group relative flex shrink-0 items-center gap-2.5 rounded-xl p-1.5 pr-3 text-left transition-all ${
+                            className={`cursor-pointer group relative flex shrink-0 items-center gap-2.5 text-left transition-opacity ${
                               isSelected
-                                ? "bg-[#111113]/10 ring-1 ring-[#111113] dark:bg-white/15 dark:ring-white/70"
-                                : "bg-black/[0.03] ring-1 ring-black/10 hover:bg-black/[0.07] dark:bg-white/[0.04] dark:ring-white/10 dark:hover:bg-white/[0.09]"
+                                ? "opacity-100"
+                                : "opacity-65 hover:opacity-100"
                             }`}
                           >
                             <span
                               aria-hidden="true"
-                              className="block h-10 w-10 shrink-0 rounded-lg border border-black/15 shadow-inner dark:border-white/25"
+                              className={`block h-11 w-11 shrink-0 rounded-xl shadow-inner transition-all ${
+                                isSelected
+                                  ? "ring-2 ring-[#111113] ring-offset-2 ring-offset-[#F7F6F3] dark:ring-white dark:ring-offset-[#0B0B0E]"
+                                  : "ring-1 ring-black/15 group-hover:scale-105 dark:ring-white/25"
+                              }`}
                               style={getSwatchStyle(shirt)}
                             />
                             <span className="flex flex-col">
-                              <span className="max-w-[115px] truncate text-xs font-medium text-[#111113] dark:text-white">
+                              <span className="max-w-[118px] truncate text-xs font-medium text-[#111113] dark:text-white">
                                 {shirt.name}
                               </span>
                               <span className="font-mono text-[10px] text-[#111113]/55 dark:text-white/55">

@@ -103,7 +103,7 @@ export function StudioShirtStage({
                 : { type: "spring", stiffness: 140, damping: 22 }
             }
             style={{ transformStyle: "preserve-3d" }}
-            className="relative flex aspect-[3/4] h-[94%] max-h-[500px] max-w-full items-center justify-center select-none"
+            className="relative flex aspect-[3/4] h-[88%] max-h-[470px] max-w-full flex-col items-center justify-center pb-5 select-none"
           >
             <AnimatePresence mode="sync">
               <motion.img
@@ -115,9 +115,15 @@ export function StudioShirtStage({
                 animate={{ opacity: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
                 transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
+                className="pointer-events-none absolute inset-x-0 top-0 bottom-5 h-[calc(100%-20px)] w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
               />
             </AnimatePresence>
+
+            {/* Soft Elliptical Floor Shadow giving real air-suspended depth */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute bottom-0 left-1/2 h-4 w-44 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-xl dark:bg-black dark:opacity-55"
+            />
 
             {/* Step 4 tailored measurement lines anchored to the garment silhouette */}
             {step === 4 && (
