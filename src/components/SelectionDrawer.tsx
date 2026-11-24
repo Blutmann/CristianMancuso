@@ -87,7 +87,7 @@ export function SelectionDrawer() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex h-full w-full max-w-md flex-col border-l border-white/[0.1] bg-obsidian text-primary shadow-[0_0_80px_rgba(0,0,0,0.8)]"
+            className="liquid-glass-active flex h-full w-full max-w-md flex-col border-l border-white/20 text-white"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/[0.08] px-6 py-5">

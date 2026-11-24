@@ -205,29 +205,10 @@ export function Hero() {
       ref={sectionRef}
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative min-h-[92svh] w-full overflow-hidden bg-[#0B0B0E] pt-32 pb-16 sm:pt-36 sm:pb-20 lg:pt-40 flex flex-col justify-center"
+      className="relative min-h-[90svh] w-full overflow-hidden bg-transparent pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 flex flex-col justify-center"
     >
-      {/* Living Liquid Ambient Light Orbs (Monochrome Silver & Graphite) */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div
-          className="animate-orb-slow absolute -top-24 right-[4%] h-[560px] w-[560px] rounded-full opacity-30 blur-[140px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(255,255,255,0.22) 0%, rgba(161,161,170,0.08) 45%, rgba(11,11,14,0) 72%)",
-          }}
-        />
-        <div
-          className="animate-orb-reverse absolute bottom-[-16%] left-[-8%] h-[480px] w-[480px] rounded-full opacity-25 blur-[130px]"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(214,195,165,0.22) 0%, rgba(11,11,14,0) 70%)",
-          }}
-        />
-        <div className="absolute inset-0 atelier-grain opacity-60" />
-      </div>
-
       {/* Main Editorial Split */}
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12 xl:pr-24">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-12">
           {/* Left Column: Clean Editorial Typography */}
           <div className="lg:col-span-7 flex flex-col items-start">
