@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, ChevronDown, ShoppingBag } from "lucide-react";
 import {
@@ -17,14 +18,13 @@ import {
 } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
 import { useMotion } from "@/context/MotionContext";
-import { ShirtArtwork } from "@/components/ShirtArtwork";
 
 const FILTER_OPTIONS: { id: FabricCategoryId | null; label: string }[] = [
   { id: null, label: "Todas" },
   { id: "urbano", label: "Algodón 100%" },
-  { id: "pima", label: "Algodón Pima Peruano" },
-  { id: "italiano", label: "Algodón Italiano" },
-  { id: "donna", label: "Mancuso Donna" },
+  { id: "pima", label: "Pima Peruano" },
+  { id: "italiano", label: "Italiano" },
+  { id: "donna", label: "Donna" },
 ];
 
 const CURATED_IDS = new Set([
@@ -75,36 +75,36 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
   };
 
   return (
-    <article className="group liquid-glass flex flex-col overflow-hidden rounded-3xl text-white transition-all duration-300 hover:border-white/28 hover:bg-white/[0.075]">
-      {/* Boxless Floating Garment Stage with Soft Ambient Halo */}
-      <div className="relative aspect-[4/4.05] w-full overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-6 rounded-full opacity-45 blur-3xl"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(11,11,14,0) 72%)",
-          }}
-        />
-        <div
-          className={`relative z-10 h-full w-full p-2 ${
+    <article className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-white transition-all duration-300 hover:border-white/28 hover:bg-white/[0.075]">
+      {/* Compact Photorealistic Studio Stage (h-40 = 160px) */}
+      <div className="relative h-40 w-full overflow-hidden bg-[#09090D]">
+        <Image
+          src={shirt.studioImage}
+          alt={`${shirt.name} — ${shirt.composition}`}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+          className={`object-contain px-3 pt-2 ${
             isMotionPaused
               ? ""
-              : "transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+              : "transition-transform duration-500 ease-out group-hover:scale-[1.06]"
           }`}
-        >
-          <ShirtArtwork shirt={shirt} uidPrefix="catalog" />
-        </div>
+        />
 
-        {/* Minimal Floating Tags */}
-        <div className="pointer-events-none absolute inset-x-4 top-4 z-20 flex items-start justify-between gap-2">
-          <span className="rounded-full bg-black/50 px-2.5 py-1 font-mono text-[10px] text-white/85 backdrop-blur-md">
+        {/* Soft bottom fade into card glass */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#09090D]/80 to-transparent"
+        />
+
+        {/* Floating Ref & Badge */}
+        <div className="pointer-events-none absolute inset-x-2.5 top-2.5 z-10 flex items-start justify-between gap-1.5">
+          <span className="rounded-full bg-black/55 px-2 py-0.5 font-mono text-[9.5px] text-white/85 backdrop-blur-md">
             {shirt.refCode}
           </span>
 
           {shirt.badge && (
             <span
-              className={`rounded-full px-2.5 py-1 text-[10px] font-semibold tracking-[0.08em] uppercase ${getBadgeStyle(
+              className={`rounded-full px-2 py-0.5 text-[9.5px] font-semibold tracking-[0.06em] uppercase ${getBadgeStyle(
                 shirt.badge
               )}`}
             >
@@ -114,41 +114,38 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
         </div>
       </div>
 
-      {/* Card Body (Uniform p-5, No Redundant Nested Borders) */}
-      <div className="flex flex-1 flex-col justify-between p-5">
+      {/* Compact Card Body (p-4) */}
+      <div className="flex flex-1 flex-col justify-between p-4">
         <div>
-          <p className="text-xs font-medium text-white/55">
+          <p className="text-[11px] font-medium text-white/55">
             {shirt.fabricLabel}
           </p>
 
-          <h3 className="mt-1 font-display text-lg font-bold leading-snug tracking-[-0.02em] text-white">
+          <h3 className="mt-0.5 truncate font-display text-base font-bold leading-snug tracking-[-0.02em] text-white">
             {shirt.name}
           </h3>
 
-          <div className="mt-2.5 flex items-baseline gap-2">
-            <span className="text-lg font-semibold text-white tabular-nums">
+          <div className="mt-1.5 flex items-baseline gap-2">
+            <span className="text-base font-semibold text-white tabular-nums">
               {formattedPrice}
             </span>
             {formattedCompare && (
-              <span className="text-xs text-muted line-through tabular-nums">
+              <span className="text-[11px] text-muted line-through tabular-nums">
                 {formattedCompare}
               </span>
             )}
           </div>
 
-          <p className="mt-0.5 text-xs text-muted">
+          <p className="mt-0.5 truncate text-[11px] text-muted">
             {currency === "ARS"
-              ? `3 cuotas sin interés de ARS $${installmentArs.toLocaleString("es-AR")}`
+              ? `3 cuotas s/i de ARS $${installmentArs.toLocaleString("es-AR")}`
               : "3 cuotas sin interés en ARS"}
           </p>
 
-          {/* Translucent Glass Commercial Size Selector — 1 Single Row */}
-          <div className="mt-4">
-            <span className="block text-[11px] font-medium text-white/60">
-              Talle comercial
-            </span>
+          {/* Commercial Size Selector — 1 Single Row */}
+          <div className="mt-3">
             <div
-              className={`mt-2 grid gap-1.5 ${
+              className={`grid gap-1 ${
                 shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
               }`}
             >
@@ -160,7 +157,7 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-xl text-xs font-medium transition-all ${
+                    className={`cursor-pointer flex min-h-[38px] w-full items-center justify-center rounded-lg text-[11px] font-medium transition-all ${
                       active
                         ? "bg-white text-[#07080B] font-semibold shadow-sm"
                         : "bg-white/[0.06] text-white/80 border border-white/12 hover:bg-white/[0.12] hover:text-white"
@@ -174,13 +171,13 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
           </div>
         </div>
 
-        {/* Crystalline White Primary CTA + Clean 1-Line Bespoke Shortcut */}
-        <div className="mt-5 space-y-2 pt-2">
+        {/* Primary CTA + Compact Bespoke Link */}
+        <div className="mt-3.5 space-y-1.5">
           <button
             id={`add-cart-btn-${shirt.id}`}
             type="button"
             onClick={handleAddDirect}
-            className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-xs font-semibold tracking-[0.04em] uppercase transition-all ${
+            className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full px-4 text-[11px] font-semibold tracking-[0.04em] uppercase transition-all ${
               justAdded
                 ? "bg-white/20 text-white border border-white/35"
                 : "bg-white text-[#07080B] hover:bg-white/90"
@@ -188,7 +185,7 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
           >
             {justAdded ? (
               <>
-                <Check className="h-4 w-4" aria-hidden="true" />
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Agregada</span>
               </>
             ) : (
@@ -202,9 +199,9 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
           <button
             type="button"
             onClick={() => goToBuilderWithShirt(shirt.id)}
-            className="cursor-pointer inline-flex min-h-[44px] w-full items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-white/65 transition-colors hover:bg-white/[0.06] hover:text-white"
+            className="cursor-pointer inline-flex min-h-[36px] w-full items-center justify-center gap-1 rounded-full px-2 text-[11px] font-medium whitespace-nowrap text-white/65 transition-colors hover:bg-white/[0.06] hover:text-white"
           >
-            <span>¿La querés a medida? Armala sin cargo</span>
+            <span>¿A medida? Armala sin cargo</span>
             <ArrowRight className="h-3 w-3 shrink-0" aria-hidden="true" />
           </button>
         </div>
@@ -232,41 +229,37 @@ export function CatalogSection() {
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full scroll-mt-24 bg-transparent text-white py-16 lg:py-20"
+      className="relative w-full scroll-mt-20 bg-transparent py-10 text-white lg:py-12"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12 xl:pr-24">
-        {/* Header */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-xl">
-            <div className="mb-3 flex items-center gap-3">
-              <span aria-hidden="true" className="h-[1px] w-7 bg-white/35" />
-              <span className="text-xs font-medium tracking-[0.2em] text-white/70 uppercase">
-                Entrega inmediata
-              </span>
+        {/* Compact Header Row */}
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              <h2
+                id="coleccion-heading"
+                className="font-display text-[clamp(1.75rem,3vw,2.5rem)] font-bold leading-[1.05] tracking-[-0.03em] text-white"
+              >
+                Listas para enviar
+              </h2>
+              <p className="text-sm text-muted">
+                Elegí tu talle comercial o pedila a medida sin cargo.
+              </p>
             </div>
-            <h2
-              id="coleccion-heading"
-              className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-white"
-            >
-              Listas para enviar
-            </h2>
-            <p className="mt-3 text-base text-muted">
-              Elegí tu talle comercial o pedila a medida sin cargo.
-            </p>
           </div>
 
           {/* Liquid Glass ARS / USD Toggle */}
           <div
             role="radiogroup"
             aria-label="Moneda"
-            className="liquid-glass inline-flex self-start lg:self-end items-center rounded-full p-1"
+            className="liquid-glass inline-flex self-start items-center rounded-full p-1 lg:self-end"
           >
             <button
               type="button"
               role="radio"
               aria-checked={currency === "ARS"}
               onClick={() => setCurrency("ARS")}
-              className={`cursor-pointer min-h-[44px] rounded-full px-4 text-xs font-semibold transition-colors ${
+              className={`cursor-pointer min-h-[38px] rounded-full px-3.5 text-xs font-semibold transition-colors ${
                 currency === "ARS"
                   ? "bg-white text-[#0B0B0E]"
                   : "text-white/70 hover:text-white"
@@ -279,7 +272,7 @@ export function CatalogSection() {
               role="radio"
               aria-checked={currency === "USD"}
               onClick={() => setCurrency("USD")}
-              className={`cursor-pointer min-h-[44px] rounded-full px-4 text-xs font-semibold transition-colors ${
+              className={`cursor-pointer min-h-[38px] rounded-full px-3.5 text-xs font-semibold transition-colors ${
                 currency === "USD"
                   ? "bg-white text-[#0B0B0E]"
                   : "text-white/70 hover:text-white"
@@ -290,12 +283,12 @@ export function CatalogSection() {
           </div>
         </div>
 
-        {/* Category Filter Pills */}
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 py-3">
+        {/* Compact Filter Bar */}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div
             role="tablist"
             aria-label="Filtrar por gama de tela"
-            className="flex flex-wrap items-center gap-2"
+            className="flex flex-wrap items-center gap-1.5"
           >
             {FILTER_OPTIONS.map((option) => {
               const isActive = selectedFabric === option.id;
@@ -307,7 +300,7 @@ export function CatalogSection() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setSelectedFabric(option.id)}
-                  className={`cursor-pointer relative min-h-[44px] rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
+                  className={`cursor-pointer relative min-h-[38px] rounded-full px-3.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 ${
                     isActive
                       ? "text-[#0B0B0E] font-semibold"
                       : "bg-white/[0.05] text-white/70 border border-white/10 hover:bg-white/[0.1] hover:text-white"
@@ -337,9 +330,9 @@ export function CatalogSection() {
           </span>
         </div>
 
-        {/* Curated Grid */}
+        {/* 4-Column Compact Grid (fits 100% in 1 desktop viewport) */}
         {visibleShirts.length === 0 ? (
-          <div className="liquid-glass mt-10 rounded-3xl p-10 text-center">
+          <div className="liquid-glass mt-6 rounded-2xl p-8 text-center">
             <p className="text-sm text-muted">No hay telas en esta gama.</p>
             <button
               type="button"
@@ -350,7 +343,7 @@ export function CatalogSection() {
             </button>
           </div>
         ) : (
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {visibleShirts.map((shirt) => (
               <CommercialShirtCard key={shirt.id} shirt={shirt} />
             ))}
@@ -359,12 +352,12 @@ export function CatalogSection() {
 
         {/* Discreet Liquid Glass Expand Toggle */}
         {!selectedFabric && (
-          <div className="mt-10 flex justify-center">
+          <div className="mt-5 flex justify-center">
             <button
               id="catalog-toggle-all-btn"
               type="button"
               onClick={() => setShowAll((prev) => !prev)}
-              className="cursor-pointer liquid-glass inline-flex min-h-[44px] items-center gap-2 rounded-full px-6 py-2.5 text-xs font-semibold tracking-[0.04em] text-white transition-all hover:bg-white/[0.12]"
+              className="cursor-pointer liquid-glass inline-flex min-h-[40px] items-center gap-2 rounded-full px-5 py-2 text-xs font-semibold tracking-[0.04em] text-white transition-all hover:bg-white/[0.12]"
             >
               <span>
                 {showAll

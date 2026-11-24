@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Check,
-  Rotate3d,
   Ruler,
   ShoppingBag,
 } from "lucide-react";
@@ -29,18 +27,7 @@ import {
 } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
 import { useMotion } from "@/context/MotionContext";
-
-const Shirt3DCanvas = dynamic(() => import("@/components/Shirt3DCanvas"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="liquid-glass flex items-center gap-3 rounded-full px-5 py-2.5 text-xs uppercase tracking-[0.2em] text-white/75">
-        <span className="h-2 w-2 animate-pulse rounded-full bg-white/80" />
-        Cargando taller 3D…
-      </div>
-    </div>
-  ),
-});
+import { StudioShirtStage } from "@/components/StudioShirtStage";
 
 type BuilderStep = 1 | 2 | 3 | 4;
 type MeasureKey = keyof BespokeMeasurements;
@@ -232,8 +219,6 @@ export function ShirtBuilderSection() {
     window.setTimeout(() => setJustAdded(false), 1800);
   };
 
-  const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
-
   const nextStepLabel: Record<1 | 2 | 3, string> = {
     1: "Confirmar tela",
     2: "Confirmar cuello",
@@ -297,7 +282,7 @@ export function ShirtBuilderSection() {
                 >
                   {isActive && (
                     <motion.span
-                      layoutId="v10BuilderStepPill"
+                      layoutId="v11BuilderStepPill"
                       transition={
                         isMotionPaused
                           ? { duration: 0 }
@@ -322,38 +307,22 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: WebGL 3D Dress Shirt filling available viewport height */}
+        {/* CENTER STAGE: Photorealistic Studio Dress Shirt with 3D Tilt & Per-Step Macro Zoom */}
         <div className="relative flex min-h-[340px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[390px] lg:min-h-0">
-          {/* Subtle studio pedestal halo behind the 3D garment */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 48%, rgba(255,255,255,0.08) 0%, rgba(148,163,184,0.03) 42%, transparent 72%)",
-            }}
+          <StudioShirtStage
+            shirt={selectedShirt}
+            collar={collar}
+            buttonId={buttonId}
+            monogramDisplay={monogramDisplay}
+            monogramPlacement={monogramPlacement}
+            step={step}
+            measurements={measurements}
+            focusedMeasure={focusedMeasure}
+            isMotionPaused={isMotionPaused}
           />
 
-          <div className="relative h-full w-full min-h-[340px] sm:min-h-[390px] lg:min-h-0">
-            <Shirt3DCanvas
-              shirt={selectedShirt}
-              collar={collar}
-              buttonId={buttonId}
-              monogramDisplay={monogramDisplay}
-              monogramPlacement={monogramPlacement}
-              step={step}
-              isMotionPaused={isMotionPaused}
-            />
-          </div>
-
-          {/* 360° Interaction Hint Pill */}
-          <div className="liquid-glass pointer-events-none absolute bottom-3 left-3 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-white/75 sm:bottom-4 sm:left-4">
-            <Rotate3d className="h-3.5 w-3.5 text-white/80" aria-hidden="true" />
-            <span>Arrastrá para rotar 360°</span>
-          </div>
-
           {/* Active detail pill (Collar / Button / Monogram) */}
-          <div className="liquid-glass pointer-events-none absolute right-3 top-3 hidden items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] text-white/80 sm:flex">
+          <div className="liquid-glass pointer-events-none absolute right-3 top-3 z-30 hidden items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] text-white/80 sm:flex">
             <span>Cuello {collar}</span>
             <span aria-hidden="true" className="text-white/25">
               ·
@@ -370,63 +339,6 @@ export function ShirtBuilderSection() {
               </>
             )}
           </div>
-
-          {/* Step 4 floating cm measurement callouts around the 3D garment */}
-          <AnimatePresence>
-            {step === 4 && (
-              <motion.div
-                initial={isMotionPaused ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="pointer-events-none absolute inset-0"
-              >
-                {(
-                  [
-                    {
-                      key: "cuello",
-                      label: "Cuello",
-                      pos: "left-1/2 top-4 -translate-x-1/2",
-                    },
-                    {
-                      key: "pecho",
-                      label: "Pecho",
-                      pos: "right-4 top-1/2 -translate-y-1/2 sm:right-10",
-                    },
-                    {
-                      key: "manga",
-                      label: "Manga",
-                      pos: "left-4 top-[44%] -translate-y-1/2 sm:left-10",
-                    },
-                    {
-                      key: "largo",
-                      label: "Largo",
-                      pos: "bottom-4 right-4 sm:right-10",
-                    },
-                  ] as const
-                ).map((item) => {
-                  const active =
-                    focusedMeasure === item.key ||
-                    Boolean(measurements[item.key]);
-                  return (
-                    <div
-                      key={item.key}
-                      className={`liquid-glass absolute rounded-full px-3 py-1 text-[11px] transition-all ${item.pos} ${
-                        active
-                          ? "border-white/50 text-white shadow-[0_0_20px_rgba(255,255,255,0.18)]"
-                          : "text-white/65"
-                      }`}
-                    >
-                      <span className="mr-1.5 text-white/60">{item.label}</span>
-                      <span className="font-mono text-white">
-                        {formatLiveCm(measurements[item.key])}
-                      </span>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
