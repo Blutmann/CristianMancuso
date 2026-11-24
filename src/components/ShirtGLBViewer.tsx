@@ -212,11 +212,25 @@ function Clo3DShirtModel({
       const materials = Array.isArray(child.material)
         ? child.material
         : [child.material];
-      const isButtonMesh = child.name.toLowerCase().includes("button");
+      const meshName = child.name.toLowerCase();
+      const isButtonMesh = meshName.includes("button");
+      const isStitchMesh =
+        meshName.includes("topstitch") ||
+        meshName.includes("bindedtrim") ||
+        meshName.includes("bartack");
 
       materials.forEach((mat) => {
         if (!(mat instanceof THREE.MeshStandardMaterial)) return;
-        const isButtonMat = isButtonMesh || mat.name === "Shirt_1826";
+        const matName = mat.name.toLowerCase();
+        const isButtonMat = isButtonMesh || matName.includes("button");
+        const isStitchMat =
+          isStitchMesh ||
+          matName.includes("bartack") ||
+          matName.includes("placket") ||
+          matName.includes("yoke") ||
+          matName.includes("collar") ||
+          matName.includes("cuff") ||
+          matName.includes("ss_");
 
         if (isButtonMat) {
           mat.map = null;
@@ -224,7 +238,14 @@ function Clo3DShirtModel({
           mat.roughness = buttonId === "Nácar blanco" ? 0.18 : 0.42;
           mat.metalness = buttonId === "Nácar blanco" ? 0.16 : 0.04;
           mat.needsUpdate = true;
+        } else if (isStitchMat) {
+          mat.map = null;
+          mat.color.set(shirt.secondaryHex);
+          mat.roughness = 0.72;
+          mat.metalness = 0.04;
+          mat.needsUpdate = true;
         } else {
+          // Main garment cloth (Cloth_mesh / solid_2580)
           mat.map = fabricTexture;
           mat.color.set("#FFFFFF");
           mat.roughness = fabricRoughness;
