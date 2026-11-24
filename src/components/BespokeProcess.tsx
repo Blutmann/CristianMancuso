@@ -114,27 +114,27 @@ export function BespokeProcess() {
   const whatsappUrl = buildWhatsAppUrl(currentModality.whatsappMessage);
 
   const strokeFor = (id: MeasureId) =>
-    activeMeasure === id ? "#C8A25A" : "rgba(255, 255, 255, 0.25)";
+    activeMeasure === id ? "#FFFFFF" : "rgba(255, 255, 255, 0.24)";
   const widthFor = (id: MeasureId) => (activeMeasure === id ? 2.4 : 1.2);
 
   return (
     <section
       id="como-medir"
       aria-labelledby="como-medir-heading"
-      className="relative w-full scroll-mt-24 border-t border-white/10 bg-[#111113] text-[#F5F5F7] py-20 sm:py-24 lg:py-28"
+      className="relative w-full scroll-mt-24 bg-[#0B0B0E] text-white py-20 sm:py-24 lg:py-28"
     >
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
         {/* Concise Header */}
         <div className="max-w-xl">
           <div className="mb-3 flex items-center gap-3">
-            <span aria-hidden="true" className="h-[1px] w-7 bg-gold" />
-            <span className="text-xs font-medium tracking-[0.18em] text-gold uppercase">
+            <span aria-hidden="true" className="h-[1px] w-7 bg-white/35" />
+            <span className="text-xs font-medium tracking-[0.2em] text-white/70 uppercase">
               Guía de medidas
             </span>
           </div>
           <h2
             id="como-medir-heading"
-            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#F5F5F7]"
+            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-white"
           >
             ¿Cómo tomar tus medidas?
           </h2>
@@ -149,7 +149,7 @@ export function BespokeProcess() {
           <div
             role="tablist"
             aria-label="Modalidad de toma de medidas"
-            className="inline-flex flex-col sm:flex-row w-full sm:w-auto gap-1.5 rounded-2xl sm:rounded-full border border-white/12 bg-[#1B1B1F] p-1"
+            className="liquid-glass inline-flex flex-col sm:flex-row w-full sm:w-auto gap-1.5 rounded-2xl sm:rounded-full p-1"
           >
             {(
               [
@@ -177,8 +177,8 @@ export function BespokeProcess() {
                   onClick={() => setModality(tab.id)}
                   className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl sm:rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
                     isActive
-                      ? "text-[#111113]"
-                      : "text-muted hover:text-[#F5F5F7]"
+                      ? "text-[#0B0B0E]"
+                      : "text-white/70 hover:text-white"
                   }`}
                 >
                   {isActive && (
@@ -191,7 +191,7 @@ export function BespokeProcess() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-xl sm:rounded-full bg-[#F5F5F7]"
+                      className="absolute inset-0 rounded-xl sm:rounded-full bg-white"
                     />
                   )}
                   <Icon
@@ -213,14 +213,14 @@ export function BespokeProcess() {
               {currentModality.steps.map((step) => (
                 <li
                   key={`${modality}-${step.number}`}
-                  className="rounded-2xl border border-white/10 bg-[#1B1B1F] p-5"
+                  className="liquid-glass rounded-2xl p-5"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gold/35 bg-[#111113] text-xs font-semibold text-gold">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-xs font-semibold text-white">
                       {step.number}
                     </span>
                     <div>
-                      <h3 className="font-display text-lg font-bold text-[#F5F5F7]">
+                      <h3 className="font-display text-lg font-bold text-white">
                         {step.title}
                       </h3>
                       <p className="mt-1 text-sm text-muted">
@@ -238,7 +238,7 @@ export function BespokeProcess() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-gold px-7 py-3 text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold-hover"
+                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-white px-7 py-3 text-xs font-semibold tracking-[0.06em] text-[#0B0B0E] uppercase shadow-[0_12px_32px_rgba(255,255,255,0.14)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Coordinar medidas por WhatsApp</span>
@@ -246,8 +246,8 @@ export function BespokeProcess() {
             </div>
           </div>
 
-          {/* Right: Unified Dark Interactive Long-Sleeve 4-Measurement Schematic */}
-          <div className="lg:col-span-6 rounded-3xl border border-white/10 bg-[#1B1B1F] p-5 sm:p-6">
+          {/* Right: Liquid Glass Interactive Long-Sleeve 4-Measurement Schematic */}
+          <div className="liquid-glass lg:col-span-6 rounded-3xl p-5 sm:p-6">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {MEASURE_ORDER.map((id) => {
                 const m = MEASURES[id];
@@ -261,10 +261,10 @@ export function BespokeProcess() {
                     onFocus={() => setActiveMeasure(id)}
                     onClick={() => setActiveMeasure(id)}
                     aria-pressed={isActive}
-                    className={`cursor-pointer min-h-[44px] rounded-xl border px-3 py-2 text-center text-xs font-semibold transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-xl px-3 py-2 text-center text-xs font-semibold transition-all ${
                       isActive
-                        ? "border-gold bg-gold text-[#111113]"
-                        : "border-white/12 bg-[#141417] text-muted hover:border-white/35 hover:text-[#F5F5F7]"
+                        ? "bg-white text-[#0B0B0E]"
+                        : "bg-white/[0.06] text-white/75 border border-white/10 hover:bg-white/[0.12] hover:text-white"
                     }`}
                   >
                     {m.label}
@@ -273,7 +273,7 @@ export function BespokeProcess() {
               })}
             </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#141417] px-3 py-4">
+            <div className="mt-4 overflow-hidden rounded-2xl bg-black/25 px-3 py-4">
               <svg
                 viewBox="0 0 420 355"
                 className="mx-auto h-auto w-full max-w-[375px]"

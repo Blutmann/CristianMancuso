@@ -1,47 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  /* V5 Palette: Carbón Profundo (#111113) + Blanco Tiza (#FAFAFA) + Dorado Champagne (#C8A25A) */
-  --bg-black: #111113;
-  --bg-navy: #111113;
-  --bg-obsidian: #111113;
-  --surface-card-dark: #18181B;
-  --surface-elevated: #18181B;
-  --surface-border: rgba(255, 255, 255, 0.10);
+  /* V7 Palette: Liquid Glass Atelier — Deep Obsidian (#0B0B0E) + Crystalline White (#FFFFFF) */
+  --bg-black: #0B0B0E;
+  --bg-navy: #0B0B0E;
+  --bg-obsidian: #0B0B0E;
+  --surface-card-dark: rgba(255, 255, 255, 0.05);
+  --surface-elevated: #141418;
+  --surface-border: rgba(255, 255, 255, 0.14);
 
-  --bg-white: #FAFAFA;
-  --bg-light: #FAFAFA;
-  --bg-ivory: #FAFAFA;
+  --bg-white: #FFFFFF;
+  --bg-light: #FFFFFF;
+  --bg-ivory: #FFFFFF;
   --bg-pearl: #F4F4F5;
   --surface-card-light: #FFFFFF;
   --border-light: #E4E4E7;
 
   --text-light: #FAFAFA;
   --text-primary: #FAFAFA;
-  --text-dark: #111113;
+  --text-dark: #0B0B0E;
   --text-muted: #A1A1AA;
 
-  /* Dorado Champagne sastrero */
-  --accent-gold: #C8A25A;
-  --accent-gold-hover: #D4B26E;
-  --stitch-accent: #C8A25A;
-  --accent-bronze: #C8A25A;
-  --accent-champagne: #C8A25A;
-  --accent-cyan: #C8A25A;
+  /* Subtle warm champagne reserved ONLY for hairline embroidery / fine thread */
+  --accent-gold: #D6C3A5;
+  --accent-gold-hover: #E5D6BE;
+  --stitch-accent: #D6C3A5;
+  --accent-bronze: #D6C3A5;
+  --accent-champagne: #D6C3A5;
+  --accent-cyan: #FFFFFF;
 }
 
 @theme inline {
   --color-navy: var(--bg-black);
   --color-obsidian: var(--bg-black);
-  --color-elevated: var(--surface-card-dark);
+  --color-elevated: var(--surface-elevated);
   --color-ivory: var(--bg-white);
   --color-pearl: var(--bg-pearl);
   --color-primary: var(--text-primary);
   --color-muted: var(--text-muted);
-  --color-cyan: var(--accent-gold);
-  --color-champagne: var(--accent-gold);
-  --color-bronze: var(--accent-gold);
-  --color-stitch: var(--accent-gold);
+  --color-cyan: var(--accent-cyan);
+  --color-champagne: var(--accent-champagne);
+  --color-bronze: var(--accent-bronze);
+  --color-stitch: var(--stitch-accent);
   --color-gold: var(--accent-gold);
   --color-gold-hover: var(--accent-gold-hover);
 
@@ -86,17 +86,55 @@ html.lenis body {
 
 /* Selection styling */
 ::selection {
-  background-color: rgba(200, 162, 90, 0.3);
-  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
 }
 
-/* Elevated sartorial surface utility */
-.surface-atelier {
-  background-color: var(--surface-card-dark);
-  border: 1px solid var(--surface-border);
+/* Liquid Glass 2026 Surfaces */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 20px 50px rgba(0, 0, 0, 0.45);
 }
 
-/* Hide native scrollbars on horizontal swatch rails */
+.liquid-glass-active {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.36),
+    0 18px 44px rgba(0, 0, 0, 0.5);
+}
+
+/* Slow ambient liquid light orb drift (GPU-only) */
+@keyframes cm-orb-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(32px, -24px, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.animate-orb-slow {
+  will-change: transform;
+  animation: cm-orb-drift 16s ease-in-out infinite;
+}
+
+.animate-orb-reverse {
+  will-change: transform;
+  animation: cm-orb-drift 22s ease-in-out infinite reverse;
+}
+
+/* Hide native scrollbars */
 .scrollbar-none {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -108,7 +146,7 @@ html.lenis body {
 
 /* Subtle fine weave & film grain atmosphere */
 .atelier-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
 }
 
 /* Paused motion accessibility mode */

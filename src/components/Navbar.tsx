@@ -50,73 +50,60 @@ export function Navbar() {
         className="fixed top-0 left-0 right-0 z-[70] h-[1.5px] bg-white/10 pointer-events-none"
       >
         <div
-          className="h-full w-full origin-left bg-gold will-change-transform"
+          className="h-full w-full origin-left bg-white will-change-transform"
           style={{ transform: `scaleX(${scrollProgress})` }}
         />
       </div>
 
-      {/* Floating Capsule Header with Shirt-Cuff Double Topstitch & Mother-of-Pearl Button */}
+      {/* Liquid Glass Floating Capsule Header with Perimeter Cuff Stitch */}
       <header className="fixed top-0 inset-x-0 z-50 px-3.5 pt-3.5 sm:px-6 sm:pt-4 pointer-events-none">
         <nav
           aria-label="Navegación principal"
-          className={`pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between overflow-hidden rounded-2xl border px-4 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
-            isScrolled
-              ? "border-white/15 bg-[#111113]/92 backdrop-blur-xl shadow-[0_14px_42px_rgba(0,0,0,0.65)]"
-              : "border-white/12 bg-[#111113]/80 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
+          className={`pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between overflow-hidden rounded-2xl px-4 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
+            isScrolled ? "liquid-glass-active" : "liquid-glass"
           }`}
         >
           {/* Full 4-Sided Perimeter Interior Stitch (Shirt Cuff Detail) */}
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-1.5 rounded-xl border border-dashed border-[#C8A25A]/45"
+            className="pointer-events-none absolute inset-1.5 rounded-xl border border-dashed border-white/18"
           />
 
           {/* Brand Monogram + Decorative Cuff Buttonhole & Mother-of-Pearl Button */}
           <Link
             id="nav-brand-link"
             href="/"
-            className="group relative inline-flex items-center gap-3 rounded-xl px-1.5 py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold"
+            className="group relative inline-flex items-center gap-3 rounded-xl px-1.5 py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/60"
           >
-            {/* Cuff Buttonhole (Ojal) + Mother-of-Pearl Button */}
             <svg
               aria-hidden="true"
               viewBox="0 0 38 22"
               className="h-5 w-9 shrink-0"
             >
-              {/* Embroidered Horizontal Buttonhole */}
               <rect
                 x="1"
                 y="9"
                 width="13"
                 height="4"
                 rx="2"
-                fill="#09090B"
-                stroke="#C8A25A"
+                fill="#0B0B0E"
+                stroke="rgba(255,255,255,0.45)"
                 strokeWidth="1"
               />
-              {/* Mother-of-Pearl Button with Gold Cross-Stitch */}
               <circle
                 cx="26"
                 cy="11"
                 r="8.5"
-                fill="#F4F4F5"
-                stroke="rgba(255,255,255,0.7)"
+                fill="#FFFFFF"
+                stroke="rgba(255,255,255,0.85)"
                 strokeWidth="0.9"
-              />
-              <circle
-                cx="26"
-                cy="11"
-                r="6.2"
-                fill="none"
-                stroke="rgba(17,17,19,0.16)"
-                strokeWidth="0.7"
               />
               <line
                 x1="24"
                 y1="9"
                 x2="28"
                 y2="13"
-                stroke="#C8A25A"
+                stroke="#D6C3A5"
                 strokeWidth="1.4"
                 strokeLinecap="round"
               />
@@ -125,20 +112,20 @@ export function Navbar() {
                 y1="9"
                 x2="24"
                 y2="13"
-                stroke="#C8A25A"
+                stroke="#D6C3A5"
                 strokeWidth="1.4"
                 strokeLinecap="round"
               />
             </svg>
 
             <div className="flex items-center gap-2">
-              <span className="font-display text-xs font-bold tracking-[0.14em] text-gold">
+              <span className="font-display text-xs font-bold tracking-[0.14em] text-white">
                 CM
               </span>
               <span aria-hidden="true" className="text-white/25 text-[10px]">
                 {"//"}
               </span>
-              <span className="font-display text-[11px] sm:text-xs font-bold tracking-[0.18em] text-white uppercase leading-none">
+              <span className="font-display text-[11px] sm:text-xs font-bold tracking-[0.18em] text-white/90 uppercase leading-none">
                 Cristian Mancuso
               </span>
             </div>
@@ -155,15 +142,15 @@ export function Navbar() {
                     href={item.href}
                     className={`relative py-1 text-xs font-medium tracking-[0.08em] uppercase transition-colors duration-200 ${
                       isActive
-                        ? "text-gold"
-                        : "text-white/75 hover:text-white"
+                        ? "text-white"
+                        : "text-white/70 hover:text-white"
                     }`}
                   >
                     {item.label}
                     {isActive && (
                       <span
                         aria-hidden="true"
-                        className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-gold"
+                        className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-white"
                       />
                     )}
                   </Link>
@@ -179,14 +166,14 @@ export function Navbar() {
               type="button"
               onClick={openDrawer}
               aria-label={`Bolsa, ${totalSelectionCount} prendas`}
-              className="cursor-pointer group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-gold/40 bg-gold/[0.08] px-4 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:border-gold hover:bg-gold/15 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold"
+              className="cursor-pointer group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/20 bg-white/[0.08] px-4 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:border-white/45 hover:bg-white/[0.14] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/60"
             >
               <ShoppingBag
-                className="h-3.5 w-3.5 text-gold transition-transform duration-200 group-hover:-translate-y-0.5"
+                className="h-3.5 w-3.5 text-white/90 transition-transform duration-200 group-hover:-translate-y-0.5"
                 aria-hidden="true"
               />
               <span className="hidden sm:inline">Bolsa</span>
-              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1.5 text-[10px] font-semibold text-[#111113] tabular-nums">
+              <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1.5 text-[10px] font-semibold text-[#0B0B0E] tabular-nums">
                 {totalSelectionCount}
               </span>
             </button>

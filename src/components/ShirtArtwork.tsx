@@ -23,7 +23,6 @@ export function ShirtArtwork({
 }: ShirtArtworkProps) {
   const pid = `${uidPrefix}-${shirt.id}`;
   const isLight = Boolean(shirt.isLightFabric);
-  const stageBg = "#141417";
   const seamStroke = isLight
     ? "rgba(17, 17, 19, 0.28)"
     : "rgba(255, 255, 255, 0.22)";
@@ -175,10 +174,7 @@ export function ShirtArtwork({
         )}
       </defs>
 
-      {/* Subtle Editorial Studio Backdrop */}
-      <rect width="360" height="370" fill={stageBg} />
-
-      {/* Full Long-Sleeve Dress Shirt Silhouette */}
+      {/* Transparent backdrop so garment floats freely over ambient halo */}
       <g>
         {/* Left & Right Full Long Sleeves + Torso */}
         <path
