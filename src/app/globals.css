@@ -75,12 +75,35 @@ html.lenis body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
 }
 
+/* Kinetic Marquee (GPU transform only) */
+@keyframes cm-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.cm-marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: cm-marquee 34s linear infinite;
+}
+
+.cm-marquee-container:hover .cm-marquee-track,
+.cm-marquee-container:focus-within .cm-marquee-track {
+  animation-play-state: paused;
+}
+
 /* Paused motion accessibility mode */
 html[data-motion="paused"] *,
 html[data-motion="paused"] *::before,
 html[data-motion="paused"] *::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
+  animation-play-state: paused !important;
   transition-duration: 0.001ms !important;
   scroll-behavior: auto !important;
 }
@@ -91,6 +114,7 @@ html[data-motion="paused"] *::after {
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
+    animation-play-state: paused !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Syne, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { MotionProvider } from "@/context/MotionContext";
+import { AtelierProvider } from "@/context/AtelierContext";
 import { SmoothScrollProvider } from "@/components/SmoothScrollProvider";
 import { Preloader } from "@/components/Preloader";
 import { Navbar } from "@/components/Navbar";
@@ -45,11 +46,13 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-obsidian text-primary font-sans antialiased">
         <MotionProvider>
-          <SmoothScrollProvider>
-            <Preloader />
-            <Navbar />
-            <main>{children}</main>
-          </SmoothScrollProvider>
+          <AtelierProvider>
+            <SmoothScrollProvider>
+              <Preloader />
+              <Navbar />
+              <main>{children}</main>
+            </SmoothScrollProvider>
+          </AtelierProvider>
         </MotionProvider>
       </body>
     </html>
