@@ -232,6 +232,8 @@ function Clo3DShirtModel({
 
         if (isButtonMat) {
           mat.map = null;
+          mat.roughnessMap = null;
+          mat.metalnessMap = null;
           mat.color.set(buttonColorHex);
           mat.roughness = buttonId === "Nácar blanco" ? 0.18 : 0.42;
           mat.metalness = buttonId === "Nácar blanco" ? 0.16 : 0.04;
