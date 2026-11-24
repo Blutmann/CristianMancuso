@@ -126,24 +126,14 @@ export function BespokeProcess() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
         {/* Concise Header */}
         <div className="max-w-xl">
-          <div className="mb-3 flex items-center gap-3">
-            <span
-              aria-hidden="true"
-              className="h-[1px] w-7 bg-black/30 dark:bg-white/35"
-            />
-            <span className="text-xs font-medium tracking-[0.2em] text-muted uppercase">
-              Guía de medidas
-            </span>
-          </div>
           <h1
             id="como-medir-heading"
             className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#111113] dark:text-white"
           >
             ¿Cómo tomar tus medidas?
           </h1>
-          <p className="mt-3 text-base text-muted">
-            En nuestro atelier de Buenos Aires o guiado por WhatsApp desde
-            donde estés.
+          <p className="mt-2.5 text-sm text-muted sm:text-base">
+            En Buenos Aires presencial o en 4 medidas rápidas por WhatsApp.
           </p>
         </div>
 

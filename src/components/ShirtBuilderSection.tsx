@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Check, Ruler, ShoppingBag } from "lucide-react";
@@ -119,6 +119,8 @@ export function ShirtBuilderSection() {
   const [monogramThread, setMonogramThread] =
     useState<MonogramThreadOption>("Champagne");
   const [justAdded, setJustAdded] = useState(false);
+  const swatchTrackRef = useRef<HTMLDivElement | null>(null);
+  const swatchItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   // Preselect shirt from ?tela= query param when arriving from /coleccion
   useEffect(() => {
@@ -137,6 +139,25 @@ export function ShirtBuilderSection() {
   const foundIndex = visibleFabrics.findIndex((s) => s.id === builderShirtId);
   const activeIndex = foundIndex >= 0 ? foundIndex : 0;
   const selectedShirt = visibleFabrics[activeIndex] ?? CATALOG_SHIRTS[0];
+
+  // Auto-center the selected fabric smoothly inside the horizontal dock track
+  useEffect(() => {
+    if (step !== 1) return;
+    const track = swatchTrackRef.current;
+    const item = swatchItemRefs.current[selectedShirt.id];
+    if (!track || !item) return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      const targetLeft =
+        item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2;
+      track.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: isMotionPaused ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [selectedShirt.id, fabricCategory, step, isMotionPaused]);
 
   const monogramDisplay = formatMonogramDisplay(monogramText);
 
@@ -181,33 +202,14 @@ export function ShirtBuilderSection() {
       className="relative bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
       <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-5 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:min-h-[700px] lg:max-h-[920px] lg:px-12 lg:pt-24 lg:pb-5">
-        {/* TOP ROW: Compact title + live fabric meta on left, 4-step stepper on right */}
+        {/* TOP ROW: Clean title on left, 4-step stepper on right */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <h1
-              id="builder-heading"
-              className="font-display text-2xl font-bold tracking-[-0.025em] text-[#111113] sm:text-3xl dark:text-white"
-            >
-              Armá tu camisa
-            </h1>
-            <div className="flex items-center gap-2.5 text-xs text-[#111113]/65 dark:text-white/65">
-              <span className="font-mono text-[11px] text-[#111113]/85 dark:text-white/80">
-                {selectedShirt.refCode}
-              </span>
-              <span aria-hidden="true" className="opacity-30">
-                ·
-              </span>
-              <span className="max-w-[180px] truncate font-medium text-[#111113] sm:max-w-none dark:text-white/90">
-                {selectedShirt.name}
-              </span>
-              <span aria-hidden="true" className="opacity-30">
-                ·
-              </span>
-              <span className="font-mono text-[11px] font-semibold text-[#16233B] dark:text-white">
-                {formatFabricPrice(selectedShirt.priceArs, currency)}
-              </span>
-            </div>
-          </div>
+          <h1
+            id="builder-heading"
+            className="font-display text-2xl font-bold tracking-[-0.025em] text-[#111113] sm:text-3xl dark:text-white"
+          >
+            Armá tu camisa
+          </h1>
 
           <nav
             aria-label="Pasos del configurador"
@@ -256,7 +258,7 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Photorealistic Studio Dress Shirt & Real Macros */}
+        {/* CENTER STAGE: Photorealistic Studio Dress Shirt & Real Macros (No duplicate floating pills) */}
         <div className="relative flex min-h-[340px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[390px] lg:min-h-0">
           <StudioShirtStage
             shirt={selectedShirt}
@@ -270,25 +272,6 @@ export function ShirtBuilderSection() {
             focusedMeasure={focusedMeasure}
             isMotionPaused={isMotionPaused}
           />
-
-          {/* Active detail summary pill */}
-          <div className="liquid-glass pointer-events-none absolute right-3 top-3 z-30 hidden items-center gap-2 rounded-full px-3.5 py-1.5 text-[11px] text-[#111113]/80 sm:flex dark:text-white/80">
-            <span>Cuello {collar}</span>
-            <span aria-hidden="true" className="opacity-30">
-              ·
-            </span>
-            <span>{buttonId}</span>
-            {monogramDisplay && (
-              <>
-                <span aria-hidden="true" className="opacity-30">
-                  ·
-                </span>
-                <span className="font-mono font-semibold text-[#111113] dark:text-white">
-                  {monogramDisplay}
-                </span>
-              </>
-            )}
-          </div>
         </div>
 
         {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
@@ -304,9 +287,10 @@ export function ShirtBuilderSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
-                    className="flex flex-col gap-2.5"
+                    className="flex flex-col gap-2"
                   >
-                    <div className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5">
+                    {/* Clean Typographic Category Tabs with Active Underline (Zero Boxes) */}
+                    <div className="scrollbar-none flex items-center gap-5 overflow-x-auto border-b border-black/8 pb-1.5 dark:border-white/10">
                       {BUILDER_CATEGORIES.map((cat) => {
                         const active = fabricCategory === cat.id;
                         return (
@@ -327,29 +311,43 @@ export function ShirtBuilderSection() {
                                 setBuilderShirtId(nextList[0].id);
                               }
                             }}
-                            className={`cursor-pointer min-h-[32px] shrink-0 rounded-full px-3 text-[11px] font-medium transition-colors ${
+                            className={`cursor-pointer relative shrink-0 pb-1 text-[11px] font-medium transition-colors ${
                               active
-                                ? "bg-[#111113] text-white dark:bg-white dark:text-[#090B10]"
-                                : "text-[#111113]/65 hover:text-[#111113] dark:text-white/65 dark:hover:text-white"
+                                ? "font-semibold text-[#111113] dark:text-white"
+                                : "text-[#111113]/55 hover:text-[#111113] dark:text-white/55 dark:hover:text-white"
                             }`}
                           >
                             {cat.label}
+                            {active && (
+                              <motion.span
+                                layoutId={
+                                  isMotionPaused
+                                    ? undefined
+                                    : "builder-cat-underline"
+                                }
+                                className="absolute right-0 -bottom-[7px] left-0 h-[2px] rounded-full bg-[#111113] dark:bg-white"
+                              />
+                            )}
                           </button>
                         );
                       })}
                     </div>
 
-                    {/* Expansive Accordion Fabric Swatches (Boxless directly on Liquid Glass dock) */}
+                    {/* Centered Expansive Carousel: Active Fabric Slides Smoothly to Center */}
                     <div
+                      ref={swatchTrackRef}
                       role="listbox"
                       aria-label="Selector de telas"
-                      className="scrollbar-none flex items-center gap-3 overflow-x-auto py-1.5"
+                      className="scrollbar-none relative flex items-center gap-3.5 overflow-x-auto px-[26%] py-1.5 sm:px-[34%]"
                     >
                       {visibleFabrics.map((shirt) => {
                         const isSelected = shirt.id === selectedShirt.id;
                         return (
                           <motion.button
                             key={shirt.id}
+                            ref={(el) => {
+                              swatchItemRefs.current[shirt.id] = el;
+                            }}
                             layout
                             transition={
                               isMotionPaused
@@ -368,7 +366,7 @@ export function ShirtBuilderSection() {
                             className={`cursor-pointer group relative flex shrink-0 items-center text-left ${
                               isSelected
                                 ? "gap-3 pr-2 opacity-100"
-                                : "opacity-75 hover:opacity-100"
+                                : "opacity-65 hover:opacity-100"
                             }`}
                           >
                             <motion.span
@@ -404,7 +402,10 @@ export function ShirtBuilderSection() {
                                   </span>
                                   <span className="mt-0.5 flex items-center gap-2 font-mono text-[10px] text-[#111113]/60 dark:text-white/60">
                                     <span>{shirt.refCode}</span>
-                                    <span aria-hidden="true" className="opacity-40">
+                                    <span
+                                      aria-hidden="true"
+                                      className="opacity-40"
+                                    >
                                       ·
                                     </span>
                                     <span className="font-semibold text-[#16233B] dark:text-white/90">

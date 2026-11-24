@@ -98,11 +98,6 @@ export function Hero() {
       <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-12 xl:pr-24">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
-          <div className="mb-4 inline-flex items-center gap-2.5 rounded-full border border-black/10 bg-white/75 px-3.5 py-1.5 text-[11px] font-medium tracking-[0.14em] text-[#16233B] uppercase backdrop-blur-md dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#B08D57]" />
-            Buenos Aires · Sastrería de Autor
-          </div>
-
           <h1 className="font-display text-[clamp(2.45rem,5.2vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.035em] text-[#111113] dark:text-white">
             Tu camisa a medida,{" "}
             <span className="text-[#16233B] dark:text-white/80">
@@ -111,8 +106,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-            Elegí tela, cuello y medidas. Confección artesanal en Buenos Aires
-            con envío a todo el país y exterior.
+            Telas italianas y peruanas. Envíos a todo el país y exterior.
           </p>
 
           {/* 2 Clean Primary / Secondary CTAs */}
@@ -135,11 +129,6 @@ export function Hero() {
               <span>Armá tu camisa</span>
             </Link>
           </div>
-
-          <p className="mt-5 text-xs text-muted">
-            ✓ 3 cuotas sin interés · Envíos a Argentina, México, EE. UU. y
-            España
-          </p>
         </div>
 
         {/* Right Protagonist Transparent PNG Shirt: Magical Levitation + 3D Tilt + Scroll Parallax + Synced Floor Shadow */}

@@ -22,6 +22,7 @@ import {
 } from "@/data/catalog";
 import { useAtelier } from "@/context/AtelierContext";
 import { useMotion } from "@/context/MotionContext";
+import { TailorFabricSwatch } from "@/components/TailorFabricSwatch";
 
 function formatArsClean(amount: number): string {
   return `$${amount.toLocaleString("es-AR")}`;
@@ -29,15 +30,15 @@ function formatArsClean(amount: number): string {
 
 function getEditorialDescription(shirt: CatalogShirt): string {
   if (shirt.fabricId === "pima") {
-    return `${shirt.composition}. Hilado de fibra extra larga del valle de Piura con caída fluida, brillo satinado discreto y terminación artesanal con costura francesa.`;
+    return `${shirt.composition}. Hilado de fibra extra larga del valle de Piura con caída fluida, brillo satinado discreto y costura francesa.`;
   }
   if (shirt.fabricId === "italiano") {
-    return `${shirt.composition}. Tejido en tejedurías del norte de Italia con trama respirable, frescura natural y calce sastrero de alta duración.`;
+    return `${shirt.composition}. Tejedurías del norte de Italia con trama respirable, frescura natural y calce sastrero.`;
   }
   if (shirt.fabricId === "donna") {
-    return `${shirt.composition}. Moldería anatómica femenina diseñada en nuestro atelier de Buenos Aires con botones perlados y terminación impecable.`;
+    return `${shirt.composition}. Moldería anatómica femenina diseñada en nuestro atelier con botones perlados.`;
   }
-  return `${shirt.composition}. Algodón de uso diario con excelente estructura, planchado ágil y confección sastrera pensada para todo el día.`;
+  return `${shirt.composition}. Algodón de uso diario con excelente estructura y planchado ágil.`;
 }
 
 export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
@@ -81,7 +82,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
       {/* 2-Column Clean PDP Layout */}
       <div className="mt-6 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-        {/* LEFT COLUMN: Large Product Image + Vista Prenda / Zoom Tejido Toggle */}
+        {/* LEFT COLUMN: Large Product Image + Vista Prenda / Muestra de Tela Toggle */}
         <div className="flex flex-col items-center lg:col-span-6">
           <div className="liquid-glass relative flex aspect-[3/4] max-h-[520px] w-full items-center justify-center overflow-hidden rounded-3xl">
             <AnimatePresence mode="wait">
@@ -112,19 +113,13 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               ) : (
                 <motion.div
                   key="pdp-tejido"
-                  initial={isMotionPaused ? false : { opacity: 0, scale: 1.05 }}
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.35 }}
-                  className="relative h-full w-full overflow-hidden"
+                  transition={{ duration: 0.32 }}
+                  className="flex h-full w-full items-center justify-center"
                 >
-                  <Image
-                    src={shirt.studioImage}
-                    alt={`Zoom tejido ${shirt.name}`}
-                    fill
-                    sizes="(min-width: 1024px) 600px, 100vw"
-                    className="scale-[2.2] object-cover object-center"
-                  />
+                  <TailorFabricSwatch shirt={shirt} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -162,7 +157,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               }`}
             >
               <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Zoom Tejido</span>
+              <span>Muestra de Tela</span>
             </button>
           </div>
         </div>

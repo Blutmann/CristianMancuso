@@ -37,30 +37,19 @@ export default function EmpresasPage() {
           </Link>
 
           {/* Header */}
-          <div className="mt-8 max-w-3xl">
-            <div className="mb-4 flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="h-[1px] w-8 bg-champagne/80"
-              />
-              <span className="font-mono text-[11px] tracking-[0.24em] text-champagne uppercase">
-                DIVISIÓN CORPORATIVA &amp; MAYORISTA
-              </span>
-            </div>
-
-            <h1 className="font-display text-[clamp(2.3rem,5.4vw,4.3rem)] font-bold leading-[1.01] tracking-[-0.035em] text-primary">
+          <div className="mt-6 max-w-3xl">
+            <h1 className="font-display text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1.02] tracking-[-0.035em] text-primary">
               Camisería de autor para tu equipo o tu local.
             </h1>
 
-            <p className="mt-5 max-w-2xl text-base sm:text-lg leading-relaxed text-muted">
-              Acompañamos a estudios, firmas ejecutivas y locales multimarca de
-              Buenos Aires y el interior con moldería consistente, géneros de
-              primera línea y atención comercial directa.
+            <p className="mt-4 max-w-xl text-base text-muted">
+              Moldería consistente, telas de primera línea y atención comercial
+              directa.
             </p>
           </div>
 
           {/* 2 Differentiated B2B / Wholesale Blocks */}
-          <div className="mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Block 1: Diseños para tu Empresa */}
             <article className="flex flex-col justify-between rounded-3xl border border-black/10 dark:border-white/[0.09] bg-elevated p-6 sm:p-8">
               <div>
@@ -73,17 +62,16 @@ export default function EmpresasPage() {
                   </span>
                 </div>
 
-                <h2 className="mt-6 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
+                <h2 className="mt-5 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
                   Diseños para tu Empresa
                 </h2>
 
-                <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-                  Camisas ejecutivas en Algodón Urbano o Pima Peruano con
-                  bordado institucional discreto, moldería consistente y
+                <p className="mt-2 text-sm text-muted">
+                  Camisas ejecutivas con bordado institucional discreto y
                   reposición continua.
                 </p>
 
-                <ul className="mt-6 space-y-2.5 border-t border-white/[0.08] pt-5 text-sm text-primary/90">
+                <ul className="mt-5 space-y-2.5 border-t border-black/10 pt-5 text-sm text-primary/90 dark:border-white/[0.08]">
                   <li className="flex items-center gap-2.5">
                     <Check
                       className="h-4 w-4 shrink-0 text-champagne"
@@ -127,13 +115,13 @@ export default function EmpresasPage() {
                   </span>
                 </div>
 
-                <h2 className="mt-6 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
+                <h2 className="mt-5 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
                   Venta Mayorista / Locales Multimarca
                 </h2>
 
-                <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-                  Sumá las líneas de Cristian Mancuso en tu tienda del interior
-                  o Buenos Aires con asesoramiento comercial directo.
+                <p className="mt-2 text-sm text-muted">
+                  Sumá Cristian Mancuso a tu tienda con asesoramiento comercial
+                  directo.
                 </p>
 
                 <ul className="mt-6 space-y-2.5 border-t border-white/[0.08] pt-5 text-sm text-primary/90">
