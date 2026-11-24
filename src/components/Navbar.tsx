@@ -60,8 +60,10 @@ export function Navbar() {
       <header className="fixed top-0 inset-x-0 z-50 px-3.5 pt-3.5 sm:px-6 sm:pt-4 pointer-events-none">
         <nav
           aria-label="Navegación principal"
-          className={`pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between overflow-hidden rounded-2xl px-4 py-2.5 sm:px-6 sm:py-3 transition-all duration-300 ${
-            isScrolled ? "liquid-glass-active" : "liquid-glass"
+          className={`pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between overflow-hidden rounded-2xl bg-[#0B0B0E]/80 px-4 py-2.5 backdrop-blur-2xl sm:px-6 sm:py-3 transition-all duration-300 ${
+            isScrolled
+              ? "liquid-glass-active !bg-[#0B0B0E]/85 border-white/25 shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
+              : "liquid-glass !bg-[#0B0B0E]/80 border-white/20"
           }`}
         >
           {/* Full 4-Sided Perimeter Interior Stitch (Shirt Cuff Detail) */}

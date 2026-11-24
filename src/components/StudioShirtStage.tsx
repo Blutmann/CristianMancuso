@@ -97,16 +97,16 @@ export function StudioShirtStage({
     <div
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-[#09090D]"
+      className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent"
       style={{ perspective: "1100px" }}
     >
-      {/* Subtle studio softbox halo behind the garment */}
+      {/* Subtle studio softbox halo behind the floating garment */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 42%, rgba(255,255,255,0.09) 0%, rgba(148,163,184,0.03) 40%, rgba(9,9,13,0.92) 78%)",
+            "radial-gradient(circle at 50% 44%, rgba(255,255,255,0.10) 0%, rgba(148,163,184,0.03) 44%, transparent 74%)",
         }}
       />
 
@@ -119,9 +119,9 @@ export function StudioShirtStage({
             : { type: "spring", stiffness: 120, damping: 22, mass: 0.9 }
         }
         style={{ transformStyle: "preserve-3d" }}
-        className="relative flex aspect-[3/4] h-[94%] max-h-[540px] max-w-full items-center justify-center select-none"
+        className="relative flex aspect-[3/4] h-[94%] max-h-[500px] max-w-full items-center justify-center select-none"
       >
-        {/* Crossfading photorealistic studio shirt */}
+        {/* Crossfading photorealistic studio shirt (transparent RGBA) */}
         <AnimatePresence mode="sync">
           <motion.img
             key={shirt.id}
@@ -132,13 +132,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0 }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-none absolute inset-0 h-full w-full object-contain"
-            style={{
-              WebkitMaskImage:
-                "radial-gradient(ellipse 92% 94% at 50% 50%, #000 72%, transparent 100%)",
-              maskImage:
-                "radial-gradient(ellipse 92% 94% at 50% 50%, #000 72%, transparent 100%)",
-            }}
+            className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_24px_38px_rgba(0,0,0,0.6)]"
           />
         </AnimatePresence>
 
@@ -247,12 +241,6 @@ export function StudioShirtStage({
           )}
         </AnimatePresence>
       </motion.div>
-
-      {/* Soft perimeter vignette so studio photo blends seamlessly */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-3xl shadow-[inset_0_0_60px_rgba(9,9,13,0.85)]"
-      />
 
       {/* STEP 2 OVERLAY: Floating Collar Detail Pill */}
       <AnimatePresence>

@@ -227,11 +227,11 @@ export function ShirtBuilderSection() {
 
   return (
     <section
-      id="armar"
+      id="arma-tu-camisa"
       aria-labelledby="builder-heading"
-      className="relative scroll-mt-20 bg-transparent text-[#F5F5F7]"
+      className="relative scroll-mt-4 bg-transparent text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[calc(100svh-72px)] max-w-7xl flex-col justify-between gap-3 px-5 py-8 sm:px-8 lg:h-[calc(100svh-64px)] lg:min-h-[660px] lg:max-h-[860px] lg:px-12 lg:py-5 xl:pr-24">
+      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-5 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:min-h-[700px] lg:max-h-[920px] lg:px-12 lg:pt-24 lg:pb-5 xl:pr-24">
         {/* TOP ROW: Compact title + live fabric meta on left, 4-step stepper on right */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">

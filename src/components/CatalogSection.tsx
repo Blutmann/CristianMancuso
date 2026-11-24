@@ -76,24 +76,26 @@ function CommercialShirtCard({ shirt }: { shirt: CatalogShirt }) {
 
   return (
     <article className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-white transition-all duration-300 hover:border-white/28 hover:bg-white/[0.075]">
-      {/* Compact Photorealistic Studio Stage (h-40 = 160px) */}
-      <div className="relative h-40 w-full overflow-hidden bg-[#09090D]">
+      {/* Compact Transparent Studio Stage (h-40 = 160px) */}
+      <div className="relative h-40 w-full overflow-hidden bg-transparent">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-4 rounded-full opacity-45 blur-2xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 72%)",
+          }}
+        />
         <Image
           src={shirt.studioImage}
           alt={`${shirt.name} — ${shirt.composition}`}
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className={`object-contain px-3 pt-2 ${
+          className={`object-contain px-3 pt-2 drop-shadow-[0_14px_22px_rgba(0,0,0,0.55)] ${
             isMotionPaused
               ? ""
               : "transition-transform duration-500 ease-out group-hover:scale-[1.06]"
           }`}
-        />
-
-        {/* Soft bottom fade into card glass */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#09090D]/80 to-transparent"
         />
 
         {/* Floating Ref & Badge */}
