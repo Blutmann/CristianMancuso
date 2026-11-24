@@ -15,12 +15,16 @@ const HERO_LINES = [
   { text: "sin costo extra.", accent: true },
 ] as const;
 
+const PLACKET_BUTTON_Y = [110, 198, 286, 374] as const;
+
 export function Hero() {
   const { isMotionPaused, preloaderDone } = useMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const specimenRef = useRef<HTMLDivElement | null>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const fadeRefs = useRef<(HTMLElement | null)[]>([]);
+  const buttonGroupRefs = useRef<(SVGGElement | null)[]>([]);
+  const threadRefs = useRef<(SVGGElement | null)[]>([]);
 
   // Kinetic entrance choreography
   useEffect(() => {
@@ -81,58 +85,80 @@ export function Hero() {
     return () => ctx.revert();
   }, [isMotionPaused, preloaderDone]);
 
-  // Subtle GPU scroll depth + pointer parallax on the sartorial specimen
+  // ScrollTrigger narrative action: 4 mother-of-pearl buttons fasten sequentially on scroll
   useEffect(() => {
-    if (isMotionPaused || !sectionRef.current || !specimenRef.current) return;
+    const buttons = buttonGroupRefs.current.filter(Boolean) as SVGGElement[];
+    const threads = threadRefs.current.filter(Boolean) as SVGGElement[];
 
-    const section = sectionRef.current;
-    const specimen = specimenRef.current;
+    if (isMotionPaused || !sectionRef.current || buttons.length === 0) {
+      gsap.set(buttons, { x: 0, rotation: 0, transformOrigin: "50% 50%" });
+      gsap.set(threads, { opacity: 1, scale: 1, transformOrigin: "50% 50%" });
+      return;
+    }
 
     const ctx = gsap.context(() => {
-      gsap.to(specimen, {
-        yPercent: 8,
-        scale: 1.03,
-        ease: "none",
+      // Initial unbuttoned state (offset & unfastened)
+      gsap.set(buttons, {
+        x: 24,
+        rotation: -32,
+        transformOrigin: "50% 50%",
+      });
+      gsap.set(threads, {
+        opacity: 0,
+        scale: 0.4,
+        transformOrigin: "50% 50%",
+      });
+
+      const buttonTl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
+          trigger: sectionRef.current,
           start: "top top",
-          end: "bottom top",
-          scrub: 1.1,
+          end: "bottom 35%",
+          scrub: 0.6,
         },
       });
+
+      buttons.forEach((btn, idx) => {
+        const at = idx * 0.22;
+        buttonTl.to(
+          btn,
+          {
+            x: 0,
+            rotation: 0,
+            duration: 0.32,
+            ease: "power2.out",
+          },
+          at
+        );
+        if (threads[idx]) {
+          buttonTl.to(
+            threads[idx],
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 0.22,
+              ease: "back.out(1.7)",
+            },
+            at + 0.16
+          );
+        }
+      });
+
+      if (specimenRef.current) {
+        gsap.to(specimenRef.current, {
+          yPercent: 6,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
     }, sectionRef);
 
-    const quickX = gsap.quickTo(specimen, "x", {
-      duration: 0.9,
-      ease: "power3.out",
-    });
-    const quickY = gsap.quickTo(specimen, "y", {
-      duration: 0.9,
-      ease: "power3.out",
-    });
-
-    const handlePointerMove = (e: PointerEvent) => {
-      if (e.pointerType !== "mouse") return;
-      const rect = section.getBoundingClientRect();
-      const nx = (e.clientX - rect.left) / rect.width - 0.5;
-      const ny = (e.clientY - rect.top) / rect.height - 0.5;
-      quickX(nx * -12);
-      quickY(ny * -10);
-    };
-
-    const handlePointerLeave = () => {
-      quickX(0);
-      quickY(0);
-    };
-
-    section.addEventListener("pointermove", handlePointerMove);
-    section.addEventListener("pointerleave", handlePointerLeave);
-
-    return () => {
-      section.removeEventListener("pointermove", handlePointerMove);
-      section.removeEventListener("pointerleave", handlePointerLeave);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [isMotionPaused]);
 
   return (
@@ -140,15 +166,15 @@ export function Hero() {
       ref={sectionRef}
       id="hero"
       aria-labelledby="hero-heading"
-      className="relative min-h-[92svh] w-full overflow-hidden bg-obsidian pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 flex flex-col justify-center"
+      className="relative min-h-[94svh] w-full overflow-hidden bg-navy pt-28 pb-16 sm:pt-32 sm:pb-20 lg:pt-36 flex flex-col justify-center"
     >
-      {/* Subtle warm atelier light & grain */}
+      {/* Subtle warm bronze rim glow & grain */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div
-          className="absolute -top-28 right-[-8%] h-[520px] w-[520px] rounded-full opacity-30 blur-[130px]"
+          className="absolute -top-28 right-[-8%] h-[540px] w-[540px] rounded-full opacity-35 blur-[130px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(200,169,126,0.34) 0%, rgba(6,7,9,0) 70%)",
+              "radial-gradient(circle, rgba(197,155,95,0.34) 0%, rgba(15,23,42,0) 70%)",
           }}
         />
         <div className="absolute inset-0 atelier-grain opacity-70" />
@@ -165,11 +191,8 @@ export function Hero() {
               }}
               className="mb-6 flex items-center gap-3"
             >
-              <span
-                aria-hidden="true"
-                className="h-[1px] w-7 bg-champagne/80"
-              />
-              <span className="text-xs font-medium tracking-[0.2em] text-champagne uppercase">
+              <span aria-hidden="true" className="h-[1px] w-7 bg-bronze" />
+              <span className="text-xs font-medium tracking-[0.2em] text-bronze uppercase">
                 Sastrería de autor · Buenos Aires
               </span>
             </div>
@@ -185,7 +208,7 @@ export function Hero() {
                       lineRefs.current[index] = el;
                     }}
                     className={`block will-change-transform ${
-                      line.accent ? "text-champagne" : "text-primary"
+                      line.accent ? "text-bronze" : "text-primary"
                     }`}
                   >
                     {line.text}
@@ -213,7 +236,7 @@ export function Hero() {
               <Link
                 id="hero-cta-collection"
                 href="/#coleccion"
-                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-ivory px-6 py-3 text-sm font-semibold text-obsidian transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full bg-ivory px-6 py-3 text-sm font-semibold text-navy transition-transform duration-300 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
               >
                 <span>Ver colección</span>
                 <ArrowUpRight
@@ -225,10 +248,10 @@ export function Hero() {
               <Link
                 id="hero-cta-builder"
                 href="/#arma-tu-camisa"
-                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/[0.14] bg-elevated/80 px-6 py-3 text-sm font-medium text-primary backdrop-blur-md transition-all duration-300 hover:border-champagne/60 hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-obsidian"
+                className="group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-white/15 bg-elevated/80 px-6 py-3 text-sm font-medium text-primary backdrop-blur-md transition-all duration-300 hover:border-bronze/70 hover:bg-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
               >
                 <Ruler
-                  className="h-4 w-4 text-champagne transition-transform duration-300 group-hover:rotate-12"
+                  className="h-4 w-4 text-bronze transition-transform duration-300 group-hover:rotate-12"
                   aria-hidden="true"
                 />
                 <span>Armar a medida</span>
@@ -236,11 +259,11 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Clean Editorial Sartorial Visual */}
+          {/* Right Column: Interactive Scroll-Buttoning Placket Visual */}
           <div className="lg:col-span-5 flex items-center justify-center lg:justify-end">
             <div
               ref={specimenRef}
-              className="relative aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-3xl border border-white/[0.08] bg-elevated shadow-[0_30px_80px_rgba(0,0,0,0.65)] will-change-transform"
+              className="relative aspect-[4/5] w-full max-w-[400px] overflow-hidden rounded-3xl border border-white/10 bg-elevated shadow-[0_30px_80px_rgba(7,12,24,0.65)] will-change-transform"
             >
               <svg
                 aria-hidden="true"
@@ -250,7 +273,7 @@ export function Hero() {
               >
                 <defs>
                   <pattern
-                    id="hero-pima-twill"
+                    id="hero-navy-twill"
                     width="10"
                     height="10"
                     patternUnits="userSpaceOnUse"
@@ -261,96 +284,125 @@ export function Hero() {
                       y1="0"
                       x2="0"
                       y2="10"
-                      stroke="rgba(245, 242, 235, 0.06)"
+                      stroke="rgba(248, 250, 252, 0.06)"
                       strokeWidth="1.1"
                     />
                   </pattern>
 
-                  <radialGradient id="hero-sheen" cx="68%" cy="28%" r="74%">
-                    <stop offset="0%" stopColor="#1E2836" />
-                    <stop offset="52%" stopColor="#11151E" />
-                    <stop offset="100%" stopColor="#080A0F" />
+                  <radialGradient id="hero-navy-sheen" cx="68%" cy="28%" r="74%">
+                    <stop offset="0%" stopColor="#22314D" />
+                    <stop offset="55%" stopColor="#162033" />
+                    <stop offset="100%" stopColor="#0F172A" />
                   </radialGradient>
 
-                  <radialGradient id="hero-pearl" cx="38%" cy="34%" r="65%">
+                  <radialGradient id="hero-pearl-v3" cx="38%" cy="34%" r="65%">
                     <stop offset="0%" stopColor="#FFFFFF" />
-                    <stop offset="40%" stopColor="#E6EDF5" />
-                    <stop offset="80%" stopColor="#C4D1E0" />
+                    <stop offset="42%" stopColor="#E6EDF5" />
+                    <stop offset="82%" stopColor="#C4D1E0" />
                     <stop offset="100%" stopColor="#8D99AE" />
                   </radialGradient>
                 </defs>
 
-                <rect width="400" height="500" fill="url(#hero-sheen)" />
-                <rect width="400" height="500" fill="url(#hero-pima-twill)" />
+                <rect width="400" height="500" fill="url(#hero-navy-sheen)" />
+                <rect width="400" height="500" fill="url(#hero-navy-twill)" />
 
-                {/* Tailored Placket */}
+                {/* Tailored Center Placket */}
                 <rect
-                  x="158"
+                  x="156"
                   y="0"
-                  width="84"
+                  width="88"
                   height="500"
-                  fill="rgba(6,7,9,0.42)"
+                  fill="rgba(15, 23, 42, 0.45)"
                 />
                 <line
-                  x1="168"
+                  x1="166"
                   y1="0"
-                  x2="168"
+                  x2="166"
                   y2="500"
-                  stroke="rgba(200, 169, 126, 0.34)"
+                  stroke="rgba(197, 155, 95, 0.42)"
                   strokeWidth="1"
                   strokeDasharray="3 3"
                 />
                 <line
-                  x1="232"
+                  x1="234"
                   y1="0"
-                  x2="232"
+                  x2="234"
                   y2="500"
-                  stroke="rgba(200, 169, 126, 0.34)"
+                  stroke="rgba(197, 155, 95, 0.42)"
                   strokeWidth="1"
                   strokeDasharray="3 3"
                 />
 
-                {/* Australian Mother-of-Pearl Button */}
-                <g transform="translate(200, 224)">
-                  <circle
-                    r="42"
-                    fill="rgba(0,0,0,0.5)"
-                    transform="translate(4, 10)"
-                  />
-                  <circle r="40" fill="url(#hero-pearl)" />
-                  <circle
-                    r="31"
-                    fill="none"
-                    stroke="rgba(255,255,255,0.65)"
-                    strokeWidth="1.1"
-                  />
-                  <circle cx="-7.5" cy="-7.5" r="2.8" fill="#101218" />
-                  <circle cx="7.5" cy="-7.5" r="2.8" fill="#101218" />
-                  <circle cx="-7.5" cy="7.5" r="2.8" fill="#101218" />
-                  <circle cx="7.5" cy="7.5" r="2.8" fill="#101218" />
-                  <line
-                    x1="-7.5"
-                    y1="-7.5"
-                    x2="7.5"
-                    y2="7.5"
-                    stroke="#C8A97E"
-                    strokeWidth="2.3"
-                    strokeLinecap="round"
-                  />
-                  <line
-                    x1="7.5"
-                    y1="-7.5"
-                    x2="-7.5"
-                    y2="7.5"
-                    stroke="#C8A97E"
-                    strokeWidth="2.3"
-                    strokeLinecap="round"
-                  />
-                </g>
+                {/* 4 Scroll-Animated Mother-of-Pearl Buttons */}
+                {PLACKET_BUTTON_Y.map((cy, idx) => (
+                  <g key={cy} transform={`translate(200, ${cy})`}>
+                    {/* Embroidered Buttonhole (Ojal) */}
+                    <rect
+                      x="-2.5"
+                      y="-13"
+                      width="5"
+                      height="26"
+                      rx="2.5"
+                      fill="#0B1120"
+                      stroke="rgba(197, 155, 95, 0.55)"
+                      strokeWidth="1"
+                    />
+
+                    {/* Animated Mother-of-Pearl Button */}
+                    <g
+                      ref={(el) => {
+                        buttonGroupRefs.current[idx] = el;
+                      }}
+                    >
+                      <circle
+                        r="23"
+                        fill="rgba(0,0,0,0.45)"
+                        transform="translate(2, 5)"
+                      />
+                      <circle r="22" fill="url(#hero-pearl-v3)" />
+                      <circle
+                        r="16.5"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.7)"
+                        strokeWidth="0.9"
+                      />
+                      <circle cx="-4.2" cy="-4.2" r="1.6" fill="#0F172A" />
+                      <circle cx="4.2" cy="-4.2" r="1.6" fill="#0F172A" />
+                      <circle cx="-4.2" cy="4.2" r="1.6" fill="#0F172A" />
+                      <circle cx="4.2" cy="4.2" r="1.6" fill="#0F172A" />
+
+                      {/* Bronze #C59B5F Cross-Stitch Thread (fades in as button fastens) */}
+                      <g
+                        ref={(el) => {
+                          threadRefs.current[idx] = el;
+                        }}
+                      >
+                        <line
+                          x1="-4.2"
+                          y1="-4.2"
+                          x2="4.2"
+                          y2="4.2"
+                          stroke="#C59B5F"
+                          strokeWidth="1.9"
+                          strokeLinecap="round"
+                        />
+                        <line
+                          x1="4.2"
+                          y1="-4.2"
+                          x2="-4.2"
+                          y2="4.2"
+                          stroke="#C59B5F"
+                          strokeWidth="1.9"
+                          strokeLinecap="round"
+                        />
+                      </g>
+                    </g>
+                  </g>
+                ))}
               </svg>
 
               {/* Quiet Editorial Caption */}
-              <div className="absolute inset-x-5 bottom-5 z-10 flex items-end justify-between border-t border-white/[0.08] pt-4">
+              <div className="absolute inset-x-5 bottom-5 z-10 flex items-end justify-between border-t border-white/10 pt-4">
                 <div>
                   <p className="font-display text-base font-bold text-primary">
                     Pima Piura Noche
@@ -359,7 +411,7 @@ export function Hero() {
                     Ref. Art. 2529
                   </p>
                 </div>
-                <span className="font-serif text-base italic tracking-[0.14em] text-champagne">
+                <span className="font-serif text-base italic tracking-[0.14em] text-bronze">
                   C.M.
                 </span>
               </div>

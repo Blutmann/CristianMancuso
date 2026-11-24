@@ -1,17 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --bg-obsidian: #060709;
-  --surface-elevated: #101218;
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --bg-ivory: #F4F1EA;
-  --text-primary: #F5F2EB;
-  --text-muted: #9CA3AF;
+  /* V3 Palette: Midnight Navy & Blanco Lino + Hilo Bronce */
+  --bg-navy: #0F172A;
+  --bg-obsidian: #0F172A;
+  --surface-card-dark: #162033;
+  --surface-elevated: #162033;
+  --surface-border: rgba(255, 255, 255, 0.10);
+
+  --bg-light: #FAF8F5;
+  --bg-ivory: #FAF8F5;
+  --surface-card-light: #FFFFFF;
+  --border-light: #E6E2DA;
+
+  --text-light: #F8FAFC;
+  --text-primary: #F8FAFC;
+  --text-dark: #0F172A;
+  --text-muted: #94A3B8;
+
+  --accent-bronze: #C59B5F;
+  --accent-champagne: #C59B5F;
   --accent-cyan: #38BDF8;
-  --accent-champagne: #C8A97E;
 }
 
 @theme inline {
+  --color-navy: var(--bg-navy);
   --color-obsidian: var(--bg-obsidian);
   --color-elevated: var(--surface-elevated);
   --color-ivory: var(--bg-ivory);
@@ -19,6 +32,7 @@
   --color-muted: var(--text-muted);
   --color-cyan: var(--accent-cyan);
   --color-champagne: var(--accent-champagne);
+  --color-bronze: var(--accent-bronze);
 
   --font-display: var(--font-syne), system-ui, sans-serif;
   --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
@@ -26,14 +40,14 @@
 }
 
 html {
-  background-color: var(--bg-obsidian);
+  background-color: var(--bg-navy);
   color: var(--text-primary);
   color-scheme: dark;
   overflow-x: clip;
 }
 
 body {
-  background-color: var(--bg-obsidian);
+  background-color: var(--bg-navy);
   color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: clip;
@@ -61,41 +75,29 @@ html.lenis body {
 
 /* Selection styling */
 ::selection {
-  background-color: rgba(200, 169, 126, 0.28);
+  background-color: rgba(197, 155, 95, 0.3);
   color: var(--text-primary);
 }
 
 /* Elevated sartorial surface utility */
 .surface-atelier {
-  background-color: var(--surface-elevated);
+  background-color: var(--surface-card-dark);
   border: 1px solid var(--surface-border);
+}
+
+/* Hide native scrollbars on horizontal swatch rails */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* Subtle fine weave & film grain atmosphere */
 .atelier-grain {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
-}
-
-/* Kinetic Marquee (GPU transform only) */
-@keyframes cm-marquee {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-.cm-marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  animation: cm-marquee 34s linear infinite;
-}
-
-.cm-marquee-container:hover .cm-marquee-track,
-.cm-marquee-container:focus-within .cm-marquee-track {
-  animation-play-state: paused;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E");
 }
 
 /* Paused motion accessibility mode */
