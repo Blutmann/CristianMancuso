@@ -32,20 +32,21 @@ export function Hero() {
     }
 
     const ctx = gsap.context(() => {
-      // Non-blocking scroll parallax + subtle scale on the protagonist shirt
+      // Dramatic non-blocking scroll parallax + scale + subtle rotation on the protagonist shirt
       if (parallaxEl) {
         gsap.fromTo(
           parallaxEl,
-          { y: 0, scale: 1 },
+          { y: 0, scale: 1, rotate: 0 },
           {
-            y: -38,
-            scale: 1.05,
+            y: -90,
+            scale: 1.12,
+            rotate: -3,
             ease: "none",
             scrollTrigger: {
               trigger: section,
               start: "top top",
               end: "bottom top",
-              scrub: 0.7,
+              scrub: 0.5,
             },
           }
         );
@@ -65,7 +66,7 @@ export function Hero() {
             trigger: section,
             start: "top top",
             end: "bottom 25%",
-            scrub: 0.6,
+            scrub: 0.5,
           },
         });
       }
@@ -141,7 +142,7 @@ export function Hero() {
           </p>
         </div>
 
-        {/* Right Protagonist Transparent PNG Shirt: Continuous Float + 3D Tilt + Scroll Parallax + Floor Shadow */}
+        {/* Right Protagonist Transparent PNG Shirt: Magical Levitation + 3D Tilt + Scroll Parallax + Synced Floor Shadow */}
         <div
           className="relative flex flex-col items-center justify-center lg:col-span-5"
           style={{ perspective: "1100px" }}
@@ -162,20 +163,24 @@ export function Hero() {
             <motion.div
               animate={
                 isMotionPaused
-                  ? { y: 0, rotateX: 0, rotateY: 0 }
+                  ? { y: 0, rotate: 0, scale: 1, rotateX: 0, rotateY: 0 }
                   : {
-                      y: [0, -9, 0],
+                      y: [-10, 10, -10],
+                      rotate: [-1.2, 1.2, -1.2],
+                      scale: [1, 1.025, 1],
                       rotateX: tilt.rotateX,
                       rotateY: tilt.rotateY,
                     }
               }
               transition={{
-                y: { duration: 5.2, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                scale: { duration: 5, repeat: Infinity, ease: "easeInOut" },
                 rotateX: { type: "spring", stiffness: 120, damping: 20 },
                 rotateY: { type: "spring", stiffness: 120, damping: 20 },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative aspect-[3/4] w-full px-2 py-3 select-none"
+              className="relative aspect-[3/4] w-full px-2 py-4 select-none"
             >
               <motion.img
                 src="/images/shirts/pima-noche.png"
@@ -188,10 +193,23 @@ export function Hero() {
               />
             </motion.div>
 
-            {/* Soft Elliptical Floor Shadow giving real air-suspended depth */}
-            <div
+            {/* Synchronized Breathing Elliptical Floor Shadow */}
+            <motion.div
               aria-hidden="true"
-              className="pointer-events-none -mt-2 h-5 w-48 rounded-full bg-[#111113] opacity-20 blur-xl dark:bg-black dark:opacity-55"
+              animate={
+                isMotionPaused
+                  ? { scale: 1, opacity: 0.25 }
+                  : {
+                      scale: [0.85, 1.12, 0.85],
+                      opacity: [0.18, 0.45, 0.18],
+                    }
+              }
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="pointer-events-none -mt-1 h-5 w-48 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
           </div>
         </div>

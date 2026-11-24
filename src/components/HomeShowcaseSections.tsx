@@ -1,55 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Ruler, Scissors, Sparkles } from "lucide-react";
 import { FABRIC_RANGES, type FabricCategoryId } from "@/data/fabrics";
 import { useMotion } from "@/context/MotionContext";
 
-gsap.registerPlugin(ScrollTrigger);
-
-const GAMA_VISUALS: Record<
-  FabricCategoryId,
-  { image: string; loupeStyle: React.CSSProperties }
-> = {
-  urbano: {
-    image: "/images/shirts/oxford-grafito.png",
-    loupeStyle: {
-      backgroundColor: "#2C3038",
-      backgroundImage:
-        "radial-gradient(rgba(255,255,255,0.22) 1px, transparent 1px), radial-gradient(rgba(0,0,0,0.35) 1px, transparent 1px)",
-      backgroundSize: "6px 6px",
-      backgroundPosition: "0 0, 3px 3px",
-    },
-  },
-  pima: {
-    image: "/images/shirts/pima-acero.png",
-    loupeStyle: {
-      backgroundColor: "#334459",
-      backgroundImage:
-        "repeating-linear-gradient(135deg, rgba(226,232,240,0.28) 0px, rgba(226,232,240,0.28) 1.5px, transparent 1.5px, transparent 5px)",
-    },
-  },
-  italiano: {
-    image: "/images/shirts/lino-marfil.png",
-    loupeStyle: {
-      backgroundColor: "#E5DDD0",
-      backgroundImage:
-        "repeating-linear-gradient(0deg, rgba(140,122,96,0.22) 0px, rgba(140,122,96,0.22) 1px, transparent 1px, transparent 4px), repeating-linear-gradient(90deg, rgba(140,122,96,0.16) 0px, rgba(140,122,96,0.16) 1px, transparent 1px, transparent 5px)",
-    },
-  },
-  donna: {
-    image: "/images/shirts/donna-mineral.png",
-    loupeStyle: {
-      backgroundColor: "#E8DDD6",
-      backgroundImage:
-        "repeating-linear-gradient(90deg, rgba(75,85,99,0.34) 0px, rgba(75,85,99,0.34) 1.5px, transparent 1.5px, transparent 8px)",
-    },
-  },
+const GAMA_IMAGE: Record<FabricCategoryId, string> = {
+  urbano: "/images/shirts/oxford-grafito.png",
+  pima: "/images/shirts/pima-acero.png",
+  italiano: "/images/shirts/lino-marfil.png",
+  donna: "/images/shirts/donna-mineral.png",
 };
 
 const BESPOKE_STEPS = [
@@ -73,56 +35,12 @@ const BESPOKE_STEPS = [
   },
 ] as const;
 
-const KINETIC_RIBBON_ITEMS = [
-  "Cuello Italiano",
-  "Botón Nácar Blanco",
-  "Iniciales Bordadas",
-  "Calce Anatómico",
-  "Algodón Pima 120/2",
-  "Lino de Biella",
-  "A Medida Sin Cargo",
-  "Cuello Francés & Mao",
-] as const;
-
 export function HomeShowcaseSections() {
   const { isMotionPaused } = useMotion();
-  const ribbonTriggerRef = useRef<HTMLDivElement | null>(null);
-  const ribbonTrackRef = useRef<HTMLDivElement | null>(null);
-
-  // Non-blocking horizontal kinetic ribbon driven smoothly by vertical scroll
-  useEffect(() => {
-    const trigger = ribbonTriggerRef.current;
-    const track = ribbonTrackRef.current;
-    if (!trigger || !track) return;
-
-    if (isMotionPaused) {
-      gsap.set(track, { xPercent: 0 });
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        track,
-        { xPercent: 4 },
-        {
-          xPercent: -24,
-          ease: "none",
-          scrollTrigger: {
-            trigger,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 0.8,
-          },
-        }
-      );
-    }, trigger);
-
-    return () => ctx.revert();
-  }, [isMotionPaused]);
 
   return (
     <>
-      {/* BLOQUE 2: Cuatro Gamas de Telas en Grilla 2×2 Horizontal (Zero Nested Boxes) */}
+      {/* BLOQUE 2: Cuatro Gamas de Telas en Grilla 2×2 Horizontal con Lupa Real 2.5x */}
       <section
         id="gamas"
         aria-labelledby="gamas-heading"
@@ -153,7 +71,7 @@ export function HomeShowcaseSections() {
 
           <div className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
             {FABRIC_RANGES.map((gama, idx) => {
-              const visual = GAMA_VISUALS[gama.id];
+              const imgSrc = GAMA_IMAGE[gama.id];
               return (
                 <motion.div
                   key={gama.id}
@@ -170,17 +88,17 @@ export function HomeShowcaseSections() {
                     href={`/coleccion?gama=${gama.id}`}
                     className="group liquid-glass flex h-full flex-row items-center gap-4 overflow-hidden rounded-3xl p-5 transition-all duration-300 hover:border-black/20 sm:gap-5 sm:p-6 dark:hover:border-white/30"
                   >
-                    {/* Left: Floating Shirt + Elliptical Floor Shadow + Circular Fabric Loupe */}
-                    <div className="relative flex h-40 w-32 shrink-0 flex-col items-center justify-center sm:h-44 sm:w-36">
+                    {/* Left: Floating Shirt + Elliptical Floor Shadow + Real 2.5x Magnifier Loupe */}
+                    <div className="relative flex h-44 w-32 shrink-0 flex-col items-center justify-center sm:h-48 sm:w-36">
                       <div
                         className={`relative h-full w-full pb-3 ${
                           isMotionPaused
                             ? ""
-                            : "transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-105"
+                            : "transition-transform duration-500 ease-out group-hover:-translate-y-2 group-hover:scale-105"
                         }`}
                       >
                         <Image
-                          src={visual.image}
+                          src={imgSrc}
                           alt={gama.name}
                           fill
                           sizes="160px"
@@ -188,25 +106,40 @@ export function HomeShowcaseSections() {
                         />
                       </div>
 
-                      {/* Soft floor shadow */}
+                      {/* Soft elliptical floor shadow */}
                       <span
                         aria-hidden="true"
-                        className="pointer-events-none absolute bottom-1 h-2.5 w-20 rounded-full bg-[#111113] opacity-20 blur-md transition-transform duration-500 group-hover:scale-90 dark:bg-black dark:opacity-55"
+                        className="pointer-events-none absolute bottom-1 h-2.5 w-20 rounded-full bg-[#111113] opacity-20 blur-md transition-all duration-500 group-hover:scale-85 group-hover:opacity-15 dark:bg-black dark:opacity-55"
                       />
 
-                      {/* Circular Magnifier Loupe revealing fabric weave on hover */}
-                      <span
+                      {/* Wide w-24 h-24 Liquid Glass Magnifier Loupe with Real 2.5x Photo Zoom */}
+                      <div
                         aria-hidden="true"
-                        style={visual.loupeStyle}
-                        className={`pointer-events-none absolute right-0 bottom-3 h-11 w-11 rounded-full border-2 border-white/90 shadow-[0_8px_20px_rgba(0,0,0,0.25)] transition-all duration-300 dark:border-white/75 ${
+                        className={`liquid-glass pointer-events-none absolute -right-2 bottom-2 z-20 h-24 w-24 overflow-hidden rounded-full border-2 border-white/85 shadow-[0_14px_32px_rgba(0,0,0,0.28)] transition-all duration-300 dark:border-white/75 ${
                           isMotionPaused
-                            ? "opacity-95 scale-100"
+                            ? "scale-100 opacity-100"
                             : "scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100"
                         }`}
-                      />
+                      >
+                        <Image
+                          src={imgSrc}
+                          alt=""
+                          fill
+                          sizes="240px"
+                          className="scale-[2.5] object-cover object-center"
+                        />
+                        {/* Subtle convex glass reflection */}
+                        <div
+                          className="absolute inset-0 rounded-full"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, rgba(255,255,255,0.38) 0%, transparent 45%, rgba(0,0,0,0.12) 100%)",
+                          }}
+                        />
+                      </div>
                     </div>
 
-                    {/* Right: Clean Editorial Text + Price (No Inner Containers) */}
+                    {/* Right: Clean Editorial Text + Price (Zero Inner Containers) */}
                     <div className="flex min-w-0 flex-1 flex-col justify-between self-stretch py-0.5">
                       <div>
                         <p className="text-[11px] font-medium text-muted">
@@ -250,37 +183,12 @@ export function HomeShowcaseSections() {
         </div>
       </section>
 
-      {/* BLOQUE 3: Invitación A Medida + Tira Cinética Ligada al Scroll (Sin Pin) */}
+      {/* BLOQUE 3: Invitación A Medida Limpia (Sin Tira Cinética) */}
       <section
         id="invitacion-medida"
         aria-labelledby="invitacion-heading"
-        className="relative overflow-hidden py-12 lg:py-14"
+        className="relative py-12 lg:py-14"
       >
-        {/* Scroll-Driven Horizontal Editorial Ribbon */}
-        <div
-          ref={ribbonTriggerRef}
-          aria-hidden="true"
-          className="mb-8 overflow-hidden py-2"
-        >
-          <div
-            ref={ribbonTrackRef}
-            className="flex w-max items-center gap-3 will-change-transform"
-          >
-            {[...KINETIC_RIBBON_ITEMS, ...KINETIC_RIBBON_ITEMS].map(
-              (phrase, i) => (
-                <span
-                  key={`${phrase}-${i}`}
-                  className="liquid-glass inline-flex items-center gap-2.5 rounded-full px-5 py-2 text-xs font-medium tracking-[0.08em] text-[#111113]/85 uppercase whitespace-nowrap dark:text-white/85"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#B08D57]" />
-                  {phrase}
-                </span>
-              )
-            )}
-          </div>
-        </div>
-
-        {/* Clean Single-Surface Invitation Panel (Dividers instead of nested boxes) */}
         <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-6">
           <div className="liquid-glass rounded-3xl p-6 sm:p-9 lg:p-10">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">

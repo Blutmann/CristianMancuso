@@ -339,46 +339,85 @@ export function ShirtBuilderSection() {
                       })}
                     </div>
 
-                    {/* Boxless floating fabric swatches directly on the single Liquid Glass dock */}
+                    {/* Expansive Accordion Fabric Swatches (Boxless directly on Liquid Glass dock) */}
                     <div
                       role="listbox"
                       aria-label="Selector de telas"
-                      className="scrollbar-none flex items-center gap-5 overflow-x-auto py-1"
+                      className="scrollbar-none flex items-center gap-3 overflow-x-auto py-1.5"
                     >
                       {visibleFabrics.map((shirt) => {
                         const isSelected = shirt.id === selectedShirt.id;
                         return (
-                          <button
+                          <motion.button
                             key={shirt.id}
+                            layout
+                            transition={
+                              isMotionPaused
+                                ? { duration: 0 }
+                                : {
+                                    type: "spring",
+                                    stiffness: 320,
+                                    damping: 28,
+                                  }
+                            }
                             type="button"
                             role="option"
                             aria-selected={isSelected}
                             onClick={() => setBuilderShirtId(shirt.id)}
-                            title={`${shirt.name} (${shirt.refCode})`}
-                            className={`cursor-pointer group relative flex shrink-0 items-center gap-2.5 text-left transition-opacity ${
+                            title={`${shirt.name} · ${shirt.refCode}`}
+                            className={`cursor-pointer group relative flex shrink-0 items-center text-left ${
                               isSelected
-                                ? "opacity-100"
-                                : "opacity-65 hover:opacity-100"
+                                ? "gap-3 pr-2 opacity-100"
+                                : "opacity-75 hover:opacity-100"
                             }`}
                           >
-                            <span
+                            <motion.span
+                              layout="position"
                               aria-hidden="true"
-                              className={`block h-11 w-11 shrink-0 rounded-xl shadow-inner transition-all ${
+                              className={`block h-12 w-12 shrink-0 rounded-xl shadow-inner transition-shadow ${
                                 isSelected
                                   ? "ring-2 ring-[#111113] ring-offset-2 ring-offset-[#F7F6F3] dark:ring-white dark:ring-offset-[#0B0B0E]"
                                   : "ring-1 ring-black/15 group-hover:scale-105 dark:ring-white/25"
                               }`}
                               style={getSwatchStyle(shirt)}
                             />
-                            <span className="flex flex-col">
-                              <span className="max-w-[118px] truncate text-xs font-medium text-[#111113] dark:text-white">
-                                {shirt.name}
-                              </span>
-                              <span className="font-mono text-[10px] text-[#111113]/55 dark:text-white/55">
-                                {shirt.refCode}
-                              </span>
-                            </span>
-                          </button>
+                            <AnimatePresence initial={false} mode="popLayout">
+                              {isSelected && (
+                                <motion.span
+                                  key={`meta-${shirt.id}`}
+                                  initial={
+                                    isMotionPaused
+                                      ? false
+                                      : { opacity: 0, x: -8 }
+                                  }
+                                  animate={{ opacity: 1, x: 0 }}
+                                  exit={
+                                    isMotionPaused
+                                      ? undefined
+                                      : { opacity: 0, x: -6 }
+                                  }
+                                  transition={{ duration: 0.2 }}
+                                  className="flex flex-col whitespace-nowrap"
+                                >
+                                  <span className="text-xs font-semibold text-[#111113] dark:text-white">
+                                    {shirt.name}
+                                  </span>
+                                  <span className="mt-0.5 flex items-center gap-2 font-mono text-[10px] text-[#111113]/60 dark:text-white/60">
+                                    <span>{shirt.refCode}</span>
+                                    <span aria-hidden="true" className="opacity-40">
+                                      ·
+                                    </span>
+                                    <span className="font-semibold text-[#16233B] dark:text-white/90">
+                                      {formatFabricPrice(
+                                        shirt.priceArs,
+                                        currency
+                                      )}
+                                    </span>
+                                  </span>
+                                </motion.span>
+                              )}
+                            </AnimatePresence>
+                          </motion.button>
                         );
                       })}
                     </div>

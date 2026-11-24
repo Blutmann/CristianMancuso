@@ -84,8 +84,46 @@ export function StudioShirtStage({
         }}
       />
 
+      {/* Subtle floating ambient particles around the garment */}
+      {!isMotionPaused && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          {[
+            { left: "22%", top: "24%", size: 4, dur: 6.2, delay: 0 },
+            { left: "76%", top: "28%", size: 3, dur: 7.4, delay: 0.8 },
+            { left: "28%", top: "68%", size: 3, dur: 6.8, delay: 1.5 },
+            { left: "72%", top: "64%", size: 4, dur: 5.9, delay: 0.4 },
+            { left: "58%", top: "18%", size: 2.5, dur: 7.1, delay: 1.1 },
+          ].map((p, idx) => (
+            <motion.span
+              key={idx}
+              animate={{
+                y: [-14, 14, -14],
+                x: [-6, 6, -6],
+                opacity: [0.15, 0.55, 0.15],
+              }}
+              transition={{
+                duration: p.dur,
+                delay: p.delay,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{
+                left: p.left,
+                top: p.top,
+                width: p.size,
+                height: p.size,
+              }}
+              className="absolute rounded-full bg-[#B08D57]/60 dark:bg-white/50"
+            />
+          ))}
+        </div>
+      )}
+
       <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Full Transparent RGBA Studio Shirt */}
+        {/* STEP 1 & STEP 4: Full Transparent RGBA Studio Shirt with Magical Levitation */}
         {(step === 1 || step === 4) && (
           <motion.div
             key="stage-full-shirt"
@@ -103,26 +141,74 @@ export function StudioShirtStage({
                 : { type: "spring", stiffness: 140, damping: 22 }
             }
             style={{ transformStyle: "preserve-3d" }}
-            className="relative flex aspect-[3/4] h-[88%] max-h-[470px] max-w-full flex-col items-center justify-center pb-5 select-none"
+            className="relative flex aspect-[3/4] h-[88%] max-h-[470px] max-w-full flex-col items-center justify-center pb-7 select-none"
           >
-            <AnimatePresence mode="sync">
-              <motion.img
-                key={shirt.id}
-                src={shirt.studioImage}
-                alt={`${shirt.name} — ${shirt.composition}`}
-                draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-x-0 top-0 bottom-5 h-[calc(100%-20px)] w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
-              />
-            </AnimatePresence>
+            {/* Organic 5s Magical Levitation Wrapper */}
+            <motion.div
+              animate={
+                isMotionPaused
+                  ? { y: 0, rotate: 0, scale: 1 }
+                  : {
+                      y: [-10, 10, -10],
+                      rotate: [-1.2, 1.2, -1.2],
+                      scale: [1, 1.025, 1],
+                    }
+              }
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="relative h-full w-full"
+            >
+              <AnimatePresence mode="sync">
+                <motion.img
+                  key={shirt.id}
+                  src={shirt.studioImage}
+                  alt={`${shirt.name} — ${shirt.composition}`}
+                  draggable={false}
+                  initial={isMotionPaused ? false : { opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_24px_38px_rgba(0,0,0,0.62)]"
+                />
+              </AnimatePresence>
 
-            {/* Soft Elliptical Floor Shadow giving real air-suspended depth */}
-            <div
+              {/* Fast Diagonal Specular Shimmer Flash on Fabric Change */}
+              {!isMotionPaused && (
+                <motion.div
+                  key={`shimmer-${shirt.id}`}
+                  aria-hidden="true"
+                  initial={{ x: "-130%", opacity: 0 }}
+                  animate={{ x: "150%", opacity: [0, 0.75, 0] }}
+                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute inset-y-4 left-0 z-10 w-1/2 -skew-x-20"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.48) 50%, transparent 100%)",
+                  }}
+                />
+              )}
+            </motion.div>
+
+            {/* Synchronized Breathing Elliptical Floor Shadow */}
+            <motion.div
               aria-hidden="true"
-              className="pointer-events-none absolute bottom-0 left-1/2 h-4 w-44 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-xl dark:bg-black dark:opacity-55"
+              animate={
+                isMotionPaused
+                  ? { scale: 1, opacity: 0.28 }
+                  : {
+                      scale: [0.85, 1.12, 0.85],
+                      opacity: [0.18, 0.45, 0.18],
+                    }
+              }
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="pointer-events-none absolute bottom-1 left-1/2 h-4 w-44 -translate-x-1/2 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
 
             {/* Step 4 tailored measurement lines anchored to the garment silhouette */}
