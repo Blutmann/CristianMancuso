@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight, MessageCircle, Pause, Play } from "lucide-react";
 import { buildWhatsAppUrl } from "@/data/config";
 import { useMotion } from "@/context/MotionContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const DIRECT_WHATSAPP_URL = buildWhatsAppUrl(
   "Hola Cristian Mancuso Atelier, quisiera realizar una consulta sobre camisas a medida."
@@ -19,19 +20,8 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
           {/* Brand Column */}
           <div className="md:col-span-5">
-            <Link
-              href="/"
-              className="relative inline-flex items-center gap-3 rounded-xl border border-dashed border-white/25 bg-white/[0.04] px-3.5 py-2"
-            >
-              <span className="font-display text-xs font-bold tracking-[0.14em] text-stitch">
-                CM
-              </span>
-              <span aria-hidden="true" className="text-white/25 text-[10px]">
-                {"//"}
-              </span>
-              <span className="font-display text-xs font-bold tracking-[0.18em] text-white uppercase">
-                Cristian Mancuso
-              </span>
+            <Link href="/" className="inline-flex items-center">
+              <BrandLogo markSize={36} />
             </Link>
 
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">

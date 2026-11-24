@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { useAtelier } from "@/context/AtelierContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const NAV_LINKS = [
   { label: "Colección", href: "/#coleccion" },
@@ -69,66 +70,13 @@ export function Navbar() {
             className="pointer-events-none absolute inset-1.5 rounded-xl border border-dashed border-white/18"
           />
 
-          {/* Brand Monogram + Decorative Cuff Buttonhole & Mother-of-Pearl Button */}
+          {/* Brand Logo + Decorative Cuff Buttonhole & Mother-of-Pearl Button */}
           <Link
             id="nav-brand-link"
             href="/"
             className="group relative inline-flex items-center gap-3 rounded-xl px-1.5 py-1 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-white/60"
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 38 22"
-              className="h-5 w-9 shrink-0"
-            >
-              <rect
-                x="1"
-                y="9"
-                width="13"
-                height="4"
-                rx="2"
-                fill="#0B0B0E"
-                stroke="rgba(255,255,255,0.45)"
-                strokeWidth="1"
-              />
-              <circle
-                cx="26"
-                cy="11"
-                r="8.5"
-                fill="#FFFFFF"
-                stroke="rgba(255,255,255,0.85)"
-                strokeWidth="0.9"
-              />
-              <line
-                x1="24"
-                y1="9"
-                x2="28"
-                y2="13"
-                stroke="#D6C3A5"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-              />
-              <line
-                x1="28"
-                y1="9"
-                x2="24"
-                y2="13"
-                stroke="#D6C3A5"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-              />
-            </svg>
-
-            <div className="flex items-center gap-2">
-              <span className="font-display text-xs font-bold tracking-[0.14em] text-white">
-                CM
-              </span>
-              <span aria-hidden="true" className="text-white/25 text-[10px]">
-                {"//"}
-              </span>
-              <span className="font-display text-[11px] sm:text-xs font-bold tracking-[0.18em] text-white/90 uppercase leading-none">
-                Cristian Mancuso
-              </span>
-            </div>
+            <BrandLogo markSize={30} />
           </Link>
 
           {/* Center Navigation Links */}

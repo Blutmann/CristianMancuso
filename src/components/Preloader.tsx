@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMotion } from "@/context/MotionContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const PRELOADER_DURATION_MS = 1350;
 const CURTAIN_DURATION_MS = 650;
@@ -122,11 +123,8 @@ export function Preloader() {
 
       {/* Top Monogram Row */}
       <div className="relative z-10 flex items-center justify-between border-b border-white/[0.08] pb-4">
-        <div className="flex items-center gap-3 font-mono text-[11px] sm:text-xs tracking-[0.22em] text-primary">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-champagne" />
-          <span>CM // CRISTIAN MANCUSO</span>
-        </div>
-        <span className="hidden sm:inline font-mono text-[11px] tracking-[0.2em] text-muted uppercase">
+        <BrandLogo markSize={28} />
+        <span className="hidden sm:inline text-xs tracking-[0.18em] text-muted uppercase">
           Buenos Aires · Sastrería de Autor
         </span>
       </div>
