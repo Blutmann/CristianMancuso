@@ -32,6 +32,7 @@ export interface ShirtGLBViewerProps {
   buttonId: ButtonOption;
   step: 1 | 4;
   isMotionPaused: boolean;
+  onWebGLError?: () => void;
 }
 
 interface WindowpaneUniforms {
@@ -591,6 +592,7 @@ export default function ShirtGLBViewer({
   buttonId,
   step,
   isMotionPaused,
+  onWebGLError,
 }: ShirtGLBViewerProps) {
   const { progress } = useProgress();
   const [modelReady, setModelReady] = useState(false);
@@ -604,6 +606,28 @@ export default function ShirtGLBViewer({
   ]);
   const [focusSignal, setFocusSignal] = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
+  const canvasCleanupRef = useRef<(() => void) | null>(null);
+
+  // Detect unsupported WebGL environments gracefully on client mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const testCanvas = document.createElement("canvas");
+      const gl =
+        testCanvas.getContext("webgl2") ||
+        testCanvas.getContext("webgl") ||
+        testCanvas.getContext("experimental-webgl");
+      if (!gl) {
+        onWebGLError?.();
+      }
+    } catch {
+      onWebGLError?.();
+    }
+    return () => {
+      canvasCleanupRef.current?.();
+      canvasCleanupRef.current = null;
+    };
+  }, [onWebGLError]);
 
   const handleModelReady = useMemo(() => () => setModelReady(true), []);
   const handleMobileMount = useMemo(
@@ -787,6 +811,20 @@ export default function ShirtGLBViewer({
               alpha: true,
               toneMapping: THREE.ACESFilmicToneMapping,
               toneMappingExposure: 1.02,
+            }}
+            onCreated={({ gl }) => {
+              const canvas = gl.domElement;
+              const handleContextLost = (e: Event) => {
+                e.preventDefault();
+                onWebGLError?.();
+              };
+              canvas.addEventListener("webglcontextlost", handleContextLost);
+              canvasCleanupRef.current = () => {
+                canvas.removeEventListener(
+                  "webglcontextlost",
+                  handleContextLost
+                );
+              };
             }}
           >
             <ambientLight intensity={0.55} />

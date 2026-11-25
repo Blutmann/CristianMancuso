@@ -26,10 +26,40 @@ const INITIAL_STATE: InquiryFormState = {
 
 export function EmpresasInquiryForm() {
   const [form, setForm] = useState<InquiryFormState>(INITIAL_STATE);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof InquiryFormState, string>>
+  >({});
   const [submitted, setSubmitted] = useState(false);
+
+  const updateField = (key: keyof InquiryFormState, value: string) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    if (fieldErrors[key]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const errors: Partial<Record<keyof InquiryFormState, string>> = {};
+    if (form.fullName.trim().length < 3) {
+      errors.fullName = "Ingresá tu nombre y apellido (mínimo 3 caracteres).";
+    }
+    if (form.company.trim().length < 2) {
+      errors.company = "Ingresá el nombre de tu empresa o local.";
+    }
+    if (form.contact.trim().length < 6) {
+      errors.contact =
+        "Ingresá un WhatsApp o email válido (mínimo 6 caracteres).";
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
+    setFieldErrors({});
     setSubmitted(true);
   };
 
@@ -37,12 +67,12 @@ export function EmpresasInquiryForm() {
     [
       `Hola Cristian Mancuso — Consulta ${form.inquiryType}:`,
       "",
-      `• Nombre: ${form.fullName}`,
-      `• Empresa / Local: ${form.company}`,
-      `• Ciudad / País: ${form.location}`,
+      `• Nombre: ${form.fullName.trim()}`,
+      `• Empresa / Local: ${form.company.trim()}`,
+      `• Ciudad / País: ${form.location.trim()}`,
       `• Tipo de consulta: ${form.inquiryType}`,
-      `• Cantidad estimada: ${form.estimatedQty}`,
-      `• Contacto: ${form.contact}`,
+      `• Cantidad estimada: ${form.estimatedQty.trim()}`,
+      `• Contacto: ${form.contact.trim()}`,
     ].join("\n")
   );
 
@@ -110,6 +140,7 @@ export function EmpresasInquiryForm() {
             onClick={() => {
               setSubmitted(false);
               setForm(INITIAL_STATE);
+              setFieldErrors({});
             }}
             className="ds-btn-secondary"
           >
@@ -122,7 +153,11 @@ export function EmpresasInquiryForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="liquid-glass rounded-2xl p-6 sm:p-8">
+    <form
+      onSubmit={handleSubmit}
+      noValidate
+      className="liquid-glass rounded-2xl p-6 sm:p-8"
+    >
       <div className="mb-6">
         <p className="ds-caption text-[#16233B] uppercase dark:text-gold">
           Contacto comercial directo
@@ -173,13 +208,22 @@ export function EmpresasInquiryForm() {
             id="emp-fullname"
             type="text"
             required
+            minLength={3}
+            aria-invalid={Boolean(fieldErrors.fullName)}
             value={form.fullName}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, fullName: e.target.value }))
-            }
+            onChange={(e) => updateField("fullName", e.target.value)}
             placeholder="Ej. Martín Gómez"
-            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
+            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+              fieldErrors.fullName
+                ? "border-red-500/80 focus:border-red-500"
+                : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"
+            }`}
           />
+          {fieldErrors.fullName && (
+            <p role="alert" className="mt-1.5 text-xs text-red-600 dark:text-red-300">
+              {fieldErrors.fullName}
+            </p>
+          )}
         </div>
 
         <div>
@@ -193,13 +237,22 @@ export function EmpresasInquiryForm() {
             id="emp-company"
             type="text"
             required
+            minLength={2}
+            aria-invalid={Boolean(fieldErrors.company)}
             value={form.company}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, company: e.target.value }))
-            }
+            onChange={(e) => updateField("company", e.target.value)}
             placeholder="Ej. Estudio / Boutique"
-            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
+            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+              fieldErrors.company
+                ? "border-red-500/80 focus:border-red-500"
+                : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"
+            }`}
           />
+          {fieldErrors.company && (
+            <p role="alert" className="mt-1.5 text-xs text-red-600 dark:text-red-300">
+              {fieldErrors.company}
+            </p>
+          )}
         </div>
 
         <div>
@@ -214,9 +267,7 @@ export function EmpresasInquiryForm() {
             type="text"
             required
             value={form.location}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, location: e.target.value }))
-            }
+            onChange={(e) => updateField("location", e.target.value)}
             placeholder="Ej. Córdoba, Argentina"
             className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
           />
@@ -234,9 +285,7 @@ export function EmpresasInquiryForm() {
             type="text"
             required
             value={form.estimatedQty}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, estimatedQty: e.target.value }))
-            }
+            onChange={(e) => updateField("estimatedQty", e.target.value)}
             placeholder="Ej. 25 camisas"
             className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
           />
@@ -254,11 +303,22 @@ export function EmpresasInquiryForm() {
           id="emp-contact"
           type="text"
           required
+          minLength={6}
+          aria-invalid={Boolean(fieldErrors.contact)}
           value={form.contact}
-          onChange={(e) => setForm((f) => ({ ...f, contact: e.target.value }))}
+          onChange={(e) => updateField("contact", e.target.value)}
           placeholder="Ej. +54 9 11 ... o nombre@empresa.com"
-          className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
+          className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+            fieldErrors.contact
+              ? "border-red-500/80 focus:border-red-500"
+              : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"
+          }`}
         />
+        {fieldErrors.contact && (
+          <p role="alert" className="mt-1.5 text-xs text-red-600 dark:text-red-300">
+            {fieldErrors.contact}
+          </p>
+        )}
       </div>
 
       <button

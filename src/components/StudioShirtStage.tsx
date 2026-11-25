@@ -1,5 +1,6 @@
 "use client";
 
+import { Component, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -13,6 +14,84 @@ import {
   type MonogramPlacement,
   type MonogramThreadOption,
 } from "@/data/catalog";
+
+interface WebGLErrorBoundaryProps {
+  fallback: ReactNode;
+  children: ReactNode;
+}
+
+interface WebGLErrorBoundaryState {
+  hasError: boolean;
+}
+
+class WebGLErrorBoundary extends Component<
+  WebGLErrorBoundaryProps,
+  WebGLErrorBoundaryState
+> {
+  constructor(props: WebGLErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): WebGLErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
+function ShirtStudioFallback({
+  shirt,
+  isMotionPaused,
+}: {
+  shirt: CatalogShirt;
+  isMotionPaused: boolean;
+}) {
+  return (
+    <div className="flex h-full w-full flex-col items-center justify-center p-4">
+      <motion.div
+        animate={
+          isMotionPaused
+            ? { y: 0, scale: 1 }
+            : { y: [-8, 8, -8], scale: [1, 1.015, 1] }
+        }
+        transition={{
+          duration: 4.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="relative flex h-[82%] max-h-[380px] w-full items-center justify-center"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={shirt.studioImage}
+          alt={shirt.name}
+          draggable={false}
+          className="h-full w-auto object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_26px_38px_rgba(0,0,0,0.62)]"
+        />
+      </motion.div>
+      <motion.span
+        aria-hidden="true"
+        animate={
+          isMotionPaused
+            ? { scale: 1, opacity: 0.22 }
+            : { scale: [0.88, 1.08, 0.88], opacity: [0.16, 0.34, 0.16] }
+        }
+        transition={{
+          duration: 4.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="pointer-events-none mt-2 h-3 w-36 rounded-full bg-[#111113] blur-lg dark:bg-black"
+      />
+    </div>
+  );
+}
 
 const ShirtGLBViewer = dynamic(() => import("@/components/ShirtGLBViewer"), {
   ssr: false,
@@ -53,6 +132,8 @@ export function StudioShirtStage({
   focusedMeasure,
   isMotionPaused,
 }: StudioShirtStageProps) {
+  const [webglFailed, setWebglFailed] = useState(false);
+
   const selectedButton =
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
   const selectedThread =
@@ -75,7 +156,7 @@ export function StudioShirtStage({
       />
 
       <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with 360° Orbit & Manual Zoom Controls */}
+        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with WebGL ErrorBoundary & Automatic Studio Fallback */}
         {(step === 1 || step === 4) && (
           <motion.div
             key="stage-glb-3d"
@@ -85,12 +166,29 @@ export function StudioShirtStage({
             transition={{ duration: 0.3 }}
             className="relative h-[390px] w-full sm:h-[440px] lg:h-full"
           >
-            <ShirtGLBViewer
-              shirt={shirt}
-              buttonId={buttonId}
-              step={step}
-              isMotionPaused={isMotionPaused}
-            />
+            {webglFailed ? (
+              <ShirtStudioFallback
+                shirt={shirt}
+                isMotionPaused={isMotionPaused}
+              />
+            ) : (
+              <WebGLErrorBoundary
+                fallback={
+                  <ShirtStudioFallback
+                    shirt={shirt}
+                    isMotionPaused={isMotionPaused}
+                  />
+                }
+              >
+                <ShirtGLBViewer
+                  shirt={shirt}
+                  buttonId={buttonId}
+                  step={step}
+                  isMotionPaused={isMotionPaused}
+                  onWebGLError={() => setWebglFailed(true)}
+                />
+              </WebGLErrorBoundary>
+            )}
           </motion.div>
         )}
 
