@@ -6,8 +6,8 @@
 ---
 
 ## 1. Sistema Tipográfico Único (`Plus Jakarta Sans` + `JetBrains Mono`)
-- **Fuente Principal Global (`--font-sans`):** `Plus Jakarta Sans` para **TODOS los títulos (`H1`, `H2`, `H3`), botones, navegación y cuerpo**. *(Se elimina `Syne` para evitar saltos de estilo entre secciones).*
-- **Fuente Técnica (`--font-mono`):** `JetBrains Mono` reservada **exclusivamente** para `Ref. Art. XXXX`, precios `ARS` y medidas en `cm` (`tabular-nums`).
+- **Fuente Principal Global (`--font-sans`):** `Plus Jakarta Sans` para **TODOS los títulos (`H1`, `H2`, `H3`), precios (`tabular-nums`), botones, navegación y cuerpo**. *(Se elimina `Syne` para evitar saltos de estilo entre secciones).*
+- **Fuente Técnica (`--font-mono`):** `JetBrains Mono` reservada **exclusivamente** para `Ref. Art. XXXX` y medidas en `cm` (`tabular-nums`).
 
 ### Escala Tipográfica Estandarizada (Desktop & Mobile)
 
@@ -39,7 +39,7 @@
 ## 3. Geometría, Botones y Contenedor (Single Rail)
 - **Riel Único Global:** `max-w-[1360px] mx-auto w-full px-5 sm:px-8 lg:px-10`.
 - **Botones y Pills (`rounded-full` obligatorio en toda la web):**
-  - **Primario (`.ds-btn-primary`):** `rounded-full min-h-[44px] px-6 text-xs font-semibold tracking-[0.04em] uppercase` (`bg-[#111113] text-white` en claro / `bg-white text-[#0B0B0E]` en oscuro).
+  - **Primario (`.ds-btn-primary`):** `rounded-full min-h-[44px] px-6 text-xs font-semibold tracking-[0.04em] uppercase` (`bg-[#16233B] hover:bg-[#1E2F4F] text-white` en claro / `bg-white text-[#0B0B0E]` en oscuro).
   - **Secundario (`.ds-btn-secondary`):** `rounded-full min-h-[44px] px-5 text-xs font-semibold` en `.liquid-glass`.
 - **Tarjetas & Contenedores (`.liquid-glass`):** `rounded-2xl` obligatorio (`16px`).
 - **Prohibido:** Colores heredados de V1 (`text-cyan`, `text-champagne`, `bg-obsidian`), botones `rounded-xl` mezclados con `rounded-full`, y tipografía `Syne`.
