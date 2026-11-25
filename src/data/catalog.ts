@@ -39,10 +39,10 @@ export interface CatalogShirt {
 export const CATALOG_SHIRTS: CatalogShirt[] = [
   {
     id: "pima-piura-noche",
-    name: "Pima Piura Noche",
+    name: "Piura Noche",
     refCode: "Ref. Art. 2529",
     fabricId: "pima",
-    fabricLabel: "Algodón Peruano",
+    fabricLabel: "Algodón Pima Peruano",
     priceArs: 120000,
     compareAtArs: 140000,
     badge: "DESTACADO",
@@ -56,10 +56,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "pima-piura-acero",
-    name: "Pima Piura Acero",
+    name: "Piura Acero",
     refCode: "Ref. Art. 2530",
     fabricId: "pima",
-    fabricLabel: "Algodón Peruano",
+    fabricLabel: "Algodón Pima Peruano",
     priceArs: 120000,
     compareAtArs: 140000,
     weaveKind: "twill",
@@ -72,7 +72,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "biella-lino-negro",
-    name: "Biella Lino Puro Negro",
+    name: "Biella Negro",
     refCode: "Ref. Art. Lino 01",
     fabricId: "italiano",
     fabricLabel: "Lino Italiano",
@@ -88,7 +88,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "biella-lino-marfil",
-    name: "Biella Lino Puro Marfil",
+    name: "Biella Marfil",
     refCode: "Ref. Art. Lino 02",
     fabricId: "italiano",
     fabricLabel: "Lino Italiano",
@@ -105,7 +105,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "urbano-oxford-grafito",
-    name: "Urbano Oxford Grafito",
+    name: "Oxford Grafito",
     refCode: "Ref. Art. 2514",
     fabricId: "urbano",
     fabricLabel: "Algodón Urbano",
@@ -120,7 +120,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "cuadros-ventana-lino-algodon",
-    name: "Cuadros Ventana Lino",
+    name: "Cuadros Lino",
     refCode: "Ref. Art. 2518",
     fabricId: "urbano",
     fabricLabel: "Algodón Urbano",
@@ -137,7 +137,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "donna-cloque-raya-mineral",
-    name: "Donna Raya Mineral",
+    name: "Donna Mineral",
     refCode: "Ref. Donna 027",
     fabricId: "donna",
     fabricLabel: "Mancuso Donna",
