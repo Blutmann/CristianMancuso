@@ -199,11 +199,11 @@ export function ShirtBuilderSection() {
     <section
       id="arma-tu-camisa"
       aria-labelledby="builder-heading"
-      className="relative bg-transparent text-[#111113] dark:text-[#F5F5F7]"
+      className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-5 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:px-12 lg:pt-24 lg:pb-5">
+      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-4 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:px-12 lg:pt-24 lg:pb-5">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
           <h1
             id="builder-heading"
             className="font-display text-2xl font-bold tracking-[-0.025em] text-[#111113] sm:text-3xl dark:text-white"
@@ -223,7 +223,7 @@ export function ShirtBuilderSection() {
                   key={item.id}
                   type="button"
                   onClick={() => setStep(item.id)}
-                  className={`cursor-pointer relative flex min-h-[40px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-xs font-medium transition-colors lg:flex-none ${
+                  className={`cursor-pointer relative flex min-h-[44px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors lg:min-h-[40px] lg:flex-none lg:px-3.5 ${
                     isActive
                       ? "text-white dark:text-[#090B10]"
                       : isDone
@@ -258,8 +258,8 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Photorealistic Studio Dress Shirt & Real Macros (No duplicate floating pills) */}
-        <div className="relative flex min-h-[340px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[390px] lg:min-h-0">
+        {/* CENTER STAGE: Photorealistic Studio Dress Shirt & Real Macros */}
+        <div className="relative flex h-[46svh] min-h-[320px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[390px] lg:h-auto lg:min-h-0">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}

@@ -8,8 +8,9 @@ import {
   Environment,
   Lightformer,
   OrbitControls,
+  useGLTF,
+  useProgress,
 } from "@react-three/drei";
-import { useGLTF } from "@react-three/drei";
 import { Minus, Move, Plus, Rotate3d, RotateCcw } from "lucide-react";
 import {
   BUTTON_OPTIONS,
@@ -557,6 +558,7 @@ export default function ShirtGLBViewer({
   step,
   isMotionPaused,
 }: ShirtGLBViewerProps) {
+  const { active: isLoadingModel, progress } = useProgress();
   const [targetDistance, setTargetDistance] = useState(DEFAULT_CAMERA_Z);
   const [interactionMode, setInteractionMode] =
     useState<InteractionMode>("rotate");
@@ -600,6 +602,7 @@ export default function ShirtGLBViewer({
 
   const shouldPauseSpin =
     isMotionPaused || interactionMode === "pan" || activePreset !== "completa";
+  const roundedProgress = Math.min(100, Math.round(progress));
 
   return (
     <div
@@ -609,9 +612,30 @@ export default function ShirtGLBViewer({
           : "cursor-grab active:cursor-grabbing"
       }`}
     >
+      {/* Live % Download Progress Overlay while shirt.glb streams on mobile/4G */}
+      {isLoadingModel && roundedProgress < 100 && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+        >
+          <div className="liquid-glass flex flex-col items-center gap-2 rounded-2xl px-5 py-3.5 text-center">
+            <span className="font-mono text-xs font-semibold text-[#111113] tabular-nums dark:text-white">
+              Cargando camisa 3D · {roundedProgress}%
+            </span>
+            <div className="h-1 w-36 overflow-hidden rounded-full bg-black/10 dark:bg-white/15">
+              <div
+                className="h-full rounded-full bg-[#16233B] transition-all duration-150 dark:bg-white"
+                style={{ width: `${Math.max(8, roundedProgress)}%` }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <Canvas
         shadows
-        dpr={[1, 2]}
+        dpr={[1, 1.5]}
         camera={{ position: [0, 0.02, DEFAULT_CAMERA_Z], fov: 36 }}
         gl={{
           antialias: true,

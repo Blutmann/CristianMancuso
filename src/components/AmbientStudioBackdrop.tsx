@@ -6,8 +6,24 @@ export function AmbientStudioBackdrop() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#F7F6F3] transition-colors duration-500 dark:bg-[#0B0B0E]"
     >
-      {/* LIGHT MODE: Warm alabaster + subtle architectural silver daylight beams */}
-      <div className="absolute inset-0 opacity-100 transition-opacity duration-500 dark:opacity-0">
+      {/* MOBILE (< 768px): Static lightweight CSS gradient (zero heavy blur orbs) */}
+      <div
+        className="absolute inset-0 md:hidden dark:hidden"
+        style={{
+          background:
+            "linear-gradient(145deg, #FFFFFF 0%, #F7F6F3 48%, #EFECE5 100%)",
+        }}
+      />
+      <div
+        className="hidden absolute inset-0 dark:block md:dark:hidden"
+        style={{
+          background:
+            "linear-gradient(145deg, #12151E 0%, #0B0B0E 52%, #0E1320 100%)",
+        }}
+      />
+
+      {/* DESKTOP (>= 768px) LIGHT MODE: Warm alabaster + subtle architectural daylight beams */}
+      <div className="hidden absolute inset-0 opacity-100 transition-opacity duration-500 md:block dark:opacity-0">
         <div
           className="animate-orb-slow absolute -top-[16%] left-[12%] h-[58vh] w-[58vh] rounded-full blur-[120px]"
           style={{
@@ -31,8 +47,8 @@ export function AmbientStudioBackdrop() {
         />
       </div>
 
-      {/* DARK MODE: Deep obsidian + luminous studio diagonal light beams */}
-      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 dark:opacity-100">
+      {/* DESKTOP (>= 768px) DARK MODE: Deep obsidian + luminous studio diagonal light beams */}
+      <div className="hidden absolute inset-0 opacity-0 transition-opacity duration-500 md:block dark:opacity-100">
         <div
           className="animate-orb-slow absolute -top-[14%] left-[18%] h-[56vh] w-[56vh] rounded-full blur-[120px]"
           style={{
@@ -56,8 +72,8 @@ export function AmbientStudioBackdrop() {
         />
       </div>
 
-      {/* Subtle fine weave film grain */}
-      <div className="atelier-grain absolute inset-0" />
+      {/* Subtle fine weave film grain (desktop only) */}
+      <div className="atelier-grain hidden absolute inset-0 md:block" />
     </div>
   );
 }

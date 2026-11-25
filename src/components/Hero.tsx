@@ -174,6 +174,8 @@ export function Hero() {
               <motion.img
                 src="/images/shirts/pima-noche.png"
                 alt="Camisa a medida Cristian Mancuso en Algodón Pima Peruano Azul Noche"
+                loading="eager"
+                fetchPriority="high"
                 draggable={false}
                 initial={isMotionPaused ? false : { opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}

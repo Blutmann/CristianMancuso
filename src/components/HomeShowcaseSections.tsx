@@ -81,10 +81,10 @@ export function HomeShowcaseSections() {
                 >
                   <Link
                     href={`/coleccion?gama=${gama.id}`}
-                    className="group liquid-glass flex h-full flex-row items-center gap-4 overflow-hidden rounded-3xl p-5 transition-all duration-300 hover:border-black/20 sm:gap-5 sm:p-6 dark:hover:border-white/30"
+                    className="group liquid-glass flex h-full flex-row items-center gap-3.5 overflow-hidden rounded-3xl p-4 transition-all duration-300 hover:border-black/20 sm:gap-5 sm:p-6 dark:hover:border-white/30"
                   >
                     {/* Left: Floating Shirt + Elliptical Floor Shadow + Real 2.5x Magnifier Loupe */}
-                    <div className="relative flex h-44 w-32 shrink-0 flex-col items-center justify-center sm:h-48 sm:w-36">
+                    <div className="relative flex h-40 w-28 shrink-0 flex-col items-center justify-center sm:h-48 sm:w-36">
                       <div
                         className={`relative h-full w-full pb-3 ${
                           isMotionPaused

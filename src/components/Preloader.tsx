@@ -5,7 +5,9 @@ import { useMotion } from "@/context/MotionContext";
 import { BrandLogo } from "@/components/BrandLogo";
 
 const PRELOADER_DURATION_MS = 1350;
+const MOBILE_PRELOADER_DURATION_MS = 550;
 const CURTAIN_DURATION_MS = 650;
+const MOBILE_CURTAIN_DURATION_MS = 320;
 const SESSION_KEY = "cm_preloader_seen";
 
 export function Preloader() {
@@ -37,12 +39,17 @@ export function Preloader() {
         return;
       }
 
+      const curtainMs =
+        window.innerWidth < 768
+          ? MOBILE_CURTAIN_DURATION_MS
+          : CURTAIN_DURATION_MS;
+
       setProgress(100);
       setPhase("exiting");
       exitTimerRef.current = window.setTimeout(() => {
         setPhase("hidden");
         markPreloaderDone();
-      }, CURTAIN_DURATION_MS);
+      }, curtainMs);
     },
     [markPreloaderDone]
   );
@@ -64,11 +71,15 @@ export function Preloader() {
       return () => window.cancelAnimationFrame(id);
     }
 
+    const durationMs =
+      window.innerWidth < 768
+        ? MOBILE_PRELOADER_DURATION_MS
+        : PRELOADER_DURATION_MS;
     const startTime = performance.now();
 
     const step = (now: number) => {
       const elapsed = now - startTime;
-      const raw = Math.min(elapsed / PRELOADER_DURATION_MS, 1);
+      const raw = Math.min(elapsed / durationMs, 1);
       // Ease-out cubic for brisk, refined sartorial cadence
       const eased = 1 - Math.pow(1 - raw, 3);
       const nextValue = Math.round(eased * 100);

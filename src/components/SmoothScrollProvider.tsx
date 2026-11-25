@@ -16,7 +16,11 @@ export function SmoothScrollProvider({
   const { isMotionPaused } = useMotion();
 
   useEffect(() => {
-    if (isMotionPaused) {
+    const isTouchOrMobile =
+      window.matchMedia("(pointer: coarse)").matches ||
+      window.innerWidth < 1024;
+
+    if (isMotionPaused || isTouchOrMobile) {
       document.documentElement.classList.remove("lenis", "lenis-smooth");
       ScrollTrigger.refresh();
       return;
@@ -26,7 +30,6 @@ export function SmoothScrollProvider({
       duration: 1.25,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.35,
     });
 
     const onScroll = () => {

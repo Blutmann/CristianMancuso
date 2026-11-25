@@ -188,6 +188,17 @@ html.dark .liquid-glass-active {
     0 22px 54px rgba(0, 0, 0, 0.6);
 }
 
+/* Mobile 60fps GPU budget: lower backdrop-filter blur on screens < 768px */
+@media (max-width: 767px) {
+  .liquid-glass,
+  .liquid-glass-active,
+  html.dark .liquid-glass,
+  html.dark .liquid-glass-active {
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+  }
+}
+
 /* Slow ambient liquid light orb drift (GPU-only) */
 @keyframes cm-orb-drift {
   0% {
