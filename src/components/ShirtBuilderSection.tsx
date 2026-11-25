@@ -201,7 +201,7 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-5 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:min-h-[700px] lg:max-h-[920px] lg:px-12 lg:pt-24 lg:pb-5">
+      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-5 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:px-12 lg:pt-24 lg:pb-5">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <h1

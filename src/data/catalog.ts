@@ -120,7 +120,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
   },
   {
     id: "cuadros-ventana-lino-algodon",
-    name: "Cuadros Ventana Lino & Algodón",
+    name: "Cuadros Ventana Lino",
     refCode: "Ref. Art. 2518",
     fabricId: "urbano",
     fabricLabel: "Algodón Urbano",

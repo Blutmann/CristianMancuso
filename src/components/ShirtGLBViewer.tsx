@@ -10,7 +10,7 @@ import {
   OrbitControls,
 } from "@react-three/drei";
 import { useGLTF } from "@react-three/drei";
-import { Minus, Plus, Rotate3d, RotateCcw } from "lucide-react";
+import { Minus, Move, Plus, Rotate3d, RotateCcw } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   type ButtonOption,
@@ -208,74 +208,147 @@ function attachSeamlessWindowpaneShader(
   };
 }
 
+type InteractionMode = "rotate" | "pan";
+type FocusPreset = "completa" | "cuello" | "puno";
+
+const FOCUS_PRESETS: Record<
+  FocusPreset,
+  { label: string; target: [number, number, number]; distance: number }
+> = {
+  completa: { label: "Completa", target: [0, 0, 0], distance: DEFAULT_CAMERA_Z },
+  cuello: { label: "Cuello", target: [0, 0.68, 0.05], distance: 1.7 },
+  puno: { label: "Puño", target: [0.58, -0.56, 0.08], distance: 1.78 },
+};
+
 function CameraZoomRig({
   targetDistance,
+  focusTarget,
+  focusSignal,
   resetSignal,
+  interactionMode,
   isMotionPaused,
 }: {
   targetDistance: number;
+  focusTarget: [number, number, number];
+  focusSignal: number;
   resetSignal: number;
+  interactionMode: InteractionMode;
   isMotionPaused: boolean;
 }) {
   const { camera } = useThree();
   const controlsRef =
     useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
-  const lastResetRef = useRef(resetSignal);
+  const desiredTargetRef = useRef<THREE.Vector3 | null>(null);
+  const desiredDistRef = useRef<number | null>(null);
 
-  useFrame((_, delta) => {
-    const controls = controlsRef.current;
-    if (!controls) return;
+  // Trigger smooth distance transition when user clicks + / - / preset
+  useEffect(() => {
+    desiredDistRef.current = targetDistance;
+  }, [targetDistance]);
 
-    // Handle explicit Reset button: smoothly return to front-facing default position
-    if (lastResetRef.current !== resetSignal) {
-      lastResetRef.current = resetSignal;
-      if (isMotionPaused) {
-        camera.position.set(0, 0.02, DEFAULT_CAMERA_Z);
-        controls.target.set(0, 0, 0);
-        controls.update();
-        return;
-      }
-    }
+  // Trigger smooth target transition only when user clicks a Focus Preset
+  useEffect(() => {
+    if (focusSignal === 0) return;
+    desiredTargetRef.current = new THREE.Vector3(...focusTarget);
+  }, [focusSignal, focusTarget]);
 
-    const offset = camera.position.clone().sub(controls.target);
-    const currentDist = offset.length();
-    if (currentDist > 0.001 && Math.abs(currentDist - targetDistance) > 0.005) {
-      const nextDist = isMotionPaused
-        ? targetDistance
-        : THREE.MathUtils.lerp(
-            currentDist,
-            targetDistance,
-            Math.min(1, delta * 7)
-          );
-      offset.setLength(nextDist);
-      camera.position.copy(controls.target).add(offset);
-      controls.update();
-    }
-  });
-
+  // Explicit Reset returns smoothly/cleanly to default front view
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls || resetSignal === 0) return;
+    desiredTargetRef.current = null;
+    desiredDistRef.current = null;
     camera.position.set(0, 0.02, DEFAULT_CAMERA_Z);
     controls.target.set(0, 0, 0);
     controls.update();
   }, [resetSignal, camera]);
 
+  useFrame((_, delta) => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+
+    const lerpAlpha = isMotionPaused ? 1 : Math.min(1, delta * 7);
+    let dirty = false;
+
+    if (desiredTargetRef.current) {
+      const distToTarget = controls.target.distanceTo(desiredTargetRef.current);
+      if (distToTarget > 0.004) {
+        const prevTarget = controls.target.clone();
+        controls.target.lerp(desiredTargetRef.current, lerpAlpha);
+        // Move camera along with target delta so angle stays natural
+        camera.position.add(controls.target.clone().sub(prevTarget));
+        dirty = true;
+      } else {
+        desiredTargetRef.current = null;
+      }
+    }
+
+    if (desiredDistRef.current !== null) {
+      const offset = camera.position.clone().sub(controls.target);
+      const currentDist = offset.length();
+      if (
+        currentDist > 0.001 &&
+        Math.abs(currentDist - desiredDistRef.current) > 0.005
+      ) {
+        const nextDist = THREE.MathUtils.lerp(
+          currentDist,
+          desiredDistRef.current,
+          lerpAlpha
+        );
+        offset.setLength(nextDist);
+        camera.position.copy(controls.target).add(offset);
+        dirty = true;
+      } else {
+        desiredDistRef.current = null;
+      }
+    }
+
+    if (dirty) {
+      controls.update();
+    }
+  });
+
   return (
     <OrbitControls
       ref={controlsRef}
       enableZoom={false}
-      enablePan={false}
+      enablePan={true}
+      screenSpacePanning={true}
+      panSpeed={0.9}
       minDistance={MIN_CAMERA_DIST}
       maxDistance={MAX_CAMERA_DIST}
       minPolarAngle={Math.PI / 2.9}
       maxPolarAngle={Math.PI / 1.72}
       dampingFactor={0.07}
       enableDamping
-      touches={{
-        ONE: THREE.TOUCH.ROTATE,
-        TWO: THREE.TOUCH.DOLLY_ROTATE,
+      onStart={() => {
+        // Never fight manual user drag/pan
+        desiredTargetRef.current = null;
       }}
+      mouseButtons={
+        interactionMode === "pan"
+          ? {
+              LEFT: THREE.MOUSE.PAN,
+              MIDDLE: THREE.MOUSE.DOLLY,
+              RIGHT: THREE.MOUSE.ROTATE,
+            }
+          : {
+              LEFT: THREE.MOUSE.ROTATE,
+              MIDDLE: THREE.MOUSE.DOLLY,
+              RIGHT: THREE.MOUSE.PAN,
+            }
+      }
+      touches={
+        interactionMode === "pan"
+          ? {
+              ONE: THREE.TOUCH.PAN,
+              TWO: THREE.TOUCH.DOLLY_PAN,
+            }
+          : {
+              ONE: THREE.TOUCH.ROTATE,
+              TWO: THREE.TOUCH.DOLLY_ROTATE,
+            }
+      }
     />
   );
 }
@@ -449,12 +522,13 @@ function Clo3DShirtModel({
     });
   }, [clonedScene, fabricTexture, shirt, buttonId]);
 
-  // Gentle idle turntable rotation in Step 1; smooth return to front-facing in Step 4 (Medidas)
+  // Gentle idle turntable rotation in Step 1 (paused while user is inspecting close-up);
+  // smooth return to front-facing in Step 4 (Medidas)
   useFrame((_, delta) => {
     const group = groupRef.current;
     if (!group || isMotionPaused) return;
     if (step === 1) {
-      group.rotation.y += delta * 0.22;
+      group.rotation.y += delta * 0.2;
     } else if (step === 4) {
       const current =
         ((group.rotation.y + Math.PI) % (Math.PI * 2) + Math.PI * 2) %
@@ -484,23 +558,57 @@ export default function ShirtGLBViewer({
   isMotionPaused,
 }: ShirtGLBViewerProps) {
   const [targetDistance, setTargetDistance] = useState(DEFAULT_CAMERA_Z);
+  const [interactionMode, setInteractionMode] =
+    useState<InteractionMode>("rotate");
+  const [activePreset, setActivePreset] = useState<FocusPreset>("completa");
+  const [focusTarget, setFocusTarget] = useState<[number, number, number]>([
+    0, 0, 0,
+  ]);
+  const [focusSignal, setFocusSignal] = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
 
   const handleZoomIn = () => {
-    setTargetDistance((d) => Math.max(MIN_CAMERA_DIST, Number((d - ZOOM_STEP).toFixed(2))));
+    setTargetDistance((d) =>
+      Math.max(MIN_CAMERA_DIST, Number((d - ZOOM_STEP).toFixed(2)))
+    );
   };
 
   const handleZoomOut = () => {
-    setTargetDistance((d) => Math.min(MAX_CAMERA_DIST, Number((d + ZOOM_STEP).toFixed(2))));
+    setTargetDistance((d) =>
+      Math.min(MAX_CAMERA_DIST, Number((d + ZOOM_STEP).toFixed(2)))
+    );
+  };
+
+  const handleSelectPreset = (presetKey: FocusPreset) => {
+    const preset = FOCUS_PRESETS[presetKey];
+    setActivePreset(presetKey);
+    setFocusTarget(preset.target);
+    setTargetDistance(preset.distance);
+    setFocusSignal((n) => n + 1);
+    if (presetKey === "completa") {
+      setInteractionMode("rotate");
+    }
   };
 
   const handleReset = () => {
+    setActivePreset("completa");
+    setInteractionMode("rotate");
+    setFocusTarget([0, 0, 0]);
     setTargetDistance(DEFAULT_CAMERA_Z);
     setResetSignal((n) => n + 1);
   };
 
+  const shouldPauseSpin =
+    isMotionPaused || interactionMode === "pan" || activePreset !== "completa";
+
   return (
-    <div className="relative h-full w-full cursor-grab active:cursor-grabbing">
+    <div
+      className={`relative h-full w-full ${
+        interactionMode === "pan"
+          ? "cursor-move"
+          : "cursor-grab active:cursor-grabbing"
+      }`}
+    >
       <Canvas
         shadows
         dpr={[1, 2]}
@@ -551,7 +659,7 @@ export default function ShirtGLBViewer({
             shirt={shirt}
             buttonId={buttonId}
             step={step}
-            isMotionPaused={isMotionPaused}
+            isMotionPaused={shouldPauseSpin}
             resetSignal={resetSignal}
           />
         </Suspense>
@@ -566,16 +674,49 @@ export default function ShirtGLBViewer({
 
         <CameraZoomRig
           targetDistance={targetDistance}
+          focusTarget={focusTarget}
+          focusSignal={focusSignal}
           resetSignal={resetSignal}
+          interactionMode={interactionMode}
           isMotionPaused={isMotionPaused}
         />
       </Canvas>
 
-      {/* Bottom-left: 360° Drag Hint + Discreet Liquid Glass Zoom (+ / - / Reset) */}
+      {/* Bottom-left: Rotar / Mover toggle + Zoom (- / + / Reset) */}
       <div className="pointer-events-none absolute bottom-3 left-3 z-20 flex flex-wrap items-center gap-2 sm:bottom-4 sm:left-4">
-        <div className="liquid-glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] text-[#111113]/75 dark:text-white/75">
-          <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>Arrastrá para rotar 360°</span>
+        <div
+          role="radiogroup"
+          aria-label="Modo de control 3D"
+          className="liquid-glass pointer-events-auto inline-flex items-center rounded-full p-0.5 text-[11px]"
+        >
+          <button
+            type="button"
+            role="radio"
+            aria-checked={interactionMode === "rotate"}
+            onClick={() => setInteractionMode("rotate")}
+            className={`cursor-pointer inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 font-medium transition-colors ${
+              interactionMode === "rotate"
+                ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+            }`}
+          >
+            <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Rotar</span>
+          </button>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={interactionMode === "pan"}
+            onClick={() => setInteractionMode("pan")}
+            className={`cursor-pointer inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 font-medium transition-colors ${
+              interactionMode === "pan"
+                ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+            }`}
+          >
+            <Move className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Mover</span>
+          </button>
         </div>
 
         <div
@@ -614,6 +755,33 @@ export default function ShirtGLBViewer({
           </button>
         </div>
       </div>
+
+      {/* Bottom-right: Quick Focus Presets (Completa · Cuello · Puño) */}
+      {step === 1 && (
+        <div
+          role="group"
+          aria-label="Enfoque rápido"
+          className="liquid-glass absolute right-3 bottom-3 z-20 hidden items-center gap-0.5 rounded-full p-0.5 text-[11px] sm:right-4 sm:bottom-4 sm:inline-flex"
+        >
+          {(["completa", "cuello", "puno"] as const).map((key) => {
+            const active = activePreset === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => handleSelectPreset(key)}
+                className={`cursor-pointer h-8 rounded-full px-3 font-medium transition-colors ${
+                  active
+                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                }`}
+              >
+                {FOCUS_PRESETS[key].label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
