@@ -652,9 +652,9 @@ export default function ShirtGLBViewer({
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      {/* 3D Canvas Stage (fills vertical height on mobile so controls below never overlap shirt) */}
+      {/* 3D Canvas Stage (explicit mobile height prevents iOS Safari canvas collapse) */}
       <div
-        className={`relative min-h-[290px] w-full flex-1 ${
+        className={`relative h-[340px] w-full sm:h-[390px] lg:h-auto lg:min-h-0 lg:flex-1 ${
           interactionMode === "pan"
             ? "cursor-move"
             : "cursor-grab active:cursor-grabbing"
@@ -683,6 +683,7 @@ export default function ShirtGLBViewer({
         )}
 
         <Canvas
+          className="block !h-full !w-full"
           shadows
           dpr={[1, 1.5]}
           camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 34 }}
@@ -758,8 +759,8 @@ export default function ShirtGLBViewer({
         </Canvas>
       </div>
 
-      {/* Controls Bar: Dedicated clean row BELOW model on mobile (never overlaps shirt), floating on lg+ */}
-      <div className="z-20 flex shrink-0 items-center justify-between gap-2 pt-2 lg:pointer-events-none lg:absolute lg:inset-x-4 lg:bottom-4 lg:pt-0">
+      {/* Controls Bar: Fixed 44px row BELOW model on mobile (never overlaps shirt), floating on lg+ */}
+      <div className="z-20 flex h-[44px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-4 lg:bottom-4 lg:h-auto lg:pt-0">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"

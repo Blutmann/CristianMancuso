@@ -63,7 +63,7 @@ export function StudioShirtStage({
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent">
+    <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent sm:h-[440px] lg:h-full">
       {/* Subtle studio softbox halo behind the 3D garment / macro */}
       <div
         aria-hidden="true"
@@ -83,7 +83,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3 }}
-            className="relative h-full w-full"
+            className="relative h-[390px] w-full sm:h-[440px] lg:h-full"
           >
             <ShirtGLBViewer
               shirt={shirt}

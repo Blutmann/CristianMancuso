@@ -258,8 +258,8 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Tall Vertical 3D Stage on Mobile + Full Flex Stage on Desktop */}
-        <div className="relative flex h-[48svh] min-h-[360px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[410px] lg:h-auto lg:min-h-0">
+        {/* CENTER STAGE: Explicit Mobile Height (iOS Safari safe) + Full Flex Stage on Desktop */}
+        <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-3xl sm:h-[440px] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
