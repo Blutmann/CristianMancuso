@@ -360,9 +360,14 @@ function Clo3DShirtModel({
   step,
   isMotionPaused,
   resetSignal,
-}: ShirtGLBViewerProps & { resetSignal: number }) {
+  onReady,
+}: ShirtGLBViewerProps & { resetSignal: number; onReady: () => void }) {
   const { scene } = useGLTF(MODEL_PATH, true);
   const groupRef = useRef<THREE.Group | null>(null);
+
+  useEffect(() => {
+    onReady();
+  }, [onReady]);
 
   // Clone scene & materials once and compute exact centering/normalization from CLO3D cm bounds
   const { clonedScene, normScale, normOffset } = useMemo(() => {
@@ -558,8 +563,15 @@ export default function ShirtGLBViewer({
   step,
   isMotionPaused,
 }: ShirtGLBViewerProps) {
-  const { active: isLoadingModel, progress } = useProgress();
-  const [targetDistance, setTargetDistance] = useState(DEFAULT_CAMERA_Z);
+  const { progress } = useProgress();
+  const [isMobileViewport] = useState(
+    () => typeof window !== "undefined" && window.innerWidth < 768
+  );
+  const initialCameraZ = isMobileViewport ? 2.95 : DEFAULT_CAMERA_Z;
+  const cameraFov = isMobileViewport ? 31 : 36;
+
+  const [modelReady, setModelReady] = useState(false);
+  const [targetDistance, setTargetDistance] = useState(initialCameraZ);
   const [interactionMode, setInteractionMode] =
     useState<InteractionMode>("rotate");
   const [activePreset, setActivePreset] = useState<FocusPreset>("completa");
@@ -568,6 +580,8 @@ export default function ShirtGLBViewer({
   ]);
   const [focusSignal, setFocusSignal] = useState(0);
   const [resetSignal, setResetSignal] = useState(0);
+
+  const handleModelReady = useMemo(() => () => setModelReady(true), []);
 
   const handleZoomIn = () => {
     setTargetDistance((d) =>
@@ -585,7 +599,9 @@ export default function ShirtGLBViewer({
     const preset = FOCUS_PRESETS[presetKey];
     setActivePreset(presetKey);
     setFocusTarget(preset.target);
-    setTargetDistance(preset.distance);
+    setTargetDistance(
+      presetKey === "completa" ? initialCameraZ : preset.distance
+    );
     setFocusSignal((n) => n + 1);
     if (presetKey === "completa") {
       setInteractionMode("rotate");
@@ -596,7 +612,7 @@ export default function ShirtGLBViewer({
     setActivePreset("completa");
     setInteractionMode("rotate");
     setFocusTarget([0, 0, 0]);
-    setTargetDistance(DEFAULT_CAMERA_Z);
+    setTargetDistance(initialCameraZ);
     setResetSignal((n) => n + 1);
   };
 
@@ -605,207 +621,214 @@ export default function ShirtGLBViewer({
   const roundedProgress = Math.min(100, Math.round(progress));
 
   return (
-    <div
-      className={`relative h-full w-full ${
-        interactionMode === "pan"
-          ? "cursor-move"
-          : "cursor-grab active:cursor-grabbing"
-      }`}
-    >
-      {/* Live % Download Progress Overlay while shirt.glb streams on mobile/4G */}
-      {isLoadingModel && roundedProgress < 100 && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
-        >
-          <div className="liquid-glass flex flex-col items-center gap-2 rounded-2xl px-5 py-3.5 text-center">
-            <span className="font-mono text-xs font-semibold text-[#111113] tabular-nums dark:text-white">
-              Cargando camisa 3D · {roundedProgress}%
-            </span>
-            <div className="h-1 w-36 overflow-hidden rounded-full bg-black/10 dark:bg-white/15">
-              <div
-                className="h-full rounded-full bg-[#16233B] transition-all duration-150 dark:bg-white"
-                style={{ width: `${Math.max(8, roundedProgress)}%` }}
-              />
+    <div className="relative flex h-full w-full flex-col">
+      {/* 3D Canvas Stage (fills vertical height on mobile so controls below never overlap shirt) */}
+      <div
+        className={`relative min-h-[290px] w-full flex-1 ${
+          interactionMode === "pan"
+            ? "cursor-move"
+            : "cursor-grab active:cursor-grabbing"
+        }`}
+      >
+        {/* Instant Photorealistic Studio Preview while GLB downloads in background on 4G */}
+        {!modelReady && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-4"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={shirt.studioImage}
+              alt={shirt.name}
+              className="h-[88%] max-h-[420px] w-auto object-contain drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
+            />
+            <div className="liquid-glass mt-2 flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#111113] dark:text-white">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#B08D57]" />
+              <span className="font-mono tabular-nums">
+                Cargando modelo 3D… {roundedProgress}%
+              </span>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <Canvas
-        shadows
-        dpr={[1, 1.5]}
-        camera={{ position: [0, 0.02, DEFAULT_CAMERA_Z], fov: 36 }}
-        gl={{
-          antialias: true,
-          alpha: true,
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.02,
-        }}
-      >
-        <ambientLight intensity={0.55} />
-        <directionalLight
-          position={[3.5, 4.5, 4.5]}
-          intensity={1.15}
-          castShadow
-          shadow-mapSize={[1024, 1024]}
-        />
-        <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.55} />
+        <Canvas
+          shadows
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0.02, initialCameraZ], fov: cameraFov }}
+          gl={{
+            antialias: true,
+            alpha: true,
+            toneMapping: THREE.ACESFilmicToneMapping,
+            toneMappingExposure: 1.02,
+          }}
+        >
+          <ambientLight intensity={0.55} />
+          <directionalLight
+            position={[3.5, 4.5, 4.5]}
+            intensity={1.15}
+            castShadow
+            shadow-mapSize={[1024, 1024]}
+          />
+          <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.55} />
 
-        {/* Offline procedural studio softboxes (Cloudflare Pages static-safe) */}
-        <Environment resolution={256}>
-          <Lightformer
-            form="rect"
-            intensity={1.4}
-            position={[0, 4, 3]}
-            rotation={[Math.PI / 4, 0, 0]}
-            scale={[8, 4, 1]}
-          />
-          <Lightformer
-            form="rect"
-            intensity={1.0}
-            position={[-5, 1.5, 2]}
-            rotation={[0, Math.PI / 2.2, 0]}
-            scale={[5, 5, 1]}
-          />
-          <Lightformer
-            form="rect"
-            intensity={0.8}
-            position={[5, 1.5, -1]}
-            rotation={[0, -Math.PI / 2, 0]}
-            scale={[5, 5, 1]}
-          />
-        </Environment>
+          {/* Offline procedural studio softboxes (Cloudflare Pages static-safe) */}
+          <Environment resolution={256}>
+            <Lightformer
+              form="rect"
+              intensity={1.4}
+              position={[0, 4, 3]}
+              rotation={[Math.PI / 4, 0, 0]}
+              scale={[8, 4, 1]}
+            />
+            <Lightformer
+              form="rect"
+              intensity={1.0}
+              position={[-5, 1.5, 2]}
+              rotation={[0, Math.PI / 2.2, 0]}
+              scale={[5, 5, 1]}
+            />
+            <Lightformer
+              form="rect"
+              intensity={0.8}
+              position={[5, 1.5, -1]}
+              rotation={[0, -Math.PI / 2, 0]}
+              scale={[5, 5, 1]}
+            />
+          </Environment>
 
-        <Suspense fallback={null}>
-          <Clo3DShirtModel
-            shirt={shirt}
-            buttonId={buttonId}
-            step={step}
-            isMotionPaused={shouldPauseSpin}
+          <Suspense fallback={null}>
+            <Clo3DShirtModel
+              shirt={shirt}
+              buttonId={buttonId}
+              step={step}
+              isMotionPaused={shouldPauseSpin}
+              resetSignal={resetSignal}
+              onReady={handleModelReady}
+            />
+          </Suspense>
+
+          <ContactShadows
+            position={[0, -1.04, 0]}
+            opacity={0.28}
+            scale={3.4}
+            blur={2.5}
+            far={2.2}
+          />
+
+          <CameraZoomRig
+            targetDistance={targetDistance}
+            focusTarget={focusTarget}
+            focusSignal={focusSignal}
             resetSignal={resetSignal}
+            interactionMode={interactionMode}
+            isMotionPaused={isMotionPaused}
           />
-        </Suspense>
-
-        <ContactShadows
-          position={[0, -1.04, 0]}
-          opacity={0.28}
-          scale={3.4}
-          blur={2.5}
-          far={2.2}
-        />
-
-        <CameraZoomRig
-          targetDistance={targetDistance}
-          focusTarget={focusTarget}
-          focusSignal={focusSignal}
-          resetSignal={resetSignal}
-          interactionMode={interactionMode}
-          isMotionPaused={isMotionPaused}
-        />
-      </Canvas>
-
-      {/* Bottom-left: Rotar / Mover toggle + Zoom (- / + / Reset) */}
-      <div className="pointer-events-none absolute bottom-3 left-3 z-20 flex flex-wrap items-center gap-2 sm:bottom-4 sm:left-4">
-        <div
-          role="radiogroup"
-          aria-label="Modo de control 3D"
-          className="liquid-glass pointer-events-auto inline-flex items-center rounded-full p-0.5 text-[11px]"
-        >
-          <button
-            type="button"
-            role="radio"
-            aria-checked={interactionMode === "rotate"}
-            onClick={() => setInteractionMode("rotate")}
-            className={`cursor-pointer inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 font-medium transition-colors ${
-              interactionMode === "rotate"
-                ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
-                : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-            }`}
-          >
-            <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Rotar</span>
-          </button>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={interactionMode === "pan"}
-            onClick={() => setInteractionMode("pan")}
-            className={`cursor-pointer inline-flex h-8 items-center gap-1.5 rounded-full px-2.5 font-medium transition-colors ${
-              interactionMode === "pan"
-                ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
-                : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-            }`}
-          >
-            <Move className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Mover</span>
-          </button>
-        </div>
-
-        <div
-          role="group"
-          aria-label="Controles de zoom 3D"
-          className="liquid-glass pointer-events-auto inline-flex items-center gap-0.5 rounded-full p-0.5 text-[#111113] dark:text-white"
-        >
-          <button
-            type="button"
-            onClick={handleZoomOut}
-            disabled={targetDistance >= MAX_CAMERA_DIST}
-            aria-label="Alejar zoom"
-            title="Alejar"
-            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[0.12]"
-          >
-            <Minus className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            onClick={handleZoomIn}
-            disabled={targetDistance <= MIN_CAMERA_DIST}
-            aria-label="Acercar zoom"
-            title="Acercar"
-            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 dark:hover:bg-white/[0.12]"
-          >
-            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            onClick={handleReset}
-            aria-label="Restablecer vista"
-            title="Restablecer vista"
-            className="cursor-pointer inline-flex h-8 w-8 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] dark:hover:bg-white/[0.12]"
-          >
-            <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
-          </button>
-        </div>
+        </Canvas>
       </div>
 
-      {/* Bottom-right: Quick Focus Presets (Completa · Cuello · Puño) */}
-      {step === 1 && (
-        <div
-          role="group"
-          aria-label="Enfoque rápido"
-          className="liquid-glass absolute right-3 bottom-3 z-20 hidden items-center gap-0.5 rounded-full p-0.5 text-[11px] sm:right-4 sm:bottom-4 sm:inline-flex"
-        >
-          {(["completa", "cuello", "puno"] as const).map((key) => {
-            const active = activePreset === key;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => handleSelectPreset(key)}
-                className={`cursor-pointer h-8 rounded-full px-3 font-medium transition-colors ${
-                  active
-                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
-                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                }`}
-              >
-                {FOCUS_PRESETS[key].label}
-              </button>
-            );
-          })}
+      {/* Controls Bar: Dedicated clean row BELOW model on mobile (never overlaps shirt), floating on lg+ */}
+      <div className="z-20 flex shrink-0 items-center justify-between gap-2 pt-2 lg:pointer-events-none lg:absolute lg:inset-x-4 lg:bottom-4 lg:pt-0">
+        <div className="flex items-center gap-2">
+          <div
+            role="radiogroup"
+            aria-label="Modo de control 3D"
+            className="liquid-glass pointer-events-auto inline-flex items-center rounded-full p-0.5 text-[11px]"
+          >
+            <button
+              type="button"
+              role="radio"
+              aria-checked={interactionMode === "rotate"}
+              onClick={() => setInteractionMode("rotate")}
+              className={`cursor-pointer inline-flex h-9 items-center gap-1.5 rounded-full px-3 font-medium transition-colors lg:h-8 lg:px-2.5 ${
+                interactionMode === "rotate"
+                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+              }`}
+            >
+              <Rotate3d className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Rotar</span>
+            </button>
+            <button
+              type="button"
+              role="radio"
+              aria-checked={interactionMode === "pan"}
+              onClick={() => setInteractionMode("pan")}
+              className={`cursor-pointer inline-flex h-9 items-center gap-1.5 rounded-full px-3 font-medium transition-colors lg:h-8 lg:px-2.5 ${
+                interactionMode === "pan"
+                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+              }`}
+            >
+              <Move className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>Mover</span>
+            </button>
+          </div>
+
+          <div
+            role="group"
+            aria-label="Controles de zoom 3D"
+            className="liquid-glass pointer-events-auto inline-flex items-center gap-0.5 rounded-full p-0.5 text-[#111113] dark:text-white"
+          >
+            <button
+              type="button"
+              onClick={handleZoomOut}
+              disabled={targetDistance >= MAX_CAMERA_DIST}
+              aria-label="Alejar zoom"
+              title="Alejar"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+            >
+              <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={handleZoomIn}
+              disabled={targetDistance <= MIN_CAMERA_DIST}
+              aria-label="Acercar zoom"
+              title="Acercar"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+            >
+              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              aria-label="Restablecer vista"
+              title="Restablecer vista"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+            >
+              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          </div>
         </div>
-      )}
+
+        {/* Quick Focus Presets (Completa · Cuello · Puño) */}
+        {step === 1 && (
+          <div
+            role="group"
+            aria-label="Enfoque rápido"
+            className="liquid-glass pointer-events-auto hidden items-center gap-0.5 rounded-full p-0.5 text-[11px] sm:inline-flex"
+          >
+            {(["completa", "cuello", "puno"] as const).map((key) => {
+              const active = activePreset === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => handleSelectPreset(key)}
+                  className={`cursor-pointer h-8 rounded-full px-3 font-medium transition-colors ${
+                    active
+                      ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                      : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                  }`}
+                >
+                  {FOCUS_PRESETS[key].label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

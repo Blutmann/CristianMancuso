@@ -201,7 +201,7 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-between gap-3 px-4 pt-24 pb-6 sm:px-8 lg:h-[100svh] lg:px-12 lg:pt-24 lg:pb-5">
+      <div className="mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-between gap-2.5 px-4 pt-22 pb-5 sm:px-8 lg:h-[100svh] lg:gap-3 lg:px-12 lg:pt-24 lg:pb-5">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
         <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
           <h1
@@ -258,8 +258,8 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Photorealistic Studio Dress Shirt & Real Macros */}
-        <div className="relative flex h-[46svh] min-h-[320px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[390px] lg:h-auto lg:min-h-0">
+        {/* CENTER STAGE: Tall Vertical 3D Stage on Mobile + Full Flex Stage on Desktop */}
+        <div className="relative flex h-[48svh] min-h-[360px] flex-1 items-center justify-center overflow-hidden rounded-3xl sm:min-h-[410px] lg:h-auto lg:min-h-0">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
