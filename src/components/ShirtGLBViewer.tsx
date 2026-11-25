@@ -369,8 +369,8 @@ function Clo3DShirtModel({
     onReady();
   }, [onReady]);
 
-  // Clone scene & materials once and compute exact centering/normalization from CLO3D cm bounds
-  const { clonedScene, normScale, normOffset } = useMemo(() => {
+  // Clone scene & materials once and compute exact [0,0,0] centering from CLO3D cm bounds
+  const { clonedScene, normScale, centerOffset } = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -409,6 +409,8 @@ function Clo3DShirtModel({
       }
     });
 
+    // Ensure world matrices are fully updated before computing Box3
+    clone.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(clone);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
@@ -416,13 +418,19 @@ function Clo3DShirtModel({
     box.getCenter(center);
 
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    const scale = 1.85 / maxDim;
-    const offset = center.multiplyScalar(-scale);
+    // Target height 1.52 in mobile (z=2.75, fov=38 -> ~79% fill) or 1.85 in desktop (z=3.45, fov=36 -> ~81% fill)
+    const isNarrow = typeof window !== "undefined" && window.innerWidth < 768;
+    const targetSize = isNarrow ? 1.5 : 1.85;
+    const scale = targetSize / maxDim;
 
     return {
       clonedScene: clone,
       normScale: scale,
-      normOffset: [offset.x, offset.y, offset.z] as [number, number, number],
+      centerOffset: [-center.x, -center.y, -center.z] as [
+        number,
+        number,
+        number,
+      ],
     };
   }, [scene]);
 
@@ -546,11 +554,9 @@ function Clo3DShirtModel({
 
   return (
     <group ref={groupRef}>
-      <primitive
-        object={clonedScene}
-        scale={normScale}
-        position={normOffset}
-      />
+      <group scale={normScale}>
+        <primitive object={clonedScene} position={centerOffset} />
+      </group>
     </group>
   );
 }
@@ -567,8 +573,8 @@ export default function ShirtGLBViewer({
   const [isMobileViewport] = useState(
     () => typeof window !== "undefined" && window.innerWidth < 768
   );
-  const initialCameraZ = isMobileViewport ? 2.95 : DEFAULT_CAMERA_Z;
-  const cameraFov = isMobileViewport ? 31 : 36;
+  const initialCameraZ = isMobileViewport ? 2.75 : DEFAULT_CAMERA_Z;
+  const cameraFov = isMobileViewport ? 38 : 36;
 
   const [modelReady, setModelReady] = useState(false);
   const [targetDistance, setTargetDistance] = useState(initialCameraZ);
@@ -641,7 +647,7 @@ export default function ShirtGLBViewer({
             <img
               src={shirt.studioImage}
               alt={shirt.name}
-              className="h-[88%] max-h-[420px] w-auto object-contain drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
+              className="h-[84%] max-h-[420px] w-auto object-contain drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
             />
             <div className="liquid-glass mt-2 flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#111113] dark:text-white">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#B08D57]" />
@@ -655,7 +661,7 @@ export default function ShirtGLBViewer({
         <Canvas
           shadows
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0.02, initialCameraZ], fov: cameraFov }}
+          camera={{ position: [0, 0, initialCameraZ], fov: cameraFov }}
           gl={{
             antialias: true,
             alpha: true,

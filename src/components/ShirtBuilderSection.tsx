@@ -275,7 +275,7 @@ export function ShirtBuilderSection() {
         </div>
 
         {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
-        <div className="liquid-glass rounded-2xl px-4 py-3 sm:px-5 sm:py-3.5">
+        <div className="liquid-glass mb-2 rounded-2xl px-4 py-3.5 sm:px-5 lg:mb-0">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
             {/* LEFT: Active Step Controls */}
             <div className="min-w-0 flex-1">
