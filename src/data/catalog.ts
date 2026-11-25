@@ -156,10 +156,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
 
 export const COLLAR_OPTIONS = [
   "Italiano",
-  "Francés",
-  "Oxford",
-  "Americano",
   "Mao",
+  "Francés",
+  "Americano",
+  "Oxford",
 ] as const;
 
 export type CollarOption = (typeof COLLAR_OPTIONS)[number];

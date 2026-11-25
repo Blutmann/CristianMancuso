@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function EmpresasPage() {
   return (
     <>
-      <section className="relative w-full bg-transparent pt-24 pb-20 text-[#111113] sm:pt-28 sm:pb-24 dark:text-[#F8FAFC]">
+      <section className="relative w-full bg-transparent pt-20 pb-20 text-[#111113] sm:pt-24 sm:pb-24 lg:pt-28 dark:text-[#F8FAFC]">
         <div className="relative z-10 mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           {/* Back link */}
           <Link

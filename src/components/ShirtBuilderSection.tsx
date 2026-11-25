@@ -122,6 +122,8 @@ export function ShirtBuilderSection() {
   const [justAdded, setJustAdded] = useState(false);
   const swatchTrackRef = useRef<HTMLDivElement | null>(null);
   const swatchItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const collarTrackRef = useRef<HTMLDivElement | null>(null);
+  const collarItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   // Preselect shirt from ?tela= query param when arriving from /coleccion
   useEffect(() => {
@@ -159,6 +161,25 @@ export function ShirtBuilderSection() {
 
     return () => window.cancelAnimationFrame(rafId);
   }, [selectedShirt.id, fabricCategory, step, isMotionPaused]);
+
+  // Auto-center the selected collar pill smoothly so it never clips at scroll edges
+  useEffect(() => {
+    if (step !== 2) return;
+    const track = collarTrackRef.current;
+    const item = collarItemRefs.current[collar];
+    if (!track || !item) return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      const targetLeft =
+        item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2;
+      track.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: isMotionPaused ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [collar, step, isMotionPaused]);
 
   const monogramDisplay = formatMonogramDisplay(monogramText);
 
@@ -214,9 +235,9 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2 px-5 pt-20 pb-3 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
-        {/* TOP ROW: Clean title on left, slimmer 4-step stepper on right */}
-        <div className="flex flex-col gap-1.5 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-5 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-28 lg:pb-6">
+        {/* TOP ROW: Clean title on left, slimmer 4-step stepper on right with breathing room */}
+        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
           <h1 id="builder-heading" className="ds-h1-page">
             Armá tu camisa
           </h1>
@@ -285,11 +306,11 @@ export function ShirtBuilderSection() {
           />
         </div>
 
-        {/* BOTTOM DOCK: Compact mobile padding (p-3 gap-2) + spacious desktop */}
-        <div className="liquid-glass rounded-2xl p-3 sm:p-5">
-          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
-            {/* LEFT: Active Step Controls */}
-            <div className="min-w-0 flex-1">
+        {/* BOTTOM CONTROLS (.liquid-glass options only) + FLOATING INDEPENDENT CTA */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-4">
+          <div className="liquid-glass min-w-0 flex-1 rounded-2xl p-3 sm:p-4 lg:p-5">
+            {/* Active Step Controls */}
+            <div className="min-w-0">
               <AnimatePresence mode="wait">
                 {step === 1 && (
                   <motion.div
@@ -439,24 +460,28 @@ export function ShirtBuilderSection() {
                 {step === 2 && (
                   <motion.div
                     key="dock-step-2"
+                    ref={collarTrackRef}
                     initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
-                    className="scrollbar-none flex items-center gap-2 overflow-x-auto py-0.5"
+                    className="scrollbar-none flex items-center gap-2 overflow-x-auto px-4 py-1 sm:px-2"
                   >
                     {COLLAR_OPTIONS.map((opt) => {
                       const active = collar === opt;
                       return (
                         <motion.button
                           key={opt}
+                          ref={(el) => {
+                            collarItemRefs.current[opt] = el;
+                          }}
                           type="button"
                           layout={!isMotionPaused}
                           onClick={() => setCollar(opt)}
                           className={`cursor-pointer flex min-h-[44px] shrink-0 items-center gap-2 rounded-full transition-colors ${
                             active
-                              ? "bg-[#16233B] px-4 py-2 text-white shadow-md dark:bg-white dark:text-[#0B0B0E] dark:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
-                              : "border border-black/12 bg-black/[0.03] px-3.5 text-[#111113]/80 hover:bg-black/[0.07] dark:border-white/15 dark:bg-white/[0.05] dark:text-white/80 dark:hover:bg-white/[0.1]"
+                              ? "border-2 border-[#16233B] bg-transparent px-4 py-2 text-[#111113] dark:border-white dark:text-white"
+                              : "border border-black/12 bg-black/[0.03] px-3.5 text-[#111113]/75 hover:bg-black/[0.06] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.08]"
                           }`}
                         >
                           <span className="whitespace-nowrap text-xs font-semibold">
@@ -477,7 +502,7 @@ export function ShirtBuilderSection() {
                                     : { opacity: 0, x: -4 }
                                 }
                                 transition={{ duration: 0.18 }}
-                                className="whitespace-nowrap text-[11px] opacity-80"
+                                className="whitespace-nowrap text-[11px] opacity-75"
                               >
                                 · {COLLAR_META[opt].note}
                               </motion.span>
@@ -507,10 +532,10 @@ export function ShirtBuilderSection() {
                             key={btn.id}
                             type="button"
                             onClick={() => setButtonId(btn.id)}
-                            className={`cursor-pointer flex min-h-[42px] items-center gap-2 rounded-full px-3 text-xs font-medium transition-all ${
+                            className={`cursor-pointer flex min-h-[42px] items-center gap-2 rounded-full px-3 text-xs transition-all ${
                               active
-                                ? "bg-[#111113] text-white dark:bg-white dark:text-[#090B10]"
-                                : "border border-black/12 bg-black/[0.03] text-[#111113]/80 hover:bg-black/[0.08] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/80 dark:hover:bg-white/[0.1]"
+                                ? "border-2 border-[#16233B] bg-transparent font-semibold text-[#111113] dark:border-white dark:text-white"
+                                : "border border-black/12 bg-black/[0.03] font-medium text-[#111113]/75 hover:bg-black/[0.07] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.09]"
                             }`}
                           >
                             <span
@@ -710,47 +735,47 @@ export function ShirtBuilderSection() {
                 )}
               </AnimatePresence>
             </div>
+          </div>
 
-            {/* RIGHT: Primary Action CTA */}
-            <div className="shrink-0">
-              {step < 4 ? (
+          {/* INDEPENDENT FLOATING PRIMARY CTA (outside .liquid-glass container) */}
+          <div className="mt-3 shrink-0 lg:mt-0">
+            {step < 4 ? (
+              <button
+                type="button"
+                onClick={() => setStep((step + 1) as BuilderStep)}
+                className="ds-btn-primary min-h-[48px] w-full shadow-lg lg:w-auto"
+              >
+                <span>{nextStepLabel[step as 1 | 2 | 3]}</span>
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </button>
+            ) : (
+              <div className="flex flex-col items-stretch gap-1.5 lg:items-end">
                 <button
                   type="button"
-                  onClick={() => setStep((step + 1) as BuilderStep)}
-                  className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
+                  disabled={!canSubmitBespoke}
+                  onClick={handleAddBespoke}
+                  className="ds-btn-primary min-h-[48px] w-full shadow-lg lg:w-auto"
                 >
-                  <span>{nextStepLabel[step as 1 | 2 | 3]}</span>
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-              ) : (
-                <div className="flex flex-col items-stretch gap-1.5 lg:items-end">
-                  <button
-                    type="button"
-                    disabled={!canSubmitBespoke}
-                    onClick={handleAddBespoke}
-                    className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
-                  >
-                    {justAdded ? (
-                      <>
-                        <Check className="h-4 w-4" aria-hidden="true" />
-                        <span>Agregada a tu bolsa</span>
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-                        <span>Agregar camisa a medida al carrito</span>
-                      </>
-                    )}
-                  </button>
-                  {!hasAnyMeasurement && !coordinateViaWhatsApp && (
-                    <span className="text-center text-[10.5px] text-muted lg:text-right">
-                      Confección en 10–15 días · Validamos tus medidas por
-                      WhatsApp antes de cortar
-                    </span>
+                  {justAdded ? (
+                    <>
+                      <Check className="h-4 w-4" aria-hidden="true" />
+                      <span>Agregada a tu bolsa</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                      <span>Agregar camisa a medida al carrito</span>
+                    </>
                   )}
-                </div>
-              )}
-            </div>
+                </button>
+                {!hasAnyMeasurement && !coordinateViaWhatsApp && (
+                  <span className="text-center text-[10.5px] text-muted lg:text-right">
+                    Confección en 10–15 días · Validamos tus medidas por
+                    WhatsApp antes de cortar
+                  </span>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

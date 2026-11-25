@@ -299,7 +299,7 @@ export function CatalogSection() {
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full bg-transparent pt-22 pb-16 text-[#111113] sm:pt-24 lg:pt-28 dark:text-white"
+      className="relative w-full bg-transparent pt-20 pb-16 text-[#111113] sm:pt-24 lg:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
         {/* ROW 1: Mobile (Title OR Inline Expanded Search + Single 🧵/👕 toggle) | Desktop (Title + Search + Sort) */}

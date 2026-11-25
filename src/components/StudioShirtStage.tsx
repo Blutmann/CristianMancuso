@@ -1,8 +1,9 @@
 "use client";
 
-import { Component, useState, type ReactNode } from "react";
+import { Component, useState, useSyncExternalStore, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+import { Box } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
@@ -54,41 +55,47 @@ function ShirtStudioFallback({
   isMotionPaused: boolean;
 }) {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center p-4">
+    <div className="flex h-full w-full flex-col items-center justify-center p-1 sm:p-2">
       <motion.div
         animate={
           isMotionPaused
             ? { y: 0, scale: 1 }
-            : { y: [-8, 8, -8], scale: [1, 1.015, 1] }
+            : { y: [-7, 7, -7], scale: [1, 1.015, 1] }
         }
         transition={{
           duration: 4.8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="relative flex h-[82%] max-h-[380px] w-full items-center justify-center"
+        className="relative flex h-[92%] max-h-[420px] w-full items-center justify-center"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={shirt.studioImage}
-          alt={shirt.name}
-          draggable={false}
-          className="h-full w-auto object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_26px_38px_rgba(0,0,0,0.62)]"
-        />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={shirt.id}
+            src={shirt.studioImage}
+            alt={shirt.name}
+            draggable={false}
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.97 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97 }}
+            transition={{ duration: 0.24, ease: "easeOut" }}
+            className="h-full w-auto max-w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] select-none dark:drop-shadow-[0_26px_38px_rgba(0,0,0,0.62)]"
+          />
+        </AnimatePresence>
       </motion.div>
       <motion.span
         aria-hidden="true"
         animate={
           isMotionPaused
             ? { scale: 1, opacity: 0.22 }
-            : { scale: [0.88, 1.08, 0.88], opacity: [0.16, 0.34, 0.16] }
+            : { scale: [0.88, 1.08, 0.88], opacity: [0.16, 0.32, 0.16] }
         }
         transition={{
           duration: 4.8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="pointer-events-none mt-2 h-3 w-36 rounded-full bg-[#111113] blur-lg dark:bg-black"
+        className="pointer-events-none mt-1 h-2.5 w-36 rounded-full bg-[#111113] blur-lg dark:bg-black"
       />
     </div>
   );
@@ -122,6 +129,19 @@ export interface StudioShirtStageProps {
   isMotionPaused: boolean;
 }
 
+const subscribeDesktopMedia = (callback: () => void) => {
+  if (typeof window === "undefined") return () => {};
+  const mql = window.matchMedia("(min-width: 1024px)");
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+};
+
+const getDesktopSnapshot = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(min-width: 1024px)").matches;
+
+const getDesktopServerSnapshot = () => false;
+
 export function StudioShirtStage({
   shirt,
   collar,
@@ -136,6 +156,14 @@ export function StudioShirtStage({
   isMotionPaused,
 }: StudioShirtStageProps) {
   const [webglFailed, setWebglFailed] = useState(false);
+  // Mobile (< lg) defaults to large floating studio photo; desktop (lg+) defaults to 3D viewer
+  const isDesktopDefault = useSyncExternalStore(
+    subscribeDesktopMedia,
+    getDesktopSnapshot,
+    getDesktopServerSnapshot
+  );
+  const [user3DOverride, setUser3DOverride] = useState<boolean | null>(null);
+  const is3DActive = user3DOverride ?? isDesktopDefault;
 
   const selectedButton =
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
@@ -155,9 +183,11 @@ export function StudioShirtStage({
     onCollarChange(COLLAR_OPTIONS[nextIdx]);
   };
 
+  const show3DViewer = is3DActive && !webglFailed;
+
   return (
     <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[400px] lg:h-full">
-      {/* Subtle studio softbox halo behind the 3D garment / macro */}
+      {/* Subtle studio softbox halo behind the garment / macro */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -167,23 +197,41 @@ export function StudioShirtStage({
         }}
       />
 
+      {/* Discreet corner 3D toggle button for Step 1 & Step 4 */}
+      {(step === 1 || step === 4) && !webglFailed && (
+        <button
+          type="button"
+          onClick={() => setUser3DOverride(!is3DActive)}
+          aria-pressed={is3DActive}
+          aria-label={
+            is3DActive
+              ? "Volver a foto de estudio"
+              : "Activar vista 3D interactiva 360°"
+          }
+          title={is3DActive ? "Ver foto de estudio" : "Ver en 3D (360°)"}
+          className={`liquid-glass cursor-pointer absolute top-2.5 right-2.5 z-30 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wider transition-all ${
+            is3DActive
+              ? "border-2 border-[#16233B] text-[#111113] dark:border-white dark:text-white"
+              : "text-[#111113]/80 hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
+          }`}
+        >
+          <Box className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>3D</span>
+        </button>
+      )}
+
       <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Real CLO3D 3D Shirt Model with WebGL ErrorBoundary & Automatic Studio Fallback */}
+        {/* STEP 1 & STEP 4: Large Floating Studio Photo (Mobile default) or Interactive 3D Model (Optional / Desktop default) */}
         {(step === 1 || step === 4) && (
           <motion.div
-            key="stage-glb-3d"
+            key={show3DViewer ? "stage-glb-3d" : "stage-studio-photo"}
             initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.28 }}
             className="relative h-[360px] w-full sm:h-[400px] lg:h-full"
           >
-            {webglFailed ? (
-              <ShirtStudioFallback
-                shirt={shirt}
-                isMotionPaused={isMotionPaused}
-              />
-            ) : (
+            {show3DViewer ? (
               <WebGLErrorBoundary
                 fallback={
                   <ShirtStudioFallback
@@ -200,18 +248,23 @@ export function StudioShirtStage({
                   onWebGLError={() => setWebglFailed(true)}
                 />
               </WebGLErrorBoundary>
+            ) : (
+              <ShirtStudioFallback
+                shirt={shirt}
+                isMotionPaused={isMotionPaused}
+              />
             )}
           </motion.div>
         )}
 
-        {/* STEP 2: Real Macro Collar Studio Photograph with Horizontal Swipe */}
+        {/* STEP 2: Full-bleed Macro Collar Studio Photograph with Horizontal Swipe (no inner double frame) */}
         {step === 2 && (
           <motion.div
             key="stage-collar-macro"
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             drag={onCollarChange ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.22}
@@ -222,7 +275,7 @@ export function StudioShirtStage({
                 handleCollarSwipe(-1);
               }
             }}
-            className="relative flex aspect-[4/3] h-[90%] max-h-[450px] max-w-[94%] cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] active:cursor-grabbing dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
+            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-2xl active:cursor-grabbing"
           >
             <AnimatePresence mode="sync">
               <motion.img
@@ -255,15 +308,15 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 3: Real Macro Button / Cuff Photograph + Perspective Stitch Embroidery */}
+        {/* STEP 3: Full-bleed Macro Button / Cuff Photograph + Perspective Stitch Embroidery */}
         {step === 3 && (
           <motion.div
             key="stage-button-macro"
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
+            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.16)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.68)]"
+            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl"
           >
             <AnimatePresence mode="sync">
               <motion.img
