@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ArrowLeft,
   ArrowRight,
   Check,
   Ruler,
@@ -71,14 +70,42 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
   return (
     <div className="mx-auto w-full max-w-[1360px] px-5 pt-24 pb-16 sm:px-8 sm:pt-28 lg:px-10">
-      {/* Subtle Back Link */}
-      <Link
-        href="/coleccion"
-        className="inline-flex min-h-[40px] items-center gap-2 text-xs font-medium text-muted transition-colors hover:text-[#111113] dark:hover:text-white"
+      {/* Accessible Breadcrumbs */}
+      <nav
+        aria-label="Breadcrumb"
+        className="flex flex-wrap items-center gap-2 text-xs text-muted"
       >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-        <span>Volver a Colección</span>
-      </Link>
+        <ol className="flex flex-wrap items-center gap-2">
+          <li>
+            <Link
+              href="/coleccion"
+              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+            >
+              Colección
+            </Link>
+          </li>
+          <li aria-hidden="true" className="opacity-40">
+            /
+          </li>
+          <li>
+            <Link
+              href={`/coleccion?gama=${encodeURIComponent(shirt.fabricId)}`}
+              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+            >
+              {shirt.fabricLabel}
+            </Link>
+          </li>
+          <li aria-hidden="true" className="opacity-40">
+            /
+          </li>
+          <li
+            aria-current="page"
+            className="font-medium text-[#111113] dark:text-[#F8FAFC]"
+          >
+            {shirt.name}
+          </li>
+        </ol>
+      </nav>
 
       {/* 2-Column Clean PDP Layout */}
       <div className="mt-6 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">

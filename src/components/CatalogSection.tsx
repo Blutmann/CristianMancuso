@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,9 +8,11 @@ import {
   Check,
   Grid2x2,
   Grid3x3,
+  Search,
   Shirt,
   ShoppingBag,
   SwatchBook,
+  X,
 } from "lucide-react";
 import {
   ALPHA_SIZES,
@@ -231,11 +233,28 @@ function MinimalShirtCard({
   );
 }
 
+type SortOrder = "featured" | "price-asc" | "price-desc";
+
+const SORT_OPTIONS: { id: SortOrder; label: string }[] = [
+  { id: "featured", label: "Destacados" },
+  { id: "price-asc", label: "Menor precio" },
+  { id: "price-desc", label: "Mayor precio" },
+];
+
+function normalizeSearch(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 export function CatalogSection() {
   const { selectedFabric, setSelectedFabric } = useAtelier();
   const { isMotionPaused } = useMotion();
   const [gridCols, setGridCols] = useState<GridCols>(4);
   const [visualMode, setVisualMode] = useState<VisualMode>("camisa");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("featured");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -246,9 +265,25 @@ export function CatalogSection() {
     }
   }, [setSelectedFabric]);
 
-  const visibleShirts = selectedFabric
-    ? CATALOG_SHIRTS.filter((s) => s.fabricId === selectedFabric)
-    : CATALOG_SHIRTS;
+  const visibleShirts = useMemo(() => {
+    const query = normalizeSearch(searchQuery.trim());
+    const filtered = CATALOG_SHIRTS.filter((s) => {
+      if (selectedFabric && s.fabricId !== selectedFabric) return false;
+      if (!query) return true;
+      const haystack = normalizeSearch(
+        `${s.name} ${s.refCode} ${s.fabricLabel}`
+      );
+      return haystack.includes(query);
+    });
+
+    if (sortOrder === "price-asc") {
+      return [...filtered].sort((a, b) => a.priceArs - b.priceArs);
+    }
+    if (sortOrder === "price-desc") {
+      return [...filtered].sort((a, b) => b.priceArs - a.priceArs);
+    }
+    return filtered;
+  }, [selectedFabric, searchQuery, sortOrder]);
 
   return (
     <section
@@ -257,9 +292,66 @@ export function CatalogSection() {
       className="relative w-full bg-transparent pt-24 pb-16 text-[#111113] sm:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-        <h1 id="coleccion-heading" className="ds-h1-page">
-          Colección
-        </h1>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <h1 id="coleccion-heading" className="ds-h1-page">
+            Colección
+          </h1>
+
+          {/* Quick Search + Sort Row */}
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <div className="liquid-glass relative flex min-h-[44px] w-full items-center rounded-full px-4 sm:w-80">
+              <Search
+                className="h-4 w-4 shrink-0 text-muted"
+                aria-hidden="true"
+              />
+              <input
+                id="catalog-search-input"
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
+                aria-label="Buscar por tela o referencia de artículo"
+                className="w-full bg-transparent px-2.5 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Limpiar búsqueda"
+                  className="cursor-pointer inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
+                >
+                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+
+            <div
+              role="radiogroup"
+              aria-label="Ordenar colección"
+              className="liquid-glass inline-flex items-center self-start rounded-full p-1 sm:self-auto"
+            >
+              {SORT_OPTIONS.map((opt) => {
+                const active = sortOrder === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => setSortOrder(opt.id)}
+                    className={`cursor-pointer inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
+                      active
+                        ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
+                        : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
 
         {/* Top Control Bar: Gama Filters + Visual (Camisa/Tela) + Grid (3/4 cols) */}
         <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -379,13 +471,22 @@ export function CatalogSection() {
         {/* Minimal Product Grid */}
         {visibleShirts.length === 0 ? (
           <div className="liquid-glass mt-8 rounded-2xl p-8 text-center">
-            <p className="ds-body text-muted">No hay telas en esta gama.</p>
+            <p className="ds-body text-muted">
+              No encontramos camisas para{" "}
+              {searchQuery.trim()
+                ? `“${searchQuery.trim()}”`
+                : "la gama seleccionada"}
+              .
+            </p>
             <button
               type="button"
-              onClick={() => setSelectedFabric(null)}
+              onClick={() => {
+                setSearchQuery("");
+                setSelectedFabric(null);
+              }}
               className="ds-btn-primary mt-4"
             >
-              Ver todas
+              Limpiar búsqueda
             </button>
           </div>
         ) : (

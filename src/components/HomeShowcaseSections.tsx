@@ -204,13 +204,52 @@ export function HomeShowcaseSections() {
                       className="h-4 w-4 shrink-0 text-[#16233B] dark:text-gold"
                       aria-hidden="true"
                     />
-                    <span className="font-display text-sm font-bold text-[#111113] dark:text-white">
+                    <span className="font-sans text-sm font-semibold text-[#111113] dark:text-white">
                       {item.num} {item.title}
                     </span>
                   </div>
                 );
               })}
             </div>
+          </div>
+
+          {/* Sober Editorial Social Proof — 3 Concise Client Testimonials */}
+          <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {[
+              {
+                quote:
+                  "“El calce del Pima 120/2 es impecable; pedí dos más con las mismas medidas.”",
+                author: "Federico M.",
+                location: "Palermo, Buenos Aires",
+              },
+              {
+                quote:
+                  "“Me guiaron por WhatsApp en 5 minutos y llegó exacta de hombros y manga.”",
+                author: "Santiago R.",
+                location: "Córdoba",
+              },
+              {
+                quote:
+                  "“El lino italiano tiene una caída difícil de encontrar. Envío perfecto a Europa.”",
+                author: "Lucía V.",
+                location: "Madrid, España",
+              },
+            ].map((item) => (
+              <figure
+                key={item.author}
+                className="liquid-glass flex flex-col justify-between gap-3 rounded-2xl p-5"
+              >
+                <blockquote className="ds-body text-[#111113]/90 dark:text-[#F8FAFC]/90">
+                  {item.quote}
+                </blockquote>
+                <figcaption className="ds-caption text-muted">
+                  <span className="font-semibold text-[#111113] dark:text-white">
+                    {item.author}
+                  </span>{" "}
+                  · {item.location}
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
