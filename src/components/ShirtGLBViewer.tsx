@@ -855,8 +855,8 @@ export default function ShirtGLBViewer({
         </div>
       </div>
 
-      {/* Controls Bar: Fixed 44px row BELOW model on mobile (never overlaps shirt), aligned to max-w-[1440px] edges on lg+ */}
-      <div className="z-20 flex h-[44px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:h-auto lg:pt-0">
+      {/* Controls Bar: Dedicated row BELOW model on mobile (>=44px touch targets), aligned to rail edges on lg+ */}
+      <div className="z-20 flex min-h-[48px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:pt-0">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"
@@ -868,9 +868,9 @@ export default function ShirtGLBViewer({
               role="radio"
               aria-checked={interactionMode === "rotate"}
               onClick={() => setInteractionMode("rotate")}
-              className={`cursor-pointer inline-flex h-9 items-center gap-1.5 rounded-full px-3 font-medium transition-colors lg:h-8 lg:px-2.5 ${
+              className={`cursor-pointer inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3.5 font-medium transition-colors lg:h-8 lg:min-h-0 lg:px-2.5 ${
                 interactionMode === "rotate"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
@@ -882,9 +882,9 @@ export default function ShirtGLBViewer({
               role="radio"
               aria-checked={interactionMode === "pan"}
               onClick={() => setInteractionMode("pan")}
-              className={`cursor-pointer inline-flex h-9 items-center gap-1.5 rounded-full px-3 font-medium transition-colors lg:h-8 lg:px-2.5 ${
+              className={`cursor-pointer inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-3.5 font-medium transition-colors lg:h-8 lg:min-h-0 lg:px-2.5 ${
                 interactionMode === "pan"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
@@ -904,7 +904,7 @@ export default function ShirtGLBViewer({
               disabled={targetDistance >= MAX_CAMERA_DIST}
               aria-label="Alejar zoom"
               title="Alejar"
-              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
             >
               <Minus className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -914,7 +914,7 @@ export default function ShirtGLBViewer({
               disabled={targetDistance <= MIN_CAMERA_DIST}
               aria-label="Acercar zoom"
               title="Acercar"
-              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -923,7 +923,7 @@ export default function ShirtGLBViewer({
               onClick={handleReset}
               aria-label="Restablecer vista"
               title="Restablecer vista"
-              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -944,9 +944,9 @@ export default function ShirtGLBViewer({
                   key={key}
                   type="button"
                   onClick={() => handleSelectPreset(key)}
-                  className={`cursor-pointer h-8 rounded-full px-3 font-medium transition-colors ${
+                  className={`cursor-pointer min-h-[44px] rounded-full px-3.5 font-medium transition-colors lg:h-8 lg:min-h-0 lg:px-3 ${
                     active
-                      ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                      ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                       : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                   }`}
                 >

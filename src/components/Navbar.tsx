@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, Moon, ShoppingBag, Sun, X } from "lucide-react";
@@ -22,6 +22,7 @@ export function Navbar() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuBtnRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     const updateScroll = () => {
@@ -44,6 +45,27 @@ export function Navbar() {
       window.removeEventListener("resize", updateScroll);
     };
   }, [pathname]);
+
+  // Escape key closes mobile menu, restores focus to trigger, and locks body scroll while open
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileMenuOpen(false);
+        mobileMenuBtnRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileMenuOpen]);
 
   const isRouteActive = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
@@ -82,7 +104,7 @@ export function Navbar() {
             <Link
               id="nav-brand-link"
               href="/"
-              className="group relative inline-flex items-center gap-3 rounded-xl px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:focus-visible:ring-white/60"
+              className="group relative inline-flex min-h-[44px] items-center gap-3 rounded-xl px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:focus-visible:ring-white/60"
             >
               <BrandLogo markSize={28} />
             </Link>
@@ -114,7 +136,7 @@ export function Navbar() {
               })}
             </ul>
 
-            {/* Right Controls: Theme Toggle + Bolsa + Mobile Trigger */}
+            {/* Right Controls: Theme Toggle + Bolsa + Mobile Trigger (>=44x44px touch targets) */}
             <div className="flex items-center gap-2">
               <button
                 id="nav-theme-toggle"
@@ -126,7 +148,7 @@ export function Navbar() {
                     : "Cambiar a modo claro"
                 }
                 title={theme === "light" ? "Modo oscuro" : "Modo claro"}
-                className="cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/12 bg-black/[0.04] text-[#111113] transition-colors hover:bg-black/[0.08] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:border-white/18 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.14] dark:focus-visible:ring-white/60"
+                className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-black/12 bg-black/[0.04] text-[#111113] transition-colors hover:bg-black/[0.08] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:border-white/18 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.14] dark:focus-visible:ring-white/60"
               >
                 {theme === "light" ? (
                   <Moon className="h-4 w-4" aria-hidden="true" />
@@ -140,7 +162,7 @@ export function Navbar() {
                 type="button"
                 onClick={openDrawer}
                 aria-label={`Bolsa, ${totalSelectionCount} prendas`}
-                className="cursor-pointer group inline-flex h-10 items-center gap-2.5 rounded-full border border-black/12 bg-black/[0.04] px-3.5 text-xs font-medium text-[#111113] transition-all duration-200 hover:border-black/25 hover:bg-black/[0.08] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:border-white/20 dark:bg-white/[0.08] dark:text-white dark:hover:border-white/45 dark:hover:bg-white/[0.14] dark:focus-visible:ring-white/60"
+                className="cursor-pointer group inline-flex min-h-[44px] items-center gap-2.5 rounded-full border border-black/12 bg-black/[0.04] px-3.5 text-xs font-medium text-[#111113] transition-all duration-200 hover:border-black/25 hover:bg-black/[0.08] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:border-white/20 dark:bg-white/[0.08] dark:text-white dark:hover:border-white/45 dark:hover:bg-white/[0.14] dark:focus-visible:ring-white/60"
               >
                 <ShoppingBag
                   className="h-3.5 w-3.5 text-[#111113]/85 transition-transform duration-200 group-hover:-translate-y-0.5 dark:text-white/90"
@@ -153,12 +175,13 @@ export function Navbar() {
               </button>
 
               <button
+                ref={mobileMenuBtnRef}
                 id="nav-mobile-menu-btn"
                 type="button"
                 onClick={() => setMobileMenuOpen((open) => !open)}
                 aria-expanded={mobileMenuOpen}
                 aria-label={mobileMenuOpen ? "Cerrar menú" : "Abrir menú"}
-                className="cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/12 bg-black/[0.04] text-[#111113] transition-colors hover:bg-black/[0.08] md:hidden dark:border-white/15 dark:bg-white/[0.05] dark:text-white"
+                className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full border border-black/12 bg-black/[0.04] text-[#111113] transition-colors hover:bg-black/[0.08] md:hidden dark:border-white/15 dark:bg-white/[0.05] dark:text-white"
               >
                 {mobileMenuOpen ? (
                   <X className="h-4 w-4" aria-hidden="true" />

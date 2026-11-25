@@ -8,6 +8,7 @@ import { AmbientStudioBackdrop } from "@/components/AmbientStudioBackdrop";
 import { Preloader } from "@/components/Preloader";
 import { Navbar } from "@/components/Navbar";
 import { SelectionDrawer } from "@/components/SelectionDrawer";
+import { SelectionToast } from "@/components/SelectionToast";
 import "./globals.css";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -50,6 +51,7 @@ export default function RootLayout({
                 <Navbar />
                 <main className="relative z-10">{children}</main>
                 <SelectionDrawer />
+                <SelectionToast />
               </SmoothScrollProvider>
             </AtelierProvider>
           </MotionProvider>

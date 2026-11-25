@@ -42,6 +42,8 @@ interface AtelierContextValue {
   updateItemQuantity: (key: string, delta: number) => void;
   removeItem: (key: string) => void;
   clearSelection: () => void;
+  toastMessage: string | null;
+  dismissToast: () => void;
 }
 
 const AtelierContext = createContext<AtelierContextValue | null>(null);
@@ -139,6 +141,25 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
     }
   }, [selectionItems]);
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const toastTimerRef = useRef<number | null>(null);
+
+  const dismissToast = useCallback(() => {
+    if (toastTimerRef.current !== null) {
+      window.clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = null;
+    }
+    setToastMessage(null);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current !== null) {
+        window.clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
+
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
@@ -164,6 +185,17 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
         }
         return [...prev, { key, shirt, config, quantity: 1 }];
       });
+
+      if (typeof window !== "undefined") {
+        if (toastTimerRef.current !== null) {
+          window.clearTimeout(toastTimerRef.current);
+        }
+        setToastMessage(`${shirt.name} agregada a tu bolsa`);
+        toastTimerRef.current = window.setTimeout(() => {
+          setToastMessage(null);
+          toastTimerRef.current = null;
+        }, 2600);
+      }
     },
     []
   );
@@ -221,6 +253,8 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
       updateItemQuantity,
       removeItem,
       clearSelection,
+      toastMessage,
+      dismissToast,
     }),
     [
       currency,
@@ -237,6 +271,8 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
       updateItemQuantity,
       removeItem,
       clearSelection,
+      toastMessage,
+      dismissToast,
     ]
   );
 

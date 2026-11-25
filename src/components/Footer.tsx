@@ -40,7 +40,7 @@ export function Footer() {
           >
             <Link
               href="/coleccion"
-              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+              className="inline-flex min-h-[44px] items-center transition-colors hover:text-[#111113] dark:hover:text-white"
             >
               Colección
             </Link>
@@ -49,7 +49,7 @@ export function Footer() {
             </span>
             <Link
               href="/a-medida"
-              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+              className="inline-flex min-h-[44px] items-center transition-colors hover:text-[#111113] dark:hover:text-white"
             >
               Armá tu camisa
             </Link>
@@ -58,7 +58,7 @@ export function Footer() {
             </span>
             <Link
               href="/como-medir"
-              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+              className="inline-flex min-h-[44px] items-center transition-colors hover:text-[#111113] dark:hover:text-white"
             >
               Cómo medir
             </Link>
@@ -67,20 +67,20 @@ export function Footer() {
             </span>
             <Link
               href="/empresas"
-              className="transition-colors hover:text-[#111113] dark:hover:text-white"
+              className="inline-flex min-h-[44px] items-center transition-colors hover:text-[#111113] dark:hover:text-white"
             >
               Empresas
             </Link>
           </nav>
 
           {/* Right: WhatsApp + Motion Toggle + Copyright */}
-          <div className="flex flex-wrap items-center gap-3 text-xs">
+          <div className="flex flex-wrap items-center gap-2.5 text-xs">
             <a
               id="footer-whatsapp-link"
               href={DIRECT_WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#111113] px-3.5 font-medium text-white transition-colors hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="inline-flex min-h-[44px] items-center gap-1.5 rounded-full bg-[#16233B] px-4 font-medium text-white transition-colors hover:bg-[#1E2F4F] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
             >
               <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
               <span>WhatsApp</span>
@@ -91,7 +91,7 @@ export function Footer() {
               type="button"
               onClick={toggleMotion}
               aria-pressed={isMotionPaused}
-              className="cursor-pointer inline-flex h-8 items-center gap-1.5 rounded-full border border-black/12 px-3 text-[11px] text-muted transition-colors hover:border-black/30 hover:text-[#111113] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stitch dark:border-white/14 dark:hover:border-white/35 dark:hover:text-white"
+              className="cursor-pointer inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-black/12 px-3.5 text-[11px] text-muted transition-colors hover:border-black/30 hover:text-[#111113] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-stitch dark:border-white/14 dark:hover:border-white/35 dark:hover:text-white"
             >
               {isMotionPaused ? (
                 <Play className="h-3 w-3 text-stitch" aria-hidden="true" />
