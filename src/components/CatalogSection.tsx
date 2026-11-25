@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
@@ -112,23 +111,25 @@ function MinimalShirtCard({
           {visualMode === "camisa" ? (
             <div className="relative flex h-full w-full items-center justify-center p-4 pb-6">
               <div
-                className={`relative h-full w-full ${
+                className={`relative flex h-full w-full items-center justify-center ${
                   isMotionPaused
                     ? ""
                     : "transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.04]"
                 }`}
               >
-                <Image
-                  src={shirt.studioImage}
-                  alt={shirt.name}
-                  fill
-                  sizes={
-                    isWide
-                      ? "(min-width: 1024px) 32vw, 50vw"
-                      : "(min-width: 1024px) 24vw, 50vw"
-                  }
-                  className="object-contain drop-shadow-[0_14px_18px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_16px_22px_rgba(0,0,0,0.58)]"
-                />
+                <picture className="flex h-full w-full items-center justify-center">
+                  <source
+                    media="(min-width: 768px)"
+                    srcSet={shirt.studioImageHd}
+                    type="image/webp"
+                  />
+                  <img
+                    src={shirt.studioImage}
+                    alt={shirt.name}
+                    loading="lazy"
+                    className="h-full w-full object-contain drop-shadow-[0_14px_18px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_16px_22px_rgba(0,0,0,0.58)]"
+                  />
+                </picture>
               </div>
               <span
                 aria-hidden="true"
@@ -337,7 +338,7 @@ export function CatalogSection() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Buscar tela o Ref. Art. (ej. 2529)..."
                   aria-label="Buscar por tela o referencia de artículo"
-                  className="w-full min-w-0 bg-transparent px-2 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+                  className="w-full min-w-0 bg-transparent px-2 text-base text-[#111113] placeholder:text-muted/75 focus:outline-none md:text-sm dark:text-[#F8FAFC]"
                 />
                 <button
                   type="button"
@@ -384,7 +385,7 @@ export function CatalogSection() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
                 aria-label="Buscar por tela o referencia de artículo"
-                className="w-full bg-transparent px-2.5 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+                className="w-full bg-transparent px-2.5 text-base text-[#111113] placeholder:text-muted/75 focus:outline-none md:text-sm dark:text-[#F8FAFC]"
               />
               {searchQuery && (
                 <button

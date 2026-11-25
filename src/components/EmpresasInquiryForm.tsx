@@ -213,7 +213,7 @@ export function EmpresasInquiryForm() {
             value={form.fullName}
             onChange={(e) => updateField("fullName", e.target.value)}
             placeholder="Ej. Martín Gómez"
-            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-base md:text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
               fieldErrors.fullName
                 ? "border-red-500/80 focus:border-red-500"
                 : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"
@@ -242,7 +242,7 @@ export function EmpresasInquiryForm() {
             value={form.company}
             onChange={(e) => updateField("company", e.target.value)}
             placeholder="Ej. Estudio / Boutique"
-            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+            className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-base md:text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
               fieldErrors.company
                 ? "border-red-500/80 focus:border-red-500"
                 : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"
@@ -269,7 +269,7 @@ export function EmpresasInquiryForm() {
             value={form.location}
             onChange={(e) => updateField("location", e.target.value)}
             placeholder="Ej. Córdoba, Argentina"
-            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
+            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-base md:text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
           />
         </div>
 
@@ -287,7 +287,7 @@ export function EmpresasInquiryForm() {
             value={form.estimatedQty}
             onChange={(e) => updateField("estimatedQty", e.target.value)}
             placeholder="Ej. 25 camisas"
-            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
+            className="mt-1.5 w-full rounded-2xl border border-black/12 bg-white/80 px-4 py-3 text-base md:text-sm text-[#111113] placeholder:text-muted/60 focus:border-[#16233B] focus:outline-none dark:border-white/16 dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 dark:focus:border-white"
           />
         </div>
       </div>
@@ -308,7 +308,7 @@ export function EmpresasInquiryForm() {
           value={form.contact}
           onChange={(e) => updateField("contact", e.target.value)}
           placeholder="Ej. +54 9 11 ... o nombre@empresa.com"
-          className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
+          className={`mt-1.5 w-full rounded-2xl border bg-white/80 px-4 py-3 text-base md:text-sm text-[#111113] placeholder:text-muted/60 focus:outline-none dark:bg-white/[0.06] dark:text-[#F8FAFC] dark:placeholder:text-white/40 ${
             fieldErrors.contact
               ? "border-red-500/80 focus:border-red-500"
               : "border-black/12 focus:border-[#16233B] dark:border-white/16 dark:focus:border-white"

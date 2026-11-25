@@ -171,17 +171,24 @@ export function Hero() {
               style={{ transformStyle: "preserve-3d" }}
               className="relative aspect-[3/4] w-full px-2 py-4 select-none"
             >
-              <motion.img
-                src="/images/shirts/pima-noche.png"
-                alt="Camisa a medida Cristian Mancuso en Algodón Pima Peruano Azul Noche"
-                loading="eager"
-                fetchPriority="high"
-                draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_44px_rgba(0,0,0,0.65)]"
-              />
+              <picture className="block h-full w-full">
+                <source
+                  media="(min-width: 768px)"
+                  srcSet="/images/shirts/pima-noche-hd.webp"
+                  type="image/webp"
+                />
+                <motion.img
+                  src="/images/shirts/pima-noche-mobile.webp"
+                  alt="Camisa a medida Cristian Mancuso en Algodón Pima Peruano Azul Noche"
+                  loading="eager"
+                  fetchPriority="high"
+                  draggable={false}
+                  initial={isMotionPaused ? false : { opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_44px_rgba(0,0,0,0.65)]"
+                />
+              </picture>
             </motion.div>
 
             {/* Synchronized Breathing Elliptical Floor Shadow */}

@@ -34,6 +34,7 @@ export interface CatalogShirt {
   composition: string;
   sizeType: "numeric" | "alpha";
   studioImage: string;
+  studioImageHd: string;
 }
 
 export const CATALOG_SHIRTS: CatalogShirt[] = [
@@ -52,7 +53,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(147, 197, 253, 0.14)",
     composition: "Algodón Pima Peruano 120/2",
     sizeType: "numeric",
-    studioImage: "/images/shirts/pima-noche.png",
+    studioImage: "/images/shirts/pima-noche-mobile.webp",
+    studioImageHd: "/images/shirts/pima-noche-hd.webp",
   },
   {
     id: "pima-piura-acero",
@@ -68,7 +70,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(226, 232, 240, 0.16)",
     composition: "Algodón Pima Peruano 120/2",
     sizeType: "numeric",
-    studioImage: "/images/shirts/pima-acero.png",
+    studioImage: "/images/shirts/pima-acero-mobile.webp",
+    studioImageHd: "/images/shirts/pima-acero-hd.webp",
   },
   {
     id: "biella-lino-negro",
@@ -84,7 +87,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(200, 169, 126, 0.16)",
     composition: "100% Lino Italiano de Biella",
     sizeType: "numeric",
-    studioImage: "/images/shirts/lino-negro.png",
+    studioImage: "/images/shirts/lino-negro-mobile.webp",
+    studioImageHd: "/images/shirts/lino-negro-hd.webp",
   },
   {
     id: "biella-lino-marfil",
@@ -101,7 +105,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     isLightFabric: true,
     composition: "100% Lino Italiano de Biella",
     sizeType: "numeric",
-    studioImage: "/images/shirts/lino-marfil.png",
+    studioImage: "/images/shirts/lino-marfil-mobile.webp",
+    studioImageHd: "/images/shirts/lino-marfil-hd.webp",
   },
   {
     id: "urbano-oxford-grafito",
@@ -116,7 +121,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(245, 242, 235, 0.12)",
     composition: "Algodón Urbano Oxford Easy Care",
     sizeType: "numeric",
-    studioImage: "/images/shirts/oxford-grafito.png",
+    studioImage: "/images/shirts/oxford-grafito-mobile.webp",
+    studioImageHd: "/images/shirts/oxford-grafito-hd.webp",
   },
   {
     id: "cuadros-ventana-lino-algodon",
@@ -133,7 +139,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(200, 169, 126, 0.28)",
     composition: "Blend Lino & Algodón Urbano",
     sizeType: "numeric",
-    studioImage: "/images/shirts/cuadros-ventana.png",
+    studioImage: "/images/shirts/cuadros-ventana-mobile.webp",
+    studioImageHd: "/images/shirts/cuadros-ventana-hd.webp",
   },
   {
     id: "donna-cloque-raya-mineral",
@@ -150,7 +157,8 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     isLightFabric: true,
     composition: "Cloqué liviano · Corte femenino",
     sizeType: "alpha",
-    studioImage: "/images/shirts/donna-mineral.png",
+    studioImage: "/images/shirts/donna-mineral-mobile.webp",
+    studioImageHd: "/images/shirts/donna-mineral-hd.webp",
   },
 ];
 

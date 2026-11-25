@@ -67,17 +67,26 @@ function ShirtStudioFallback({
         className="relative flex h-[92%] max-h-[420px] w-full items-center justify-center"
       >
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.picture
             key={shirt.id}
-            src={shirt.studioImage}
-            alt={shirt.name}
-            draggable={false}
             initial={isMotionPaused ? false : { opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.24, ease: "easeOut" }}
-            className="h-full w-auto max-w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] select-none dark:drop-shadow-[0_26px_38px_rgba(0,0,0,0.62)]"
-          />
+            className="flex h-full w-full items-center justify-center"
+          >
+            <source
+              media="(min-width: 768px)"
+              srcSet={shirt.studioImageHd}
+              type="image/webp"
+            />
+            <img
+              src={shirt.studioImage}
+              alt={shirt.name}
+              draggable={false}
+              className="h-full w-auto max-w-full object-contain drop-shadow-[0_22px_32px_rgba(17,17,19,0.22)] select-none dark:drop-shadow-[0_26px_38px_rgba(0,0,0,0.62)]"
+            />
+          </motion.picture>
         </AnimatePresence>
       </motion.div>
       {/* Organic soft elliptical shadow directly under the shirt hem */}
@@ -273,15 +282,15 @@ export function StudioShirtStage({
                 src={collarMeta.macroImage}
                 alt={`Macro real Cuello ${collar}`}
                 draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-0 h-full w-full object-contain px-2 pt-2 pb-12 drop-shadow-[0_18px_28px_rgba(17,17,19,0.2)] select-none dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
               />
             </AnimatePresence>
 
-            {/* Discreet Previous / Next Collar Arrows */}
+            {/* Discreet Previous / Next Collar Arrows (Dark Frosted for crisp contrast in Light & Dark modes) */}
             {onCollarChange && (
               <>
                 <button
@@ -289,7 +298,7 @@ export function StudioShirtStage({
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => handleCollarSwipe(-1)}
                   aria-label="Cuello anterior"
-                  className="liquid-glass cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
+                  className="cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#111113]/85 text-white shadow-lg backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10"
                 >
                   <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -298,31 +307,28 @@ export function StudioShirtStage({
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => handleCollarSwipe(1)}
                   aria-label="Siguiente cuello"
-                  className="liquid-glass cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                  className="cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#111113]/85 text-white shadow-lg backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10"
                 >
                   <ChevronRight className="h-5 w-5" aria-hidden="true" />
                 </button>
               </>
             )}
 
-            {/* Floating Collar Spec Pill */}
-            <div className="liquid-glass pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
+            {/* Floating Collar Spec Pill (Dark Frosted) */}
+            <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full border border-white/15 bg-[#111113]/85 px-4 py-1.5 text-xs text-white shadow-lg backdrop-blur-md sm:bottom-4 sm:py-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
               <span className="font-semibold">Cuello {collar}</span>
-              <span
-                aria-hidden="true"
-                className="hidden text-black/25 sm:inline dark:text-white/30"
-              >
+              <span aria-hidden="true" className="hidden text-white/35 sm:inline">
                 ·
               </span>
-              <span className="hidden text-[#111113]/70 sm:inline dark:text-white/75">
+              <span className="hidden text-white/80 sm:inline">
                 {collarMeta.detail}
               </span>
             </div>
           </motion.div>
         )}
 
-        {/* STEP 3: Full-bleed Macro Button / Cuff Photograph with Horizontal Swipe & Side Arrows */}
+        {/* STEP 3: Transparent Straight-On Cuff / Button Cutout with Horizontal Swipe & Dark Frosted Side Arrows */}
         {step === 3 && (
           <motion.div
             key="stage-button-macro"
@@ -348,15 +354,15 @@ export function StudioShirtStage({
                 src={selectedButton.macroImage}
                 alt={`Macro real Botón ${selectedButton.label}`}
                 draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-0 h-full w-full object-contain px-4 pt-3 pb-14 drop-shadow-[0_18px_28px_rgba(17,17,19,0.2)] select-none dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
               />
             </AnimatePresence>
 
-            {/* Discreet Previous / Next Button Arrows */}
+            {/* Discreet Previous / Next Button Arrows (Dark Frosted) */}
             {onButtonChange && (
               <>
                 <button
@@ -364,7 +370,7 @@ export function StudioShirtStage({
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => handleButtonSwipe(-1)}
                   aria-label="Botón anterior"
-                  className="liquid-glass cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
+                  className="cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#111113]/85 text-white shadow-lg backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10"
                 >
                   <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -373,15 +379,15 @@ export function StudioShirtStage({
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => handleButtonSwipe(1)}
                   aria-label="Siguiente botón"
-                  className="liquid-glass cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                  className="cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-[#111113]/85 text-white shadow-lg backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10"
                 >
                   <ChevronRight className="h-5 w-5" aria-hidden="true" />
                 </button>
               </>
             )}
 
-            {/* Floating Button Detail Pill */}
-            <div className="liquid-glass pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
+            {/* Floating Button Detail Pill (Dark Frosted) */}
+            <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full border border-white/15 bg-[#111113]/85 px-4 py-1.5 text-xs text-white shadow-lg backdrop-blur-md sm:bottom-4 sm:py-2">
               <span
                 aria-hidden="true"
                 className="h-3.5 w-3.5 shrink-0 rounded-full border shadow-sm"

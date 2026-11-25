@@ -623,7 +623,7 @@ export function ShirtBuilderSection() {
                                   handleMeasureChange(field.key, e.target.value)
                                 }
                                 aria-label={`${field.label} en centímetros`}
-                                className="w-11 bg-transparent text-right font-mono text-xs text-[#111113] placeholder:text-black/30 focus:outline-none dark:text-white dark:placeholder:text-white/30"
+                                className="w-14 bg-transparent text-right font-mono text-base text-[#111113] placeholder:text-black/30 focus:outline-none md:text-sm dark:text-white dark:placeholder:text-white/30"
                               />
                               <span className="font-mono text-[10px] text-[#111113]/45 dark:text-white/45">
                                 cm

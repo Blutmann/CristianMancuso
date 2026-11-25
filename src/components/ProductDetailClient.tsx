@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -122,15 +121,21 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   transition={{ duration: 0.3 }}
                   className="relative flex h-full w-full items-center justify-center p-6 pb-9"
                 >
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={shirt.studioImage}
-                      alt={shirt.name}
-                      fill
-                      priority
-                      sizes="(min-width: 1024px) 520px, 90vw"
-                      className="object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_42px_rgba(0,0,0,0.62)]"
-                    />
+                  <div className="relative flex h-full w-full items-center justify-center">
+                    <picture className="flex h-full w-full items-center justify-center">
+                      <source
+                        media="(min-width: 768px)"
+                        srcSet={shirt.studioImageHd}
+                        type="image/webp"
+                      />
+                      <img
+                        src={shirt.studioImage}
+                        alt={shirt.name}
+                        loading="eager"
+                        fetchPriority="high"
+                        className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_42px_rgba(0,0,0,0.62)]"
+                      />
+                    </picture>
                   </div>
                   <span
                     aria-hidden="true"
@@ -315,14 +320,20 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               href={`/coleccion/${item.id}`}
               className="group liquid-glass flex flex-col overflow-hidden rounded-2xl p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/28"
             >
-              <div className="relative aspect-[4/4.4] w-full">
-                <Image
-                  src={item.studioImage}
-                  alt={item.name}
-                  fill
-                  sizes="(min-width: 768px) 25vw, 50vw"
-                  className="object-contain p-2 drop-shadow-[0_10px_14px_rgba(17,17,19,0.18)] transition-transform duration-500 group-hover:scale-[1.04] dark:drop-shadow-[0_12px_18px_rgba(0,0,0,0.5)]"
-                />
+              <div className="relative flex aspect-[4/4.4] w-full items-center justify-center p-2">
+                <picture className="flex h-full w-full items-center justify-center">
+                  <source
+                    media="(min-width: 768px)"
+                    srcSet={item.studioImageHd}
+                    type="image/webp"
+                  />
+                  <img
+                    src={item.studioImage}
+                    alt={item.name}
+                    loading="lazy"
+                    className="h-full w-full object-contain drop-shadow-[0_10px_14px_rgba(17,17,19,0.18)] transition-transform duration-500 group-hover:scale-[1.04] dark:drop-shadow-[0_12px_18px_rgba(0,0,0,0.5)]"
+                  />
+                </picture>
               </div>
               <div className="mt-2 px-1">
                 <p className="ds-h3 truncate text-xs sm:text-sm">{item.name}</p>
