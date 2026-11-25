@@ -12,6 +12,7 @@ import {
   useGLTF,
   useProgress,
 } from "@react-three/drei";
+import { AnimatePresence, motion } from "framer-motion";
 import { Minus, Move, Plus, Rotate3d, RotateCcw } from "lucide-react";
 import {
   BUTTON_OPTIONS,
@@ -660,103 +661,198 @@ export default function ShirtGLBViewer({
             : "cursor-grab active:cursor-grabbing"
         }`}
       >
-        {/* Instant Photorealistic Studio Preview while GLB downloads in background on 4G */}
-        {!modelReady && (
-          <div
-            role="status"
-            aria-live="polite"
-            className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-4"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={shirt.studioImage}
-              alt={shirt.name}
-              className="h-[84%] max-h-[420px] w-auto object-contain drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
-            />
-            <div className="liquid-glass mt-2 flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#111113] dark:text-white">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#B08D57]" />
-              <span className="font-mono tabular-nums">
-                Cargando modelo 3D… {roundedProgress}%
-              </span>
-            </div>
-          </div>
-        )}
+        {/* Sartorial Long-Sleeve Silhouette + Diagonal Shimmer while GLB loads */}
+        <AnimatePresence>
+          {!modelReady && (
+            <motion.div
+              key="glb-sartorial-loader"
+              role="status"
+              aria-live="polite"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: isMotionPaused ? 0 : 0.35,
+                ease: "easeOut",
+              }}
+              className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center p-4"
+            >
+              <svg
+                viewBox="0 0 240 280"
+                fill="none"
+                aria-hidden="true"
+                className="h-[78%] max-h-[340px] w-auto text-white/75 dark:text-white/20"
+              >
+                <defs>
+                  <clipPath id="shirtSilhouetteClip">
+                    <path d="M96 22 C104 28 136 28 144 22 L152 30 L194 46 C200 48 205 54 207 62 L226 196 C227 202 224 206 218 207 L202 209 C197 210 194 206 193 201 L179 112 L176 244 C176 254 152 264 120 264 C88 264 64 254 64 244 L61 112 L47 201 C46 206 43 210 38 209 L22 207 C16 206 13 202 14 196 L33 62 C35 54 40 48 46 46 L88 30 Z" />
+                  </clipPath>
+                  <linearGradient
+                    id="shirtShimmerGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
+                    <stop
+                      offset="50%"
+                      stopColor="currentColor"
+                      stopOpacity="0.9"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="currentColor"
+                      stopOpacity="0"
+                    />
+                  </linearGradient>
+                </defs>
 
-        <Canvas
-          className="block !h-full !w-full"
-          shadows
-          dpr={[1, 1.5]}
-          camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 34 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.02,
-          }}
+                {/* Main tailored long-sleeve shirt silhouette */}
+                <path
+                  d="M96 22 C104 28 136 28 144 22 L152 30 L194 46 C200 48 205 54 207 62 L226 196 C227 202 224 206 218 207 L202 209 C197 210 194 206 193 201 L179 112 L176 244 C176 254 152 264 120 264 C88 264 64 254 64 244 L61 112 L47 201 C46 206 43 210 38 209 L22 207 C16 206 13 202 14 196 L33 62 C35 54 40 48 46 46 L88 30 Z"
+                  className="fill-black/[0.06] stroke-black/15 dark:fill-white/[0.06] dark:stroke-white/15"
+                  strokeWidth="1.4"
+                  strokeLinejoin="round"
+                />
+
+                {/* Collar flaps & subtle sartorial placket lines */}
+                <path
+                  d="M92 26 L112 52 L120 42 L128 52 L148 26"
+                  className="stroke-black/15 dark:stroke-white/15"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <line
+                  x1="120"
+                  y1="44"
+                  x2="120"
+                  y2="262"
+                  className="stroke-black/12 dark:stroke-white/12"
+                  strokeWidth="1.1"
+                />
+                <path
+                  d="M17 188 L47 192 M193 192 L223 188"
+                  className="stroke-black/12 dark:stroke-white/12"
+                  strokeWidth="1.1"
+                  strokeLinecap="round"
+                />
+
+                {/* Soft diagonal light shimmer clipped cleanly to the garment */}
+                {!isMotionPaused && (
+                  <g clipPath="url(#shirtSilhouetteClip)">
+                    <motion.rect
+                      x="-140"
+                      y="-40"
+                      width="130"
+                      height="360"
+                      fill="url(#shirtShimmerGrad)"
+                      transform="rotate(20 120 140)"
+                      initial={{ x: -160 }}
+                      animate={{ x: 340 }}
+                      transition={{
+                        duration: 1.9,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        repeatDelay: 0.25,
+                      }}
+                    />
+                  </g>
+                )}
+              </svg>
+
+              <div className="liquid-glass mt-2 flex items-center gap-2.5 rounded-full px-3.5 py-1.5 text-[11px] font-medium text-[#111113] dark:text-white">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#B08D57]" />
+                <span className="font-mono tabular-nums">
+                  Preparando prenda 3D… {roundedProgress}%
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Smooth 500ms Fade-In & subtle scale settle when 3D garment is ready */}
+        <div
+          className={`h-full w-full transition-all ease-out ${
+            isMotionPaused ? "duration-0" : "duration-500"
+          } ${modelReady ? "scale-100 opacity-100" : "scale-[0.97] opacity-0"}`}
         >
-          <ambientLight intensity={0.55} />
-          <directionalLight
-            position={[3.5, 4.5, 4.5]}
-            intensity={1.15}
-            castShadow
-            shadow-mapSize={[1024, 1024]}
-          />
-          <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.55} />
+          <Canvas
+            className="block !h-full !w-full"
+            shadows
+            dpr={[1, 1.5]}
+            camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 34 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.02,
+            }}
+          >
+            <ambientLight intensity={0.55} />
+            <directionalLight
+              position={[3.5, 4.5, 4.5]}
+              intensity={1.15}
+              castShadow
+              shadow-mapSize={[1024, 1024]}
+            />
+            <directionalLight position={[-3.5, 2.2, -2.5]} intensity={0.55} />
 
-          {/* Offline procedural studio softboxes (Cloudflare Pages static-safe) */}
-          <Environment resolution={256}>
-            <Lightformer
-              form="rect"
-              intensity={1.4}
-              position={[0, 4, 3]}
-              rotation={[Math.PI / 4, 0, 0]}
-              scale={[8, 4, 1]}
-            />
-            <Lightformer
-              form="rect"
-              intensity={1.0}
-              position={[-5, 1.5, 2]}
-              rotation={[0, Math.PI / 2.2, 0]}
-              scale={[5, 5, 1]}
-            />
-            <Lightformer
-              form="rect"
-              intensity={0.8}
-              position={[5, 1.5, -1]}
-              rotation={[0, -Math.PI / 2, 0]}
-              scale={[5, 5, 1]}
-            />
-          </Environment>
+            {/* Offline procedural studio softboxes (Cloudflare Pages static-safe) */}
+            <Environment resolution={256}>
+              <Lightformer
+                form="rect"
+                intensity={1.4}
+                position={[0, 4, 3]}
+                rotation={[Math.PI / 4, 0, 0]}
+                scale={[8, 4, 1]}
+              />
+              <Lightformer
+                form="rect"
+                intensity={1.0}
+                position={[-5, 1.5, 2]}
+                rotation={[0, Math.PI / 2.2, 0]}
+                scale={[5, 5, 1]}
+              />
+              <Lightformer
+                form="rect"
+                intensity={0.8}
+                position={[5, 1.5, -1]}
+                rotation={[0, -Math.PI / 2, 0]}
+                scale={[5, 5, 1]}
+              />
+            </Environment>
 
-          <Suspense fallback={null}>
-            <Clo3DShirtModel
-              shirt={shirt}
-              buttonId={buttonId}
-              step={step}
-              isMotionPaused={shouldPauseSpin}
+            <Suspense fallback={null}>
+              <Clo3DShirtModel
+                shirt={shirt}
+                buttonId={buttonId}
+                step={step}
+                isMotionPaused={shouldPauseSpin}
+                resetSignal={resetSignal}
+                onReady={handleModelReady}
+              />
+            </Suspense>
+
+            <ContactShadows
+              position={[0, -1.04, 0]}
+              opacity={0.2}
+              scale={3.2}
+              blur={2.4}
+              far={2.2}
+            />
+
+            <CameraZoomRig
+              targetDistance={targetDistance}
+              focusTarget={focusTarget}
+              focusSignal={focusSignal}
               resetSignal={resetSignal}
-              onReady={handleModelReady}
+              interactionMode={interactionMode}
+              isMotionPaused={isMotionPaused}
+              onMobileMount={handleMobileMount}
             />
-          </Suspense>
-
-          <ContactShadows
-            position={[0, -1.04, 0]}
-            opacity={0.2}
-            scale={3.2}
-            blur={2.4}
-            far={2.2}
-          />
-
-          <CameraZoomRig
-            targetDistance={targetDistance}
-            focusTarget={focusTarget}
-            focusSignal={focusSignal}
-            resetSignal={resetSignal}
-            interactionMode={interactionMode}
-            isMotionPaused={isMotionPaused}
-            onMobileMount={handleMobileMount}
-          />
-        </Canvas>
+          </Canvas>
+        </div>
       </div>
 
       {/* Controls Bar: Fixed 44px row BELOW model on mobile (never overlaps shirt), floating on lg+ */}
