@@ -63,7 +63,7 @@ export function StudioShirtStage({
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
 
   return (
-    <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-3xl bg-transparent sm:h-[440px] lg:h-full">
+    <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[440px] lg:h-full">
       {/* Subtle studio softbox halo behind the 3D garment / macro */}
       <div
         aria-hidden="true"
@@ -102,7 +102,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
+            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
           >
             <AnimatePresence mode="sync">
               <motion.img
@@ -143,7 +143,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-3xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.16)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.68)]"
+            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.16)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.68)]"
           >
             <AnimatePresence mode="sync">
               <motion.img

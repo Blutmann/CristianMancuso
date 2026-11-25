@@ -84,7 +84,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       <div className="mt-6 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
         {/* LEFT COLUMN: Large Product Image + Vista Prenda / Muestra de Tela Toggle */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="liquid-glass relative flex aspect-[3/4] max-h-[520px] w-full items-center justify-center overflow-hidden rounded-3xl">
+          <div className="liquid-glass relative flex aspect-[3/4] max-h-[520px] w-full items-center justify-center overflow-hidden rounded-2xl">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -138,7 +138,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               onClick={() => setViewMode("prenda")}
               className={`cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-4 text-xs font-medium transition-colors ${
                 viewMode === "prenda"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
@@ -152,7 +152,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               onClick={() => setViewMode("tejido")}
               className={`cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-4 text-xs font-medium transition-colors ${
                 viewMode === "tejido"
-                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
@@ -165,43 +165,39 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
         {/* RIGHT COLUMN: Details, Commercial Size, Add to Cart, Bespoke Shortcut */}
         <div className="flex flex-col lg:col-span-6 lg:pt-2">
           <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted">
-            <span className="font-medium uppercase tracking-[0.14em]">
-              {shirt.fabricLabel}
-            </span>
+            <span className="ds-caption uppercase">{shirt.fabricLabel}</span>
             <span aria-hidden="true" className="opacity-35">
               ·
             </span>
-            <span className="font-mono text-[11px]">{shirt.refCode}</span>
+            <span className="ds-mono text-[11px]">{shirt.refCode}</span>
           </div>
 
-          <h1 className="mt-2.5 font-display text-[clamp(2rem,3.6vw,2.9rem)] font-bold leading-[1.06] tracking-[-0.03em] text-[#111113] dark:text-white">
-            {shirt.name}
-          </h1>
+          <h1 className="ds-h1-page mt-2.5">{shirt.name}</h1>
 
           {/* Price + 3 Installments */}
           <div className="mt-4 flex items-baseline gap-3">
-            <span className="font-mono text-2xl font-semibold text-[#111113] tabular-nums dark:text-white">
+            <span className="font-sans text-2xl font-semibold text-[#111113] tabular-nums dark:text-white">
               {formatArsClean(shirt.priceArs)}
             </span>
             {shirt.compareAtArs && (
-              <span className="font-mono text-sm text-muted line-through tabular-nums">
+              <span className="font-sans text-sm text-muted line-through tabular-nums">
                 {formatArsClean(shirt.compareAtArs)}
               </span>
             )}
           </div>
-          <p className="mt-1 text-xs font-medium text-[#16233B] dark:text-champagne">
+          <p className="mt-1 text-xs font-medium text-[#16233B] dark:text-gold">
             3 cuotas sin interés de {formatArsClean(installmentArs)}
           </p>
 
           {/* Editorial Description */}
-          <p className="mt-5 text-sm leading-relaxed text-muted">
+          <p className="ds-body mt-5 text-muted">
             {getEditorialDescription(shirt)}
           </p>
 
           {/* Commercial Size Selector — 1 Single Row */}
           <div className="mt-7">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase dark:text-white">
+              <span className="ds-caption font-semibold text-[#111113] uppercase dark:text-white">
                 Talle comercial
               </span>
               <Link
@@ -226,10 +222,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     type="button"
                     aria-pressed={active}
                     onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer flex min-h-[46px] w-full items-center justify-center rounded-xl text-xs font-semibold transition-all ${
+                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-full text-xs font-semibold transition-all ${
                       active
-                        ? "bg-[#111113] text-white shadow-sm dark:bg-white dark:text-[#0B0B0E]"
-                        : "border border-black/12 bg-white/70 text-[#111113]/85 hover:bg-white dark:border-white/15 dark:bg-white/[0.05] dark:text-white/85 dark:hover:bg-white/[0.12]"
+                        ? "bg-[#16233B] text-white shadow-sm dark:bg-white dark:text-[#0B0B0E]"
+                        : "border border-black/12 bg-white/75 text-[#111113]/85 hover:bg-white dark:border-white/16 dark:bg-white/[0.06] dark:text-white/85 dark:hover:bg-white/[0.14]"
                     }`}
                   >
                     {size}
@@ -245,11 +241,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               id="pdp-add-to-cart"
               type="button"
               onClick={handleAddToCart}
-              className={`cursor-pointer flex min-h-[52px] w-full items-center justify-center gap-2.5 rounded-full px-6 text-xs font-semibold tracking-[0.08em] uppercase shadow-lg transition-all ${
-                justAdded
-                  ? "bg-[#16233B] text-white dark:bg-white/20 dark:border dark:border-white/35"
-                  : "bg-[#111113] text-white hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
-              }`}
+              className="ds-btn-primary w-full min-h-[48px] shadow-lg"
             >
               {justAdded ? (
                 <>
@@ -267,7 +259,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             {/* Secondary Clean Bespoke Link */}
             <Link
               href={`/a-medida?tela=${encodeURIComponent(shirt.id)}`}
-              className="liquid-glass flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full px-5 text-xs font-medium text-[#111113] transition-colors hover:bg-white dark:text-white dark:hover:bg-white/[0.12]"
+              className="ds-btn-secondary w-full min-h-[48px]"
             >
               <span>¿La querés a medida? Armala sin cargo</span>
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -281,14 +273,11 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
         aria-labelledby="related-heading"
         className="mt-16 border-t border-black/10 pt-12 dark:border-white/10"
       >
-        <h2
-          id="related-heading"
-          className="font-display text-xl font-bold tracking-[-0.02em] text-[#111113] sm:text-2xl dark:text-white"
-        >
+        <h2 id="related-heading" className="ds-h2">
           También te puede interesar
         </h2>
 
-        <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-5 md:grid-cols-4">
           {relatedShirts.map((item) => (
             <Link
               key={item.id}
@@ -305,10 +294,8 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                 />
               </div>
               <div className="mt-2 px-1">
-                <p className="truncate font-display text-xs font-bold text-[#111113] sm:text-sm dark:text-white">
-                  {item.name}
-                </p>
-                <p className="mt-0.5 font-mono text-xs text-muted tabular-nums">
+                <p className="ds-h3 truncate text-xs sm:text-sm">{item.name}</p>
+                <p className="mt-0.5 font-sans text-xs font-medium text-muted tabular-nums">
                   {formatArsClean(item.priceArs)}
                 </p>
               </div>

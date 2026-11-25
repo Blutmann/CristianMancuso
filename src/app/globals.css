@@ -3,79 +3,52 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* V12 Editorial Light Mode (Default) */
+  /* Design System v2.0 — Light Mode (Default) */
+  --bg-canvas: #F7F6F3;
   --bg-page: #F7F6F3;
-  --bg-black: #F7F6F3;
-  --bg-navy: #16233B;
-  --bg-obsidian: #F7F6F3;
-  --surface-card-dark: rgba(255, 255, 255, 0.78);
   --surface-elevated: #FFFFFF;
-  --surface-border: rgba(17, 17, 19, 0.10);
+  --glass-surface: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(17, 17, 19, 0.10);
 
-  --bg-white: #FFFFFF;
-  --bg-light: #F7F6F3;
-  --bg-ivory: #F7F6F3;
-  --bg-pearl: #ECEAE4;
-  --surface-card-light: #FFFFFF;
-  --border-light: rgba(17, 17, 19, 0.10);
-
-  --text-light: #FAFAFA;
   --text-primary: #111113;
-  --text-dark: #111113;
   --text-muted: #52525B;
-
-  /* Tailoring accents */
-  --accent-navy: #16233B;
+  --accent-sartorial: #16233B;
+  --accent-sartorial-hover: #1E2F4F;
   --accent-gold: #B08D57;
-  --accent-gold-hover: #9C7944;
   --stitch-accent: #B08D57;
-  --accent-bronze: #B08D57;
-  --accent-champagne: #C8A97E;
-  --accent-cyan: #16233B;
 }
 
 html.dark {
-  /* V12 Studio Dark Mode */
+  /* Design System v2.0 — Studio Dark Mode */
+  --bg-canvas: #0B0B0E;
   --bg-page: #0B0B0E;
-  --bg-black: #0B0B0E;
-  --bg-navy: #0B0B0E;
-  --bg-obsidian: #0B0B0E;
-  --surface-card-dark: rgba(255, 255, 255, 0.06);
   --surface-elevated: #14161D;
-  --surface-border: rgba(255, 255, 255, 0.20);
+  --glass-surface: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.16);
 
-  --text-primary: #FAFAFA;
-  --text-muted: #A1A1AA;
+  --text-primary: #F8FAFC;
+  --text-muted: #9CA3AF;
+  --accent-sartorial: #FFFFFF;
+  --accent-sartorial-hover: rgba(255, 255, 255, 0.9);
   --accent-gold: #D6C3A5;
-  --accent-gold-hover: #E5D6BE;
   --stitch-accent: #D6C3A5;
-  --accent-bronze: #D6C3A5;
-  --accent-champagne: #D6C3A5;
-  --accent-cyan: #FFFFFF;
 }
 
 @theme inline {
-  --color-navy: var(--bg-navy);
-  --color-obsidian: var(--bg-obsidian);
+  --color-canvas: var(--bg-canvas);
   --color-elevated: var(--surface-elevated);
-  --color-ivory: var(--bg-white);
-  --color-pearl: var(--bg-pearl);
-  --color-primary: var(--text-primary);
   --color-muted: var(--text-muted);
-  --color-cyan: var(--accent-cyan);
-  --color-champagne: var(--accent-champagne);
-  --color-bronze: var(--accent-bronze);
+  --color-sartorial: var(--accent-sartorial);
   --color-stitch: var(--stitch-accent);
   --color-gold: var(--accent-gold);
-  --color-gold-hover: var(--accent-gold-hover);
 
-  --font-display: var(--font-syne), system-ui, sans-serif;
+  --font-display: var(--font-plus-jakarta), system-ui, sans-serif;
   --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
 }
 
 html {
-  background-color: var(--bg-page);
+  background-color: var(--bg-canvas);
   color: var(--text-primary);
   color-scheme: light;
   overflow-x: clip;
@@ -86,12 +59,184 @@ html.dark {
 }
 
 body {
-  background-color: var(--bg-page);
+  background-color: var(--bg-canvas);
   color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   DESIGN SYSTEM v2.0 — UNIFIED TYPOGRAPHY & BUTTONS (Desktop & Mobile)
+   ========================================================================== */
+
+.ds-h1-hero {
+  font-family: var(--font-sans);
+  font-size: 2.25rem; /* 36px mobile */
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.ds-h1-page {
+  font-family: var(--font-sans);
+  font-size: 1.75rem; /* 28px mobile */
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.ds-h2 {
+  font-family: var(--font-sans);
+  font-size: 1.375rem; /* 22px mobile */
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.ds-h3 {
+  font-family: var(--font-sans);
+  font-size: 1rem; /* 16px mobile */
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.ds-body {
+  font-family: var(--font-sans);
+  font-size: 0.875rem; /* 14px mobile */
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.ds-caption {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem; /* 11px mobile */
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.ds-mono {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 1024px) {
+  .ds-h1-hero {
+    font-size: 3.75rem; /* 60px desktop */
+  }
+  .ds-h1-page {
+    font-size: 2.5rem; /* 40px desktop */
+  }
+  .ds-h2 {
+    font-size: 1.875rem; /* 30px desktop */
+  }
+  .ds-h3 {
+    font-size: 1.125rem; /* 18px desktop */
+  }
+  .ds-body {
+    font-size: 1rem; /* 16px desktop */
+  }
+  .ds-caption {
+    font-size: 0.75rem; /* 12px desktop */
+  }
+}
+
+.ds-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.5rem;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background-color: #16233B;
+  color: #FFFFFF;
+  transition: background-color 200ms ease, transform 200ms ease, opacity 200ms ease;
+}
+
+.ds-btn-primary:hover {
+  background-color: #1E2F4F;
+}
+
+.ds-btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+html.dark .ds-btn-primary {
+  background-color: #FFFFFF;
+  color: #0B0B0E;
+}
+
+html.dark .ds-btn-primary:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.ds-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #111113;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.84) 0%,
+    rgba(255, 255, 255, 0.66) 55%,
+    rgba(255, 255, 255, 0.78) 100%
+  );
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(17, 17, 19, 0.10);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.92),
+    0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.ds-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(17, 17, 19, 0.18);
+}
+
+html.dark .ds-btn-secondary {
+  color: #F8FAFC;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 55%,
+    rgba(255, 255, 255, 0.09) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.28),
+    0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+html.dark .ds-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 /* Lenis smooth scroll base */
@@ -123,7 +268,7 @@ html.dark ::selection {
   color: #FFFFFF;
 }
 
-/* V12 Dual Liquid Glass Specular Surfaces — Editorial Light Default */
+/* Dual Liquid Glass Specular Surfaces — Editorial Light Default */
 .liquid-glass {
   background: linear-gradient(
     135deg,
@@ -155,7 +300,7 @@ html.dark ::selection {
     0 16px 44px rgba(0, 0, 0, 0.08);
 }
 
-/* V12 Dark Mode Liquid Glass */
+/* Dark Mode Liquid Glass */
 html.dark .liquid-glass {
   background: linear-gradient(
     135deg,
@@ -165,7 +310,7 @@ html.dark .liquid-glass {
   );
   backdrop-filter: blur(28px) saturate(180%);
   -webkit-backdrop-filter: blur(28px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.34),
     inset 0 -1px 1px rgba(255, 255, 255, 0.05),
@@ -181,7 +326,7 @@ html.dark .liquid-glass-active {
   );
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.26);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.42),
     inset 0 -1px 1px rgba(255, 255, 255, 0.08),
@@ -192,8 +337,10 @@ html.dark .liquid-glass-active {
 @media (max-width: 767px) {
   .liquid-glass,
   .liquid-glass-active,
+  .ds-btn-secondary,
   html.dark .liquid-glass,
-  html.dark .liquid-glass-active {
+  html.dark .liquid-glass-active,
+  html.dark .ds-btn-secondary {
     backdrop-filter: blur(10px) saturate(140%);
     -webkit-backdrop-filter: blur(10px) saturate(140%);
   }

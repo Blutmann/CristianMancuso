@@ -204,10 +204,7 @@ export function ShirtBuilderSection() {
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-4 px-5 pt-24 pb-8 sm:px-8 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <h1
-            id="builder-heading"
-            className="font-display text-2xl font-bold tracking-[-0.025em] text-[#111113] sm:text-3xl dark:text-white"
-          >
+          <h1 id="builder-heading" className="ds-h2">
             Armá tu camisa
           </h1>
 
@@ -225,7 +222,7 @@ export function ShirtBuilderSection() {
                   onClick={() => setStep(item.id)}
                   className={`cursor-pointer relative flex min-h-[44px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors lg:min-h-[40px] lg:flex-none lg:px-3.5 ${
                     isActive
-                      ? "text-white dark:text-[#090B10]"
+                      ? "text-white dark:text-[#0B0B0E]"
                       : isDone
                         ? "text-[#111113]/85 hover:text-[#111113] dark:text-white/85 dark:hover:text-white"
                         : "text-[#111113]/55 hover:text-[#111113] dark:text-white/55 dark:hover:text-white/85"
@@ -239,7 +236,7 @@ export function ShirtBuilderSection() {
                           ? { duration: 0 }
                           : { type: "spring", stiffness: 380, damping: 32 }
                       }
-                      className="absolute inset-0 rounded-full bg-[#111113] shadow-md dark:bg-white dark:shadow-[0_6px_20px_rgba(255,255,255,0.22)]"
+                      className="absolute inset-0 rounded-full bg-[#16233B] shadow-md dark:bg-white dark:shadow-[0_6px_20px_rgba(255,255,255,0.22)]"
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-1">
@@ -259,7 +256,7 @@ export function ShirtBuilderSection() {
         </div>
 
         {/* CENTER STAGE: Explicit Mobile Height (iOS Safari safe) + Full Flex Stage on Desktop */}
-        <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-3xl sm:h-[440px] lg:h-auto lg:min-h-0 lg:flex-1">
+        <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[440px] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
@@ -670,7 +667,7 @@ export function ShirtBuilderSection() {
                 <button
                   type="button"
                   onClick={() => setStep((step + 1) as BuilderStep)}
-                  className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#111113] px-6 text-xs font-semibold tracking-[0.04em] text-white shadow-lg transition-transform hover:scale-[1.01] hover:bg-[#16233B] active:scale-[0.99] lg:w-auto dark:bg-white dark:text-[#090B10] dark:shadow-[0_10px_30px_rgba(255,255,255,0.2)] dark:hover:bg-white/95"
+                  className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
                 >
                   <span>{nextStepLabel[step as 1 | 2 | 3]}</span>
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -680,7 +677,7 @@ export function ShirtBuilderSection() {
                   type="button"
                   disabled={Boolean(invalidField)}
                   onClick={handleAddBespoke}
-                  className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#111113] px-6 text-xs font-semibold tracking-[0.04em] text-white shadow-lg transition-transform hover:scale-[1.01] hover:bg-[#16233B] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45 lg:w-auto dark:bg-white dark:text-[#090B10] dark:shadow-[0_10px_30px_rgba(255,255,255,0.22)] dark:hover:bg-white/95"
+                  className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
                 >
                   {justAdded ? (
                     <>

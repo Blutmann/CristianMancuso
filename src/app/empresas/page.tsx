@@ -13,68 +13,54 @@ export const metadata: Metadata = {
 export default function EmpresasPage() {
   return (
     <>
-      <section className="relative w-full overflow-hidden bg-obsidian pt-32 pb-20 sm:pt-36 sm:pb-24">
-        {/* Chiaroscuro Atelier Glow & Grain */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div
-            className="absolute -top-24 right-[-10%] h-[500px] w-[500px] rounded-full opacity-30 blur-[130px]"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(200,169,126,0.32) 0%, rgba(6,7,9,0) 70%)",
-            }}
-          />
-          <div className="absolute inset-0 atelier-grain opacity-75" />
-        </div>
-
+      <section className="relative w-full bg-transparent pt-24 pb-20 text-[#111113] sm:pt-28 sm:pb-24 dark:text-[#F8FAFC]">
         <div className="relative z-10 mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           {/* Back link */}
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.18em] text-muted uppercase transition-colors hover:text-champagne"
+            className="ds-caption inline-flex min-h-[40px] items-center gap-2 text-muted uppercase transition-colors hover:text-[#111113] dark:hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>Volver al Atelier B2C</span>
+            <span>Volver al Atelier</span>
           </Link>
 
           {/* Header */}
-          <div className="mt-6 max-w-3xl">
-            <h1 className="font-display text-[clamp(2.2rem,5vw,4rem)] font-bold leading-[1.02] tracking-[-0.035em] text-primary">
+          <div className="mt-4 max-w-3xl">
+            <h1 className="ds-h1-page">
               Camisería de autor para tu equipo o tu local.
             </h1>
 
-            <p className="mt-4 max-w-xl text-base text-muted">
+            <p className="ds-body mt-4 max-w-xl text-muted">
               Moldería consistente, telas de primera línea y atención comercial
               directa.
             </p>
           </div>
 
           {/* 2 Differentiated B2B / Wholesale Blocks */}
-          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
             {/* Block 1: Diseños para tu Empresa */}
-            <article className="flex flex-col justify-between rounded-3xl border border-black/10 dark:border-white/[0.09] bg-elevated p-6 sm:p-8">
+            <article className="liquid-glass flex flex-col justify-between rounded-2xl p-6 sm:p-8">
               <div>
                 <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-champagne/35 bg-obsidian text-champagne">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-[#16233B] dark:border-white/16 dark:bg-white/[0.06] dark:text-gold">
                     <Building2 className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="font-mono text-[10px] tracking-[0.2em] text-champagne uppercase">
-                    01 / CORPORATIVO
+                  <span className="ds-caption text-[#16233B] uppercase dark:text-gold">
+                    01 / Corporativo
                   </span>
                 </div>
 
-                <h2 className="mt-5 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
-                  Diseños para tu Empresa
-                </h2>
+                <h2 className="ds-h2 mt-5">Diseños para tu Empresa</h2>
 
-                <p className="mt-2 text-sm text-muted">
+                <p className="ds-body mt-2 text-muted">
                   Camisas ejecutivas con bordado institucional discreto y
                   reposición continua.
                 </p>
 
-                <ul className="mt-5 space-y-2.5 border-t border-black/10 pt-5 text-sm text-primary/90 dark:border-white/[0.08]">
+                <ul className="mt-5 space-y-2.5 border-t border-black/10 pt-5 text-sm text-[#111113]/90 dark:border-white/12 dark:text-[#F8FAFC]/90">
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-champagne"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-gold"
                       aria-hidden="true"
                     />
                     <span>
@@ -83,7 +69,7 @@ export default function EmpresasPage() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-champagne"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-gold"
                       aria-hidden="true"
                     />
                     <span>
@@ -92,7 +78,7 @@ export default function EmpresasPage() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-champagne"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-gold"
                       aria-hidden="true"
                     />
                     <span>
@@ -104,30 +90,30 @@ export default function EmpresasPage() {
             </article>
 
             {/* Block 2: Venta Mayorista / Locales Multimarca */}
-            <article className="flex flex-col justify-between rounded-3xl border border-black/10 dark:border-white/[0.09] bg-elevated p-6 sm:p-8">
+            <article className="liquid-glass flex flex-col justify-between rounded-2xl p-6 sm:p-8">
               <div>
                 <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-cyan/35 bg-obsidian text-cyan">
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-black/[0.04] text-[#16233B] dark:border-white/16 dark:bg-white/[0.06] dark:text-white">
                     <Store className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="font-mono text-[10px] tracking-[0.2em] text-cyan uppercase">
-                    02 / MAYORISTA
+                  <span className="ds-caption text-[#16233B] uppercase dark:text-white/85">
+                    02 / Mayorista
                   </span>
                 </div>
 
-                <h2 className="mt-5 font-display text-2xl font-bold tracking-[-0.025em] text-primary">
+                <h2 className="ds-h2 mt-5">
                   Venta Mayorista / Locales Multimarca
                 </h2>
 
-                <p className="mt-2 text-sm text-muted">
+                <p className="ds-body mt-2 text-muted">
                   Sumá Cristian Mancuso a tu tienda con asesoramiento comercial
                   directo.
                 </p>
 
-                <ul className="mt-6 space-y-2.5 border-t border-white/[0.08] pt-5 text-sm text-primary/90">
+                <ul className="mt-5 space-y-2.5 border-t border-black/10 pt-5 text-sm text-[#111113]/90 dark:border-white/12 dark:text-[#F8FAFC]/90">
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-cyan"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-white"
                       aria-hidden="true"
                     />
                     <span>
@@ -136,7 +122,7 @@ export default function EmpresasPage() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-cyan"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-white"
                       aria-hidden="true"
                     />
                     <span>
@@ -145,7 +131,7 @@ export default function EmpresasPage() {
                   </li>
                   <li className="flex items-center gap-2.5">
                     <Check
-                      className="h-4 w-4 shrink-0 text-cyan"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-white"
                       aria-hidden="true"
                     />
                     <span>
@@ -158,7 +144,7 @@ export default function EmpresasPage() {
           </div>
 
           {/* Commercial Inquiry Form */}
-          <div className="mt-12">
+          <div className="mt-10">
             <EmpresasInquiryForm />
           </div>
         </div>

@@ -116,7 +116,7 @@ export function Preloader() {
       role="status"
       aria-live="polite"
       aria-label={`Cargando atelier Cristian Mancuso ${progress}%`}
-      className="fixed inset-0 z-[100] flex flex-col justify-between bg-obsidian px-6 py-7 sm:px-12 sm:py-10 select-none will-change-transform"
+      className="fixed inset-0 z-[100] flex flex-col justify-between bg-[#F7F6F3] px-6 py-7 select-none will-change-transform sm:px-12 sm:py-10 dark:bg-[#0B0B0E]"
       style={{
         transform:
           phase === "exiting" ? "translate3d(0, -100%, 0)" : "translate3d(0, 0, 0)",
@@ -142,36 +142,36 @@ export function Preloader() {
 
       {/* Center Counter & Hairline */}
       <div className="relative z-10 my-auto flex flex-col items-center text-center">
-        <p className="mb-4 font-mono text-[10px] sm:text-[11px] tracking-[0.28em] text-muted uppercase">
+        <p className="ds-caption mb-4 tracking-[0.22em] text-muted uppercase">
           Calibrando Atelier Textil
         </p>
 
-        <div className="flex items-baseline justify-center font-display text-[clamp(4.5rem,16vw,11rem)] font-bold leading-none tracking-[-0.05em] text-primary tabular-nums">
+        <div className="flex items-baseline justify-center font-sans text-[clamp(4.5rem,16vw,11rem)] font-bold leading-none tracking-[-0.05em] text-[#111113] tabular-nums dark:text-[#F8FAFC]">
           <span>{formattedProgress}</span>
-          <span className="ml-1 text-[0.38em] font-semibold text-champagne">
+          <span className="ml-1 text-[0.38em] font-semibold text-gold">
             %
           </span>
         </div>
 
-        <div className="mt-8 w-full max-w-md overflow-hidden bg-black/10 dark:bg-white/[0.08] h-[1.5px]">
+        <div className="mt-8 h-[1.5px] w-full max-w-md overflow-hidden bg-black/10 dark:bg-white/[0.08]">
           <div
             className="h-full w-full origin-left will-change-transform"
             style={{
               transform: `scaleX(${progress / 100})`,
               background:
-                "linear-gradient(90deg, var(--accent-champagne) 0%, var(--accent-cyan) 100%)",
+                "linear-gradient(90deg, var(--accent-gold) 0%, var(--accent-sartorial) 100%)",
             }}
           />
         </div>
 
-        <p className="mt-4 font-mono text-[10px] tracking-[0.22em] text-muted/80 uppercase">
+        <p className="ds-caption mt-4 tracking-[0.18em] text-muted/85 uppercase">
           Pima 120/2 · Lino Italiano · Nácar Australiano
         </p>
       </div>
 
       {/* Bottom Row with Skip Button */}
       <div className="relative z-10 flex items-center justify-between border-t border-black/10 pt-4 dark:border-white/[0.08]">
-        <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-champagne/90 uppercase">
+        <span className="ds-caption tracking-[0.16em] text-[#16233B] uppercase dark:text-gold">
           A medida · Sin cargo extra
         </span>
 
@@ -179,9 +179,9 @@ export function Preloader() {
           id="preloader-skip-btn"
           type="button"
           onClick={() => triggerExit(isMotionPaused)}
-          className="cursor-pointer font-mono text-[11px] tracking-[0.22em] text-muted transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-champagne px-2 py-1"
+          className="ds-caption cursor-pointer rounded-full px-3 py-1 tracking-[0.16em] text-muted uppercase transition-colors duration-200 hover:text-[#111113] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B] dark:hover:text-white dark:focus-visible:ring-white"
         >
-          [ SALTAR ]
+          Saltar
         </button>
       </div>
     </div>

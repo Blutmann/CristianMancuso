@@ -98,14 +98,14 @@ export function Hero() {
       <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
-          <h1 className="font-display text-[clamp(2.45rem,5.2vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.035em] text-[#111113] dark:text-white">
+          <h1 className="ds-h1-hero">
             Tu camisa a medida,{" "}
             <span className="text-[#16233B] dark:text-white/80">
               sin costo extra.
             </span>
           </h1>
 
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+          <p className="ds-body mt-4 max-w-xl text-muted">
             Telas italianas y peruanas. Envíos a todo el país y exterior.
           </p>
 
@@ -114,7 +114,7 @@ export function Hero() {
             <Link
               id="hero-cta-coleccion"
               href="/coleccion"
-              className="inline-flex min-h-[50px] items-center gap-2.5 rounded-full bg-[#111113] px-7 text-xs font-semibold tracking-[0.06em] text-white uppercase shadow-[0_14px_34px_rgba(17,17,19,0.2)] transition-transform hover:scale-[1.01] hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:shadow-[0_14px_34px_rgba(255,255,255,0.18)] dark:hover:bg-white/90"
+              className="ds-btn-primary shadow-[0_14px_34px_rgba(22,35,59,0.2)] dark:shadow-[0_14px_34px_rgba(255,255,255,0.16)]"
             >
               <span>Ver Colección</span>
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -123,7 +123,7 @@ export function Hero() {
             <Link
               id="hero-cta-medida"
               href="/a-medida"
-              className="liquid-glass inline-flex min-h-[50px] items-center gap-2.5 rounded-full px-7 text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase transition-colors hover:bg-white dark:text-white dark:hover:bg-white/[0.14]"
+              className="ds-btn-secondary"
             >
               <Ruler className="h-4 w-4" aria-hidden="true" />
               <span>Armá tu camisa</span>

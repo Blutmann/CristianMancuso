@@ -126,13 +126,10 @@ export function BespokeProcess() {
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
         {/* Concise Header */}
         <div className="max-w-xl">
-          <h1
-            id="como-medir-heading"
-            className="font-display text-[clamp(2rem,4.2vw,3.3rem)] font-bold leading-[1.03] tracking-[-0.035em] text-[#111113] dark:text-white"
-          >
+          <h1 id="como-medir-heading" className="ds-h1-page">
             ¿Cómo tomar tus medidas?
           </h1>
-          <p className="mt-2.5 text-sm text-muted sm:text-base">
+          <p className="ds-body mt-2.5 text-muted">
             En Buenos Aires presencial o en 4 medidas rápidas por WhatsApp.
           </p>
         </div>
@@ -168,7 +165,7 @@ export function BespokeProcess() {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setModality(tab.id)}
-                  className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-xl px-5 py-2 text-xs font-semibold transition-colors sm:rounded-full ${
+                  className={`cursor-pointer relative flex min-h-[44px] items-center justify-center gap-2 rounded-full px-5 py-2 text-xs font-semibold transition-colors ${
                     isActive
                       ? "text-white dark:text-[#0B0B0E]"
                       : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
@@ -184,7 +181,7 @@ export function BespokeProcess() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-xl bg-[#111113] sm:rounded-full dark:bg-white"
+                      className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
                     />
                   )}
                   <Icon
@@ -202,21 +199,19 @@ export function BespokeProcess() {
         <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
           {/* Left: 3 Short Steps + WhatsApp CTA */}
           <div className="flex flex-col justify-between lg:col-span-6">
-            <ol className="space-y-3.5">
+            <ol className="space-y-4">
               {currentModality.steps.map((step) => (
                 <li
                   key={`${modality}-${step.number}`}
                   className="liquid-glass rounded-2xl p-5"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-black/[0.06] text-xs font-semibold text-[#111113] dark:bg-white/10 dark:text-white">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/[0.06] text-xs font-semibold text-[#111113] dark:bg-white/10 dark:text-white">
                       {step.number}
                     </span>
                     <div>
-                      <h2 className="font-display text-lg font-bold text-[#111113] dark:text-white">
-                        {step.title}
-                      </h2>
-                      <p className="mt-1 text-sm text-muted">
+                      <h2 className="ds-h3">{step.title}</h2>
+                      <p className="ds-body mt-1 text-muted">
                         {step.description}
                       </p>
                     </div>
@@ -231,7 +226,7 @@ export function BespokeProcess() {
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-[48px] items-center justify-center gap-2.5 rounded-full bg-[#111113] px-7 py-3 text-xs font-semibold tracking-[0.06em] text-white uppercase shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:shadow-[0_12px_32px_rgba(255,255,255,0.14)] dark:hover:bg-white/90"
+                className="ds-btn-primary shadow-lg"
               >
                 <MessageCircle className="h-4 w-4" aria-hidden="true" />
                 <span>Coordinar medidas por WhatsApp</span>
@@ -240,7 +235,7 @@ export function BespokeProcess() {
           </div>
 
           {/* Right: Liquid Glass Interactive Long-Sleeve 4-Measurement Schematic */}
-          <div className="liquid-glass rounded-3xl p-5 sm:p-6 lg:col-span-6">
+          <div className="liquid-glass rounded-2xl p-5 sm:p-6 lg:col-span-6">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               {MEASURE_ORDER.map((id) => {
                 const m = MEASURES[id];
@@ -254,9 +249,9 @@ export function BespokeProcess() {
                     onFocus={() => setActiveMeasure(id)}
                     onClick={() => setActiveMeasure(id)}
                     aria-pressed={isActive}
-                    className={`cursor-pointer min-h-[44px] rounded-xl px-3 py-2 text-center text-xs font-semibold transition-all ${
+                    className={`cursor-pointer min-h-[44px] rounded-full px-3 py-2 text-center text-xs font-semibold transition-all ${
                       isActive
-                        ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                        ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                         : "border border-black/10 bg-black/[0.04] text-[#111113]/75 hover:bg-black/[0.08] dark:border-white/10 dark:bg-white/[0.06] dark:text-white/75 dark:hover:bg-white/[0.12] dark:hover:text-white"
                     }`}
                   >

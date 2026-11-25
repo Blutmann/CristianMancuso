@@ -48,16 +48,13 @@ export function HomeShowcaseSections() {
       >
         <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2
-              id="gamas-heading"
-              className="font-display text-[clamp(1.8rem,3.2vw,2.65rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
-            >
+            <h2 id="gamas-heading" className="ds-h2">
               Cuatro gamas de telas
             </h2>
 
             <Link
               href="/coleccion"
-              className="inline-flex min-h-[44px] items-center gap-1.5 text-xs font-semibold tracking-[0.06em] text-[#16233B] uppercase transition-opacity hover:opacity-75 dark:text-white"
+              className="ds-caption inline-flex min-h-[44px] items-center gap-1.5 font-semibold text-[#16233B] uppercase transition-opacity hover:opacity-75 dark:text-white"
             >
               <span>Ver colección</span>
               <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -81,7 +78,7 @@ export function HomeShowcaseSections() {
                 >
                   <Link
                     href={`/coleccion?gama=${gama.id}`}
-                    className="group liquid-glass flex h-full flex-row items-center gap-3.5 overflow-hidden rounded-3xl p-4 transition-all duration-300 hover:border-black/20 sm:gap-5 sm:p-6 dark:hover:border-white/30"
+                    className="group liquid-glass flex h-full flex-row items-center gap-3.5 overflow-hidden rounded-2xl p-4 transition-all duration-300 hover:border-black/20 sm:gap-5 sm:p-6 dark:hover:border-white/30"
                   >
                     {/* Left: Floating Shirt + Elliptical Floor Shadow + Real 2.5x Magnifier Loupe */}
                     <div className="relative flex h-40 w-28 shrink-0 flex-col items-center justify-center sm:h-48 sm:w-36">
@@ -134,9 +131,7 @@ export function HomeShowcaseSections() {
                     {/* Right: Ultra-concise Title + <=5-word Copy + Price */}
                     <div className="flex min-w-0 flex-1 flex-col justify-between self-stretch py-1">
                       <div>
-                        <h3 className="font-display text-lg font-bold leading-snug tracking-[-0.02em] text-[#111113] dark:text-white">
-                          {gama.name}
-                        </h3>
+                        <h3 className="ds-h3">{gama.name}</h3>
                         <p className="mt-1.5 text-xs text-muted">
                           {visual.shortCopy}
                         </p>
@@ -145,11 +140,11 @@ export function HomeShowcaseSections() {
                       <div className="mt-4 pt-2">
                         <div className="flex items-baseline gap-2">
                           <span className="text-[11px] text-muted">Desde</span>
-                          <span className="font-mono text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
+                          <span className="font-sans text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
                             ${gama.priceArs.toLocaleString("es-AR")}
                           </span>
                         </div>
-                        <div className="mt-1.5 flex items-center justify-between text-[11px] font-medium text-[#16233B] dark:text-champagne">
+                        <div className="mt-1.5 flex items-center justify-between text-[11px] font-medium text-[#16233B] dark:text-gold">
                           <span className="inline-flex items-center gap-1">
                             <Check
                               className="h-3.5 w-3.5"
@@ -179,27 +174,18 @@ export function HomeShowcaseSections() {
         className="relative py-12 lg:py-14"
       >
         <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-          <div className="liquid-glass rounded-3xl p-5 sm:p-9 lg:p-10">
+          <div className="liquid-glass rounded-2xl p-5 sm:p-9 lg:p-10">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-              <h2
-                id="invitacion-heading"
-                className="max-w-lg font-display text-[clamp(1.65rem,3vw,2.35rem)] font-bold leading-[1.08] tracking-[-0.03em] text-[#111113] dark:text-white"
-              >
+              <h2 id="invitacion-heading" className="ds-h2 max-w-lg">
                 A medida, al mismo precio que un talle estándar.
               </h2>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Link
-                  href="/a-medida"
-                  className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#111113] px-6 text-xs font-semibold tracking-[0.06em] text-white uppercase transition-colors hover:bg-[#16233B] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
-                >
+                <Link href="/a-medida" className="ds-btn-primary">
                   <span>Armar mi camisa</span>
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
-                <Link
-                  href="/como-medir"
-                  className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-black/15 bg-white/70 px-6 text-xs font-semibold tracking-[0.06em] text-[#111113] uppercase transition-colors hover:bg-white dark:border-white/20 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.12]"
-                >
+                <Link href="/como-medir" className="ds-btn-secondary">
                   <Ruler className="h-4 w-4" aria-hidden="true" />
                   <span>Cómo medir</span>
                 </Link>
@@ -215,7 +201,7 @@ export function HomeShowcaseSections() {
                     className={`flex items-center gap-3 ${idx > 0 ? "sm:pl-6" : ""}`}
                   >
                     <Icon
-                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-champagne"
+                      className="h-4 w-4 shrink-0 text-[#16233B] dark:text-gold"
                       aria-hidden="true"
                     />
                     <span className="font-display text-sm font-bold text-[#111113] dark:text-white">

@@ -149,20 +149,20 @@ function MinimalShirtCard({
         {/* Clean Metadata: Name + Ref. Art. + Price */}
         <div className="flex flex-1 flex-col justify-between gap-1.5 px-4 pt-3 pb-2">
           <div>
-            <h2 className="truncate font-display text-sm font-bold tracking-[-0.015em] text-[#111113] sm:text-[15px] dark:text-white">
+            <h2 className="ds-h3 truncate text-sm sm:text-[15px]">
               {shirt.name}
             </h2>
-            <p className="mt-0.5 font-mono text-[10.5px] text-muted">
+            <p className="ds-mono mt-0.5 text-[10.5px] text-muted">
               {shirt.refCode}
             </p>
           </div>
 
           <div className="flex items-baseline gap-2 pt-0.5">
-            <span className="font-mono text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
+            <span className="font-sans text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
               {formatArsClean(shirt.priceArs)}
             </span>
             {shirt.compareAtArs && (
-              <span className="font-mono text-[11px] text-muted line-through tabular-nums">
+              <span className="font-sans text-[11px] text-muted line-through tabular-nums">
                 {formatArsClean(shirt.compareAtArs)}
               </span>
             )}
@@ -191,7 +191,7 @@ function MinimalShirtCard({
                   type="button"
                   onClick={() => handleQuickSelectSize(size)}
                   aria-label={`Agregar ${shirt.name} talle ${size}`}
-                  className="cursor-pointer flex min-h-[40px] w-full items-center justify-center rounded-xl border border-black/12 bg-white/85 text-[11px] font-semibold text-[#111113] transition-colors hover:bg-[#111113] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                  className="cursor-pointer flex min-h-[40px] w-full items-center justify-center rounded-full border border-black/12 bg-white/85 text-[11px] font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
                 >
                   {size}
                 </button>
@@ -209,7 +209,7 @@ function MinimalShirtCard({
               className={`cursor-pointer flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase transition-colors ${
                 justAdded
                   ? "bg-[#16233B] text-white dark:bg-white/20 dark:text-white"
-                  : "border border-black/14 bg-white/75 text-[#111113] hover:bg-[#111113] hover:text-white dark:border-white/18 dark:bg-white/[0.07] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                  : "border border-black/14 bg-white/75 text-[#111113] hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.07] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
               }`}
             >
               {justAdded ? (
@@ -257,10 +257,7 @@ export function CatalogSection() {
       className="relative w-full bg-transparent pt-24 pb-16 text-[#111113] sm:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-        <h1
-          id="coleccion-heading"
-          className="font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
-        >
+        <h1 id="coleccion-heading" className="ds-h1-page">
           Colección
         </h1>
 
@@ -297,7 +294,7 @@ export function CatalogSection() {
                         stiffness: 380,
                         damping: 32,
                       }}
-                      className="absolute inset-0 rounded-full bg-[#111113] dark:bg-white"
+                      className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
                     />
                   )}
                   <span className="relative z-10">{option.label}</span>
@@ -319,7 +316,7 @@ export function CatalogSection() {
                 onClick={() => setVisualMode("camisa")}
                 className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
                   visualMode === "camisa"
-                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
@@ -333,7 +330,7 @@ export function CatalogSection() {
                 onClick={() => setVisualMode("tela")}
                 className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
                   visualMode === "tela"
-                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
@@ -354,7 +351,7 @@ export function CatalogSection() {
                 onClick={() => setGridCols(3)}
                 className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
                   gridCols === 3
-                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
@@ -368,7 +365,7 @@ export function CatalogSection() {
                 onClick={() => setGridCols(4)}
                 className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
                   gridCols === 4
-                    ? "bg-[#111113] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
@@ -382,11 +379,11 @@ export function CatalogSection() {
         {/* Minimal Product Grid */}
         {visibleShirts.length === 0 ? (
           <div className="liquid-glass mt-8 rounded-2xl p-8 text-center">
-            <p className="text-sm text-muted">No hay telas en esta gama.</p>
+            <p className="ds-body text-muted">No hay telas en esta gama.</p>
             <button
               type="button"
               onClick={() => setSelectedFabric(null)}
-              className="cursor-pointer mt-4 min-h-[44px] rounded-full bg-[#111113] px-5 text-xs font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+              className="ds-btn-primary mt-4"
             >
               Ver todas
             </button>
