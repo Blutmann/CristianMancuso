@@ -19,10 +19,11 @@ import {
 } from "@/data/catalog";
 
 const MODEL_PATH = "/models/shirt.glb";
-const DEFAULT_CAMERA_Z = 3.45;
-const MIN_CAMERA_DIST = 1.6;
-const MAX_CAMERA_DIST = 5.0;
-const ZOOM_STEP = 0.45;
+const DEFAULT_CAMERA_Z = 3.15;
+const MOBILE_CAMERA_Z = 2.25;
+const MIN_CAMERA_DIST = 1.35;
+const MAX_CAMERA_DIST = 4.8;
+const ZOOM_STEP = 0.4;
 
 export interface ShirtGLBViewerProps {
   shirt: CatalogShirt;
@@ -228,6 +229,7 @@ function CameraZoomRig({
   resetSignal,
   interactionMode,
   isMotionPaused,
+  onMobileMount,
 }: {
   targetDistance: number;
   focusTarget: [number, number, number];
@@ -235,12 +237,32 @@ function CameraZoomRig({
   resetSignal: number;
   interactionMode: InteractionMode;
   isMotionPaused: boolean;
+  onMobileMount: (mobileZ: number) => void;
 }) {
-  const { camera } = useThree();
+  const { camera, get } = useThree();
   const controlsRef =
     useRef<React.ComponentRef<typeof OrbitControls> | null>(null);
   const desiredTargetRef = useRef<THREE.Vector3 | null>(null);
   const desiredDistRef = useRef<number | null>(null);
+
+  // Calibrate mobile camera on real client mount (avoids static-export SSR hydration mismatch)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.innerWidth < 768) {
+      const cam = get().camera;
+      if (cam instanceof THREE.PerspectiveCamera) {
+        cam.fov = 46;
+        cam.updateProjectionMatrix();
+      }
+      cam.position.set(0, 0, MOBILE_CAMERA_Z);
+      desiredDistRef.current = MOBILE_CAMERA_Z;
+      if (controlsRef.current) {
+        controlsRef.current.target.set(0, 0, 0);
+        controlsRef.current.update();
+      }
+      onMobileMount(MOBILE_CAMERA_Z);
+    }
+  }, [get, onMobileMount]);
 
   // Trigger smooth distance transition when user clicks + / - / preset
   useEffect(() => {
@@ -253,13 +275,17 @@ function CameraZoomRig({
     desiredTargetRef.current = new THREE.Vector3(...focusTarget);
   }, [focusSignal, focusTarget]);
 
-  // Explicit Reset returns smoothly/cleanly to default front view
+  // Explicit Reset returns cleanly to default front view for current viewport
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls || resetSignal === 0) return;
     desiredTargetRef.current = null;
     desiredDistRef.current = null;
-    camera.position.set(0, 0.02, DEFAULT_CAMERA_Z);
+    const baseZ =
+      typeof window !== "undefined" && window.innerWidth < 768
+        ? MOBILE_CAMERA_Z
+        : DEFAULT_CAMERA_Z;
+    camera.position.set(0, 0, baseZ);
     controls.target.set(0, 0, 0);
     controls.update();
   }, [resetSignal, camera]);
@@ -409,19 +435,23 @@ function Clo3DShirtModel({
       }
     });
 
-    // Ensure world matrices are fully updated before computing Box3
+    // Ensure world matrices are updated and compute Box3 strictly over visible Mesh children
+    // (ignores any hidden armature/helper nodes that could shift vertical center upward)
     clone.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(clone);
+    const box = new THREE.Box3();
+    clone.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.visible) {
+        box.expandByObject(child);
+      }
+    });
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
     box.getSize(size);
     box.getCenter(center);
 
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    // Target height 1.52 in mobile (z=2.75, fov=38 -> ~79% fill) or 1.85 in desktop (z=3.45, fov=36 -> ~81% fill)
-    const isNarrow = typeof window !== "undefined" && window.innerWidth < 768;
-    const targetSize = isNarrow ? 1.5 : 1.85;
-    const scale = targetSize / maxDim;
+    // Universal 1.65 normalized height (y from -0.825 to +0.825 -> ContactShadows sits cleanly at y = -0.82)
+    const scale = 1.65 / maxDim;
 
     return {
       clonedScene: clone,
@@ -570,14 +600,9 @@ export default function ShirtGLBViewer({
   isMotionPaused,
 }: ShirtGLBViewerProps) {
   const { progress } = useProgress();
-  const [isMobileViewport] = useState(
-    () => typeof window !== "undefined" && window.innerWidth < 768
-  );
-  const initialCameraZ = isMobileViewport ? 2.75 : DEFAULT_CAMERA_Z;
-  const cameraFov = isMobileViewport ? 38 : 36;
-
   const [modelReady, setModelReady] = useState(false);
-  const [targetDistance, setTargetDistance] = useState(initialCameraZ);
+  const [baseDistance, setBaseDistance] = useState(DEFAULT_CAMERA_Z);
+  const [targetDistance, setTargetDistance] = useState(DEFAULT_CAMERA_Z);
   const [interactionMode, setInteractionMode] =
     useState<InteractionMode>("rotate");
   const [activePreset, setActivePreset] = useState<FocusPreset>("completa");
@@ -588,6 +613,13 @@ export default function ShirtGLBViewer({
   const [resetSignal, setResetSignal] = useState(0);
 
   const handleModelReady = useMemo(() => () => setModelReady(true), []);
+  const handleMobileMount = useMemo(
+    () => (mobileZ: number) => {
+      setBaseDistance(mobileZ);
+      setTargetDistance(mobileZ);
+    },
+    []
+  );
 
   const handleZoomIn = () => {
     setTargetDistance((d) =>
@@ -606,7 +638,7 @@ export default function ShirtGLBViewer({
     setActivePreset(presetKey);
     setFocusTarget(preset.target);
     setTargetDistance(
-      presetKey === "completa" ? initialCameraZ : preset.distance
+      presetKey === "completa" ? baseDistance : preset.distance
     );
     setFocusSignal((n) => n + 1);
     if (presetKey === "completa") {
@@ -618,7 +650,7 @@ export default function ShirtGLBViewer({
     setActivePreset("completa");
     setInteractionMode("rotate");
     setFocusTarget([0, 0, 0]);
-    setTargetDistance(initialCameraZ);
+    setTargetDistance(baseDistance);
     setResetSignal((n) => n + 1);
   };
 
@@ -661,7 +693,7 @@ export default function ShirtGLBViewer({
         <Canvas
           shadows
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0, initialCameraZ], fov: cameraFov }}
+          camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 36 }}
           gl={{
             antialias: true,
             alpha: true,
@@ -715,11 +747,11 @@ export default function ShirtGLBViewer({
           </Suspense>
 
           <ContactShadows
-            position={[0, -1.04, 0]}
+            position={[0, -0.82, 0]}
             opacity={0.28}
-            scale={3.4}
-            blur={2.5}
-            far={2.2}
+            scale={3.0}
+            blur={2.4}
+            far={1.9}
           />
 
           <CameraZoomRig
@@ -729,6 +761,7 @@ export default function ShirtGLBViewer({
             resetSignal={resetSignal}
             interactionMode={interactionMode}
             isMotionPaused={isMotionPaused}
+            onMobileMount={handleMobileMount}
           />
         </Canvas>
       </div>
