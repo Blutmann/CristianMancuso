@@ -3,18 +3,15 @@
 import { Component, useState, useSyncExternalStore, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
-import { Box } from "lucide-react";
+import { Box, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
   COLLAR_OPTIONS,
-  MONOGRAM_THREAD_OPTIONS,
   type BespokeMeasurements,
   type ButtonOption,
   type CatalogShirt,
   type CollarOption,
-  type MonogramPlacement,
-  type MonogramThreadOption,
 } from "@/data/catalog";
 
 interface WebGLErrorBoundaryProps {
@@ -83,19 +80,20 @@ function ShirtStudioFallback({
           />
         </AnimatePresence>
       </motion.div>
+      {/* Organic soft elliptical shadow directly under the shirt hem */}
       <motion.span
         aria-hidden="true"
         animate={
           isMotionPaused
-            ? { scale: 1, opacity: 0.22 }
-            : { scale: [0.88, 1.08, 0.88], opacity: [0.16, 0.32, 0.16] }
+            ? { scale: 1, opacity: 1 }
+            : { scale: [0.9, 1.06, 0.9], opacity: [0.75, 1, 0.75] }
         }
         transition={{
           duration: 4.8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="pointer-events-none mt-1 h-2.5 w-36 rounded-full bg-[#111113] blur-lg dark:bg-black"
+        className="pointer-events-none mt-1 h-6 w-44 rounded-full bg-black/15 blur-2xl dark:bg-black/45"
       />
     </div>
   );
@@ -120,9 +118,7 @@ export interface StudioShirtStageProps {
   collar: CollarOption;
   onCollarChange?: (collar: CollarOption) => void;
   buttonId: ButtonOption;
-  monogramDisplay: string;
-  monogramPlacement: MonogramPlacement;
-  monogramThread: MonogramThreadOption;
+  onButtonChange?: (buttonId: ButtonOption) => void;
   step: 1 | 2 | 3 | 4;
   measurements: BespokeMeasurements;
   focusedMeasure: MeasureKey | null;
@@ -147,9 +143,7 @@ export function StudioShirtStage({
   collar,
   onCollarChange,
   buttonId,
-  monogramDisplay,
-  monogramPlacement,
-  monogramThread,
+  onButtonChange,
   step,
   measurements,
   focusedMeasure,
@@ -167,9 +161,6 @@ export function StudioShirtStage({
 
   const selectedButton =
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
-  const selectedThread =
-    MONOGRAM_THREAD_OPTIONS.find((t) => t.id === monogramThread) ??
-    MONOGRAM_THREAD_OPTIONS[2];
   const collarMeta = COLLAR_META[collar];
 
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
@@ -183,20 +174,19 @@ export function StudioShirtStage({
     onCollarChange(COLLAR_OPTIONS[nextIdx]);
   };
 
+  const handleButtonSwipe = (direction: -1 | 1) => {
+    if (!onButtonChange) return;
+    const idx = BUTTON_OPTIONS.findIndex((b) => b.id === buttonId);
+    if (idx < 0) return;
+    const nextIdx =
+      (idx + direction + BUTTON_OPTIONS.length) % BUTTON_OPTIONS.length;
+    onButtonChange(BUTTON_OPTIONS[nextIdx].id);
+  };
+
   const show3DViewer = is3DActive && !webglFailed;
 
   return (
     <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[400px] lg:h-full">
-      {/* Subtle studio softbox halo behind the garment / macro */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 44%, rgba(255,255,255,0.22) 0%, rgba(148,163,184,0.06) 44%, transparent 74%)",
-        }}
-      />
-
       {/* Discreet corner 3D toggle button for Step 1 & Step 4 */}
       {(step === 1 || step === 4) && !webglFailed && (
         <button
@@ -257,7 +247,7 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 2: Full-bleed Macro Collar Studio Photograph with Horizontal Swipe (no inner double frame) */}
+        {/* STEP 2: Full-bleed Macro Collar Studio Photograph with Horizontal Swipe & Side Arrows */}
         {step === 2 && (
           <motion.div
             key="stage-collar-macro"
@@ -291,6 +281,30 @@ export function StudioShirtStage({
               />
             </AnimatePresence>
 
+            {/* Discreet Previous / Next Collar Arrows */}
+            {onCollarChange && (
+              <>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => handleCollarSwipe(-1)}
+                  aria-label="Cuello anterior"
+                  className="liquid-glass cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
+                >
+                  <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => handleCollarSwipe(1)}
+                  aria-label="Siguiente cuello"
+                  className="liquid-glass cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                >
+                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </>
+            )}
+
             {/* Floating Collar Spec Pill */}
             <div className="liquid-glass pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
@@ -308,7 +322,7 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 3: Full-bleed Macro Button / Cuff Photograph + Perspective Stitch Embroidery */}
+        {/* STEP 3: Full-bleed Macro Button / Cuff Photograph with Horizontal Swipe & Side Arrows */}
         {step === 3 && (
           <motion.div
             key="stage-button-macro"
@@ -316,7 +330,17 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-2xl"
+            drag={onButtonChange ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.22}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -38) {
+                handleButtonSwipe(1);
+              } else if (info.offset.x > 38) {
+                handleButtonSwipe(-1);
+              }
+            }}
+            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-2xl active:cursor-grabbing"
           >
             <AnimatePresence mode="sync">
               <motion.img
@@ -324,67 +348,49 @@ export function StudioShirtStage({
                 src={selectedButton.macroImage}
                 alt={`Macro real Botón ${selectedButton.label}`}
                 draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.04 }}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 h-full w-full object-cover"
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
               />
             </AnimatePresence>
 
-            {/* Realistic Embroidered Monogram with Perspective Tilt & Raised Stitch Relief */}
-            {monogramDisplay && (
-              <motion.div
-                key={`${monogramDisplay}-${monogramThread}-${monogramPlacement}`}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.25 }}
-                aria-label={`Iniciales bordadas ${monogramDisplay} en hilo ${selectedThread.label}`}
-                className="pointer-events-none absolute right-[12%] bottom-[26%] z-20 select-none"
-                style={{
-                  transform:
-                    "perspective(260px) rotateX(12deg) rotateY(-8deg) rotateZ(-6deg)",
-                }}
-              >
-                <span
-                  className="block font-serif text-xl italic font-semibold tracking-[0.18em] sm:text-2xl"
-                  style={{
-                    color: selectedThread.hex,
-                    textShadow:
-                      selectedThread.id === "Negro"
-                        ? "0 1px 0 rgba(255,255,255,0.22), 0 -0.5px 1px rgba(0,0,0,0.85), 1px 2px 3px rgba(0,0,0,0.65)"
-                        : "0 1px 0 rgba(0,0,0,0.65), 0 -0.5px 0 rgba(255,255,255,0.45), 1px 2px 4px rgba(0,0,0,0.55)",
-                    filter: "contrast(1.08)",
-                  }}
+            {/* Discreet Previous / Next Button Arrows */}
+            {onButtonChange && (
+              <>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => handleButtonSwipe(-1)}
+                  aria-label="Botón anterior"
+                  className="liquid-glass cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
                 >
-                  {monogramDisplay}
-                </span>
-              </motion.div>
+                  <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => handleButtonSwipe(1)}
+                  aria-label="Siguiente botón"
+                  className="liquid-glass cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                >
+                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                </button>
+              </>
             )}
 
-            {/* Floating Button + Thread Detail Card */}
-            <div className="liquid-glass pointer-events-none absolute bottom-4 left-4 z-20 flex items-center gap-3 rounded-2xl px-3.5 py-2 text-xs text-[#111113] dark:text-white">
+            {/* Floating Button Detail Pill */}
+            <div className="liquid-glass pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
               <span
                 aria-hidden="true"
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border shadow-sm"
+                className="h-3.5 w-3.5 shrink-0 rounded-full border shadow-sm"
                 style={{
                   backgroundColor: selectedButton.fill,
                   borderColor: selectedButton.ring,
                 }}
-              >
-                <span
-                  className="h-2 w-2 rounded-full border border-dashed opacity-80"
-                  style={{ borderColor: selectedButton.thread }}
-                />
-              </span>
-              <div className="leading-tight">
-                <p className="font-semibold">Botón {selectedButton.label}</p>
-                <p className="mt-0.5 text-[11px] text-[#111113]/70 dark:text-white/70">
-                  {monogramDisplay
-                    ? `${monogramDisplay} · ${monogramPlacement} · Hilo ${selectedThread.label}`
-                    : "Sin iniciales bordadas"}
-                </p>
-              </div>
+              />
+              <span className="font-semibold">Botón {selectedButton.label}</span>
             </div>
           </motion.div>
         )}

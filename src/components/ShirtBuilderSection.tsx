@@ -3,21 +3,21 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Check, Ruler, ShoppingBag } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  ChevronLeft,
+  Ruler,
+  ShoppingBag,
+} from "lucide-react";
 import {
   BUTTON_OPTIONS,
   CATALOG_SHIRTS,
-  COLLAR_META,
   COLLAR_OPTIONS,
-  MONOGRAM_PLACEMENTS,
-  MONOGRAM_THREAD_OPTIONS,
-  formatMonogramDisplay,
   type BespokeMeasurements,
   type ButtonOption,
   type CatalogShirt,
   type CollarOption,
-  type MonogramPlacement,
-  type MonogramThreadOption,
 } from "@/data/catalog";
 import {
   formatFabricPrice,
@@ -30,12 +30,12 @@ import { StudioShirtStage } from "@/components/StudioShirtStage";
 type BuilderStep = 1 | 2 | 3 | 4;
 type MeasureKey = keyof BespokeMeasurements;
 
-const STEPS: { id: BuilderStep; label: string; shortLabel: string }[] = [
-  { id: 1, label: "1. Tela", shortLabel: "1. Tela" },
-  { id: 2, label: "2. Cuello", shortLabel: "2. Cuello" },
-  { id: 3, label: "3. Botón", shortLabel: "3. Botón" },
-  { id: 4, label: "4. Medidas", shortLabel: "4. Medidas" },
-];
+const STEP_NAMES: Record<BuilderStep, string> = {
+  1: "Tela",
+  2: "Cuello",
+  3: "Botón",
+  4: "Medidas",
+};
 
 const BUILDER_CATEGORIES: { id: FabricCategoryId | null; label: string }[] = [
   { id: null, label: "Todas" },
@@ -114,16 +114,13 @@ export function ShirtBuilderSection() {
   });
   const [focusedMeasure, setFocusedMeasure] = useState<MeasureKey | null>(null);
   const [coordinateViaWhatsApp, setCoordinateViaWhatsApp] = useState(false);
-  const [monogramText, setMonogramText] = useState("CM");
-  const [monogramPlacement, setMonogramPlacement] =
-    useState<MonogramPlacement>("Puño izquierdo");
-  const [monogramThread, setMonogramThread] =
-    useState<MonogramThreadOption>("Champagne");
   const [justAdded, setJustAdded] = useState(false);
   const swatchTrackRef = useRef<HTMLDivElement | null>(null);
   const swatchItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const collarTrackRef = useRef<HTMLDivElement | null>(null);
   const collarItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const buttonTrackRef = useRef<HTMLDivElement | null>(null);
+  const buttonItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   // Preselect shirt from ?tela= query param when arriving from /coleccion
   useEffect(() => {
@@ -143,7 +140,7 @@ export function ShirtBuilderSection() {
   const activeIndex = foundIndex >= 0 ? foundIndex : 0;
   const selectedShirt = visibleFabrics[activeIndex] ?? CATALOG_SHIRTS[0];
 
-  // Auto-center the selected fabric smoothly inside the horizontal dock track
+  // Keep selected fabric visible cleanly without forcing overscroll at start or end
   useEffect(() => {
     if (step !== 1) return;
     const track = swatchTrackRef.current;
@@ -151,18 +148,38 @@ export function ShirtBuilderSection() {
     if (!track || !item) return;
 
     const rafId = window.requestAnimationFrame(() => {
-      const targetLeft =
-        item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2;
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      let targetLeft: number;
+      if (activeIndex === 0) {
+        targetLeft = 0;
+      } else if (activeIndex === visibleFabrics.length - 1) {
+        targetLeft = maxScroll;
+      } else {
+        targetLeft = Math.min(
+          maxScroll,
+          Math.max(
+            0,
+            item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2
+          )
+        );
+      }
       track.scrollTo({
-        left: Math.max(0, targetLeft),
+        left: targetLeft,
         behavior: isMotionPaused ? "auto" : "smooth",
       });
     });
 
     return () => window.cancelAnimationFrame(rafId);
-  }, [selectedShirt.id, fabricCategory, step, isMotionPaused]);
+  }, [
+    selectedShirt.id,
+    activeIndex,
+    visibleFabrics.length,
+    fabricCategory,
+    step,
+    isMotionPaused,
+  ]);
 
-  // Auto-center the selected collar pill smoothly so it never clips at scroll edges
+  // Keep selected collar pill visible cleanly without overscroll at edges
   useEffect(() => {
     if (step !== 2) return;
     const track = collarTrackRef.current;
@@ -170,10 +187,16 @@ export function ShirtBuilderSection() {
     if (!track || !item) return;
 
     const rafId = window.requestAnimationFrame(() => {
-      const targetLeft =
-        item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2;
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      const targetLeft = Math.min(
+        maxScroll,
+        Math.max(
+          0,
+          item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2
+        )
+      );
       track.scrollTo({
-        left: Math.max(0, targetLeft),
+        left: targetLeft,
         behavior: isMotionPaused ? "auto" : "smooth",
       });
     });
@@ -181,7 +204,30 @@ export function ShirtBuilderSection() {
     return () => window.cancelAnimationFrame(rafId);
   }, [collar, step, isMotionPaused]);
 
-  const monogramDisplay = formatMonogramDisplay(monogramText);
+  // Keep selected button pill visible cleanly without overscroll at edges
+  useEffect(() => {
+    if (step !== 3) return;
+    const track = buttonTrackRef.current;
+    const item = buttonItemRefs.current[buttonId];
+    if (!track || !item) return;
+
+    const rafId = window.requestAnimationFrame(() => {
+      const maxScroll = Math.max(0, track.scrollWidth - track.clientWidth);
+      const targetLeft = Math.min(
+        maxScroll,
+        Math.max(
+          0,
+          item.offsetLeft - track.clientWidth / 2 + item.offsetWidth / 2
+        )
+      );
+      track.scrollTo({
+        left: targetLeft,
+        behavior: isMotionPaused ? "auto" : "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(rafId);
+  }, [buttonId, step, isMotionPaused]);
 
   const handleMeasureChange = (key: MeasureKey, value: string) => {
     const clean = value.replace(/[^0-9.]/g, "").slice(0, 4);
@@ -213,9 +259,6 @@ export function ShirtBuilderSection() {
       mode: "bespoke",
       collar,
       button: buttonId,
-      monogramText,
-      monogramPlacement,
-      monogramThread,
       measurements: finalMeasurements,
     });
     setJustAdded(true);
@@ -226,8 +269,10 @@ export function ShirtBuilderSection() {
   const nextStepLabel: Record<1 | 2 | 3, string> = {
     1: "Confirmar tela",
     2: "Confirmar cuello",
-    3: "Confirmar detalles",
+    3: "Confirmar botón",
   };
+
+  const progressPercent = (step / 4) * 100;
 
   return (
     <section
@@ -236,69 +281,70 @@ export function ShirtBuilderSection() {
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-5 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-28 lg:pb-6">
-        {/* TOP ROW: Clean title on left, slimmer 4-step stepper on right with breathing room */}
-        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
+        {/* TOP ROW: Page Title + Minimalist Apple-style Progress Header */}
+        <div className="flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
           <h1 id="builder-heading" className="ds-h1-page">
             Armá tu camisa
           </h1>
 
-          <nav
-            aria-label="Pasos del configurador"
-            className="liquid-glass scrollbar-none inline-flex w-full items-center gap-0.5 overflow-x-auto rounded-full p-0.5 lg:w-auto lg:gap-1 lg:p-1"
+          {/* Apple-style Stepper: "Paso X de 4 · Nombre" + discreet "‹ Volver" + ultra-thin 2px progress bar */}
+          <div
+            aria-label={`Paso ${step} de 4: ${STEP_NAMES[step]}`}
+            className="flex w-full flex-col gap-2 lg:w-72 xl:w-80"
           >
-            {STEPS.map((item) => {
-              const isActive = step === item.id;
-              const isDone = step > item.id;
-              return (
+            <div className="flex min-h-[28px] items-center justify-between gap-3">
+              <p className="text-xs font-medium tracking-wide text-[#111113]/75 dark:text-white/75">
+                <span>Paso {step} de 4</span>
+                <span aria-hidden="true" className="mx-1.5 opacity-40">
+                  ·
+                </span>
+                <span className="font-semibold text-[#111113] dark:text-white">
+                  {STEP_NAMES[step]}
+                </span>
+              </p>
+
+              {step > 1 && (
                 <button
-                  key={item.id}
                   type="button"
-                  onClick={() => setStep(item.id)}
-                  className={`cursor-pointer relative flex h-9 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors lg:h-10 lg:flex-none lg:px-3.5 ${
-                    isActive
-                      ? "text-white dark:text-[#0B0B0E]"
-                      : isDone
-                        ? "text-[#111113]/85 hover:text-[#111113] dark:text-white/85 dark:hover:text-white"
-                        : "text-[#111113]/55 hover:text-[#111113] dark:text-white/55 dark:hover:text-white/85"
-                  }`}
+                  onClick={() => setStep((step - 1) as BuilderStep)}
+                  className="cursor-pointer inline-flex min-h-[32px] items-center gap-0.5 rounded-full px-2 -mr-2 text-xs font-medium text-[#111113]/70 transition-colors hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 >
-                  {isActive && (
-                    <motion.span
-                      layoutId="v12BuilderStepPill"
-                      transition={
-                        isMotionPaused
-                          ? { duration: 0 }
-                          : { type: "spring", stiffness: 380, damping: 32 }
-                      }
-                      className="absolute inset-0 rounded-full bg-[#16233B] shadow-md dark:bg-white dark:shadow-[0_6px_20px_rgba(255,255,255,0.22)]"
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1">
-                    {isDone && (
-                      <Check
-                        className="h-3 w-3 opacity-75"
-                        aria-hidden="true"
-                      />
-                    )}
-                    <span className="hidden sm:inline">{item.label}</span>
-                    <span className="sm:hidden">{item.shortLabel}</span>
-                  </span>
+                  <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Volver</span>
                 </button>
-              );
-            })}
-          </nav>
+              )}
+            </div>
+
+            <div
+              role="progressbar"
+              aria-valuenow={step}
+              aria-valuemin={1}
+              aria-valuemax={4}
+              aria-label="Progreso de configuración"
+              className="h-[2px] w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/15"
+            >
+              <motion.div
+                initial={false}
+                animate={{ width: `${progressPercent}%` }}
+                transition={
+                  isMotionPaused
+                    ? { duration: 0 }
+                    : { duration: 0.35, ease: [0.22, 1, 0.36, 1] }
+                }
+                className="h-full rounded-full bg-[#16233B] dark:bg-white"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* CENTER STAGE: Tall Mobile 3D Stage (h-[360px]) + Full Flex Stage on Desktop */}
+        {/* CENTER STAGE: Floating Studio Photo / 3D / Full-Bleed Collar & Button Macros */}
         <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[400px] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
             onCollarChange={setCollar}
             buttonId={buttonId}
-            monogramDisplay={monogramDisplay}
-            monogramPlacement={monogramPlacement}
-            monogramThread={monogramThread}
+            onButtonChange={setButtonId}
             step={step}
             measurements={measurements}
             focusedMeasure={focusedMeasure}
@@ -365,12 +411,12 @@ export function ShirtBuilderSection() {
                       })}
                     </div>
 
-                    {/* Centered Expansive Carousel: Active Fabric Slides Smoothly to Center */}
+                    {/* Flush-Left Fabric Carousel (Zero initial gap, clean edge stop, no overscroll) */}
                     <div
                       ref={swatchTrackRef}
                       role="listbox"
                       aria-label="Selector de telas"
-                      className="scrollbar-none relative flex items-center gap-3.5 overflow-x-auto px-[26%] py-1.5 sm:px-[34%]"
+                      className="scrollbar-none relative flex items-center gap-3.5 overflow-x-auto overscroll-x-contain px-1 py-1.5"
                     >
                       {visibleFabrics.map((shirt) => {
                         const isSelected = shirt.id === selectedShirt.id;
@@ -465,50 +511,26 @@ export function ShirtBuilderSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
-                    className="scrollbar-none flex items-center gap-2 overflow-x-auto px-4 py-1 sm:px-2"
+                    className="scrollbar-none flex items-center gap-2 overflow-x-auto overscroll-x-contain px-0.5 py-0.5"
                   >
                     {COLLAR_OPTIONS.map((opt) => {
                       const active = collar === opt;
                       return (
-                        <motion.button
+                        <button
                           key={opt}
                           ref={(el) => {
                             collarItemRefs.current[opt] = el;
                           }}
                           type="button"
-                          layout={!isMotionPaused}
                           onClick={() => setCollar(opt)}
-                          className={`cursor-pointer flex min-h-[44px] shrink-0 items-center gap-2 rounded-full transition-colors ${
+                          className={`cursor-pointer flex min-h-[44px] shrink-0 items-center justify-center rounded-full px-4 text-xs transition-colors ${
                             active
-                              ? "border-2 border-[#16233B] bg-transparent px-4 py-2 text-[#111113] dark:border-white dark:text-white"
-                              : "border border-black/12 bg-black/[0.03] px-3.5 text-[#111113]/75 hover:bg-black/[0.06] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.08]"
+                              ? "border-2 border-[#16233B] bg-transparent font-semibold text-[#111113] dark:border-white dark:text-white"
+                              : "border border-black/12 bg-black/[0.03] font-medium text-[#111113]/75 hover:bg-black/[0.06] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.08]"
                           }`}
                         >
-                          <span className="whitespace-nowrap text-xs font-semibold">
-                            {opt}
-                          </span>
-                          <AnimatePresence initial={false}>
-                            {active && (
-                              <motion.span
-                                initial={
-                                  isMotionPaused
-                                    ? false
-                                    : { opacity: 0, x: -4 }
-                                }
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={
-                                  isMotionPaused
-                                    ? undefined
-                                    : { opacity: 0, x: -4 }
-                                }
-                                transition={{ duration: 0.18 }}
-                                className="whitespace-nowrap text-[11px] opacity-75"
-                              >
-                                · {COLLAR_META[opt].note}
-                              </motion.span>
-                            )}
-                          </AnimatePresence>
-                        </motion.button>
+                          <span className="whitespace-nowrap">{opt}</span>
+                        </button>
                       );
                     })}
                   </motion.div>
@@ -517,119 +539,43 @@ export function ShirtBuilderSection() {
                 {step === 3 && (
                   <motion.div
                     key="dock-step-3"
+                    ref={buttonTrackRef}
                     initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
-                    className="flex flex-col gap-2.5 xl:flex-row xl:items-center xl:gap-4"
+                    className="scrollbar-none flex items-center gap-2 overflow-x-auto overscroll-x-contain px-0.5 py-0.5"
                   >
-                    {/* 4 Real Button Options */}
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      {BUTTON_OPTIONS.map((btn) => {
-                        const active = buttonId === btn.id;
-                        return (
-                          <button
-                            key={btn.id}
-                            type="button"
-                            onClick={() => setButtonId(btn.id)}
-                            className={`cursor-pointer flex min-h-[42px] items-center gap-2 rounded-full px-3 text-xs transition-all ${
-                              active
-                                ? "border-2 border-[#16233B] bg-transparent font-semibold text-[#111113] dark:border-white dark:text-white"
-                                : "border border-black/12 bg-black/[0.03] font-medium text-[#111113]/75 hover:bg-black/[0.07] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.09]"
-                            }`}
-                          >
-                            <span
-                              aria-hidden="true"
-                              className="h-3.5 w-3.5 rounded-full border"
-                              style={{
-                                backgroundColor: btn.fill,
-                                borderColor: btn.ring,
-                              }}
-                            />
-                            <span>{btn.shortLabel}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    <div
-                      aria-hidden="true"
-                      className="hidden h-7 w-px bg-black/12 xl:block dark:bg-white/15"
-                    />
-
-                    {/* Monogram Initials + Placement + Thread Color */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      <label className="flex items-center gap-1.5 text-xs text-[#111113]/75 dark:text-white/75">
-                        <span>Iniciales</span>
-                        <input
-                          type="text"
-                          value={monogramText}
-                          maxLength={3}
-                          onChange={(e) =>
-                            setMonogramText(
-                              e.target.value
-                                .replace(/[^a-zA-ZáéíóúñÁÉÍÓÚÑ]/g, "")
-                                .toUpperCase()
-                                .slice(0, 3)
-                            )
-                          }
-                          placeholder="CM"
-                          aria-label="Iniciales bordadas"
-                          className="min-h-[40px] w-14 rounded-xl border border-black/15 bg-white/80 px-2 text-center font-mono text-xs uppercase tracking-[0.18em] text-[#111113] placeholder:text-black/35 focus:border-[#16233B] focus:outline-none dark:border-white/20 dark:bg-white/[0.06] dark:text-white dark:placeholder:text-white/35 dark:focus:border-white"
-                        />
-                      </label>
-
-                      <div className="inline-flex rounded-full border border-black/12 bg-black/[0.03] p-0.5 dark:border-white/15 dark:bg-white/[0.04]">
-                        {MONOGRAM_PLACEMENTS.map((place) => {
-                          const active = monogramPlacement === place;
-                          return (
-                            <button
-                              key={place}
-                              type="button"
-                              onClick={() => setMonogramPlacement(place)}
-                              className={`cursor-pointer min-h-[34px] rounded-full px-2.5 text-[11px] font-medium transition-colors ${
-                                active
-                                  ? "bg-[#111113] text-white dark:bg-white dark:text-[#090B10]"
-                                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                              }`}
-                            >
-                              {place === "Puño izquierdo" ? "Puño" : "Pechera"}
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      {/* 4 Thread Colors */}
-                      <div
-                        role="radiogroup"
-                        aria-label="Color de hilo del bordado"
-                        className="flex items-center gap-1.5"
-                      >
-                        {MONOGRAM_THREAD_OPTIONS.map((t) => {
-                          const active = monogramThread === t.id;
-                          return (
-                            <button
-                              key={t.id}
-                              type="button"
-                              role="radio"
-                              aria-checked={active}
-                              title={`Hilo ${t.label}`}
-                              aria-label={`Hilo ${t.label}`}
-                              onClick={() => setMonogramThread(t.id)}
-                              className={`cursor-pointer flex h-8 w-8 items-center justify-center rounded-full border transition-transform ${
-                                active
-                                  ? "scale-110 ring-2 ring-[#16233B] ring-offset-1 ring-offset-[#F7F6F3] dark:ring-white dark:ring-offset-[#0B0B0E]"
-                                  : "opacity-80 hover:opacity-100"
-                              }`}
-                              style={{
-                                backgroundColor: t.hex,
-                                borderColor: t.ring,
-                              }}
-                            />
-                          );
-                        })}
-                      </div>
-                    </div>
+                    {BUTTON_OPTIONS.map((btn) => {
+                      const active = buttonId === btn.id;
+                      return (
+                        <button
+                          key={btn.id}
+                          ref={(el) => {
+                            buttonItemRefs.current[btn.id] = el;
+                          }}
+                          type="button"
+                          onClick={() => setButtonId(btn.id)}
+                          className={`cursor-pointer flex min-h-[44px] shrink-0 items-center gap-2 rounded-full px-4 text-xs transition-colors ${
+                            active
+                              ? "border-2 border-[#16233B] bg-transparent font-semibold text-[#111113] dark:border-white dark:text-white"
+                              : "border border-black/12 bg-black/[0.03] font-medium text-[#111113]/75 hover:bg-black/[0.06] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/75 dark:hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="h-3.5 w-3.5 shrink-0 rounded-full border"
+                            style={{
+                              backgroundColor: btn.fill,
+                              borderColor: btn.ring,
+                            }}
+                          />
+                          <span className="whitespace-nowrap">
+                            {btn.shortLabel}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </motion.div>
                 )}
 
