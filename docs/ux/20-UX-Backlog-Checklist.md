@@ -14,5 +14,5 @@
 - [x] **7. Prueba Social sobria** (3 testimonios breves de BA, Interior y Exterior). *(V23 `5e44bc2`)*
 
 ## P2 — Ergonomía Táctil & Accesibilidad (WCAG / Apple HIG)
-- [ ] **8. Touch targets `>= 44×44px`** en controles móviles (`ShirtGLBViewer`, `Navbar`, `Footer`).
-- [ ] **9. Menú Mobile con tecla `Escape` y `scroll-lock`** + Toast `aria-live` al agregar producto.
+- [x] **8. Touch targets `>= 44×44px`** en controles móviles (`ShirtGLBViewer`, `Navbar`, `Footer`). *(V24 `4abd055`)*
+- [x] **9. Menú Mobile con tecla `Escape` y `scroll-lock`** + Toast `aria-live` al agregar producto. *(V24 `4abd055`)*
