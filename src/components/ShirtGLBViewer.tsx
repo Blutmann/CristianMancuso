@@ -21,7 +21,7 @@ import {
 
 const MODEL_PATH = "/models/shirt.glb";
 const DEFAULT_CAMERA_Z = 3.85;
-const MOBILE_CAMERA_Z = 2.45;
+const MOBILE_CAMERA_Z = 3.85;
 const MIN_CAMERA_DIST = 1.4;
 const MAX_CAMERA_DIST = 5.2;
 const ZOOM_STEP = 0.4;
@@ -573,7 +573,7 @@ function Clo3DShirtModel({
   });
 
   return (
-    <group ref={groupRef}>
+    <group ref={groupRef} position={[0, 0.08, 0]}>
       <group scale={normScale}>
         <Center>
           <primitive object={clonedScene} />
@@ -741,7 +741,7 @@ export default function ShirtGLBViewer({
 
           <ContactShadows
             position={[0, -1.04, 0]}
-            opacity={0.28}
+            opacity={0.2}
             scale={3.2}
             blur={2.4}
             far={2.2}
