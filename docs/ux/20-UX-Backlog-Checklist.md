@@ -3,9 +3,9 @@
 > Checklist vivo priorizado por impacto en **Conversión, Usabilidad y Accesibilidad**.
 
 ## P0 — Críticos (Bloqueantes de Venta y Prevención de Errores)
-- [ ] **1. Persistencia de la Bolsa (`localStorage`)** en `AtelierContext.tsx` (`"cm_selection_v1"`).
-- [ ] **2. Prevención de medidas vacías en `/a-medida`** (opción explícita *"Coordinar medidas por WhatsApp"* vs. validación de `cm`).
-- [ ] **3. Tiempos de entrega y Garantía de calce** en `/coleccion/[id]` y `/a-medida`.
+- [x] **1. Persistencia de la Bolsa (`localStorage`)** en `AtelierContext.tsx` (`"cm_selection_v1"`). *(V22 `d321b13`)*
+- [x] **2. Prevención de medidas vacías en `/a-medida`** (opción explícita *"Coordinar medidas por WhatsApp"* vs. validación de `cm`). *(V22 `d321b13`)*
+- [x] **3. Tiempos de entrega y Garantía de calce** en `/coleccion/[id]` y `/a-medida`. *(V22 `d321b13`)*
 - [ ] **4. Número real de WhatsApp** en `src/data/config.ts` (reemplazar `5491100000000`).
 
 ## P1 — Altos (Descubrimiento, Orientación y Confianza)
