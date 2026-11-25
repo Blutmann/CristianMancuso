@@ -289,13 +289,15 @@ export function formatMonogramDisplay(raw?: string): string {
 }
 
 export function formatMeasurementsInline(m?: BespokeMeasurements): string {
-  if (!m) return "A coordinar con el atelier";
+  if (!m) return "Medidas a coordinar por WhatsApp";
   const parts: string[] = [];
   if (m.cuello) parts.push(`Cuello ${m.cuello}cm`);
   if (m.pecho) parts.push(`Pecho ${m.pecho}cm`);
   if (m.manga) parts.push(`Manga ${m.manga}cm`);
   if (m.largo) parts.push(`Largo ${m.largo}cm`);
-  return parts.length > 0 ? parts.join(", ") : "A coordinar con el atelier";
+  return parts.length > 0
+    ? parts.join(", ")
+    : "Medidas a coordinar por WhatsApp";
 }
 
 export function buildSelectionPlainText(

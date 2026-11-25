@@ -256,6 +256,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               )}
             </button>
 
+            <p className="text-center text-xs text-muted">
+              Despacho en 24–48 hs · Cambios y ajustes sin cargo
+            </p>
+
             {/* Secondary Clean Bespoke Link */}
             <Link
               href={`/a-medida?tela=${encodeURIComponent(shirt.id)}`}

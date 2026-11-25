@@ -4,7 +4,9 @@ import React, {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useRouter } from "next/navigation";
@@ -15,6 +17,8 @@ import {
   type SelectionItem,
   type ShirtConfiguration,
 } from "@/data/catalog";
+
+const SELECTION_STORAGE_KEY = "cm_selection_v1";
 
 interface AtelierContextValue {
   currency: Currency;
@@ -62,6 +66,43 @@ function makeItemKey(shirtId: string, c: ShirtConfiguration): string {
   ].join("|");
 }
 
+function readStoredSelection(): SelectionItem[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(SELECTION_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const valid: SelectionItem[] = [];
+    for (const entry of parsed) {
+      if (
+        !entry ||
+        typeof entry !== "object" ||
+        typeof entry.key !== "string" ||
+        typeof entry.quantity !== "number" ||
+        entry.quantity < 1 ||
+        !entry.shirt ||
+        typeof entry.shirt.id !== "string" ||
+        !entry.config ||
+        typeof entry.config !== "object"
+      ) {
+        continue;
+      }
+      const freshShirt = CATALOG_SHIRTS.find((s) => s.id === entry.shirt.id);
+      if (!freshShirt) continue;
+      valid.push({
+        key: entry.key,
+        shirt: freshShirt,
+        config: entry.config as ShirtConfiguration,
+        quantity: Math.floor(entry.quantity),
+      });
+    }
+    return valid;
+  } catch {
+    return [];
+  }
+}
+
 export function AtelierProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [currency, setCurrency] = useState<Currency>("ARS");
@@ -72,6 +113,31 @@ export function AtelierProvider({ children }: { children: React.ReactNode }) {
   );
   const [selectionItems, setSelectionItems] = useState<SelectionItem[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const hasHydratedSelectionRef = useRef(false);
+
+  // Hydrate persisted selection from localStorage strictly on client mount (SSG-safe)
+  useEffect(() => {
+    const stored = readStoredSelection();
+    hasHydratedSelectionRef.current = true;
+    if (stored.length > 0) {
+      queueMicrotask(() => {
+        setSelectionItems(stored);
+      });
+    }
+  }, []);
+
+  // Persist selection changes to localStorage after initial hydration
+  useEffect(() => {
+    if (!hasHydratedSelectionRef.current) return;
+    try {
+      window.localStorage.setItem(
+        SELECTION_STORAGE_KEY,
+        JSON.stringify(selectionItems)
+      );
+    } catch {
+      // Ignore storage quota or private mode restrictions
+    }
+  }, [selectionItems]);
 
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);

@@ -113,6 +113,7 @@ export function ShirtBuilderSection() {
     largo: "",
   });
   const [focusedMeasure, setFocusedMeasure] = useState<MeasureKey | null>(null);
+  const [coordinateViaWhatsApp, setCoordinateViaWhatsApp] = useState(false);
   const [monogramText, setMonogramText] = useState("CM");
   const [monogramPlacement, setMonogramPlacement] =
     useState<MonogramPlacement>("Puño izquierdo");
@@ -163,6 +164,9 @@ export function ShirtBuilderSection() {
 
   const handleMeasureChange = (key: MeasureKey, value: string) => {
     const clean = value.replace(/[^0-9.]/g, "").slice(0, 4);
+    if (clean) {
+      setCoordinateViaWhatsApp(false);
+    }
     setMeasurements((prev) => ({ ...prev, [key]: clean }));
   };
 
@@ -173,8 +177,17 @@ export function ShirtBuilderSection() {
     return Number.isNaN(num) || num < f.min || num > f.max;
   });
 
+  const hasAnyMeasurement = MEASURE_FIELDS.some(
+    (f) => measurements[f.key].trim().length > 0
+  );
+  const canSubmitBespoke =
+    !invalidField && (hasAnyMeasurement || coordinateViaWhatsApp);
+
   const handleAddBespoke = () => {
-    if (invalidField) return;
+    if (!canSubmitBespoke) return;
+    const finalMeasurements: BespokeMeasurements = coordinateViaWhatsApp
+      ? { cuello: "", pecho: "", manga: "", largo: "" }
+      : measurements;
     addToSelection(selectedShirt, {
       mode: "bespoke",
       collar,
@@ -182,7 +195,7 @@ export function ShirtBuilderSection() {
       monogramText,
       monogramPlacement,
       monogramThread,
-      measurements,
+      measurements: finalMeasurements,
     });
     setJustAdded(true);
     openDrawer();
@@ -636,18 +649,19 @@ export function ShirtBuilderSection() {
                       })}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                      {invalidField ? (
-                        <p className="text-red-600 dark:text-red-300" role="alert">
-                          {invalidField.label}: ingresá entre {invalidField.min}{" "}
-                          y {invalidField.max} cm.
-                        </p>
-                      ) : (
-                        <p className="text-muted">
-                          Opcional: también podés confirmarlas luego por
-                          WhatsApp.
-                        </p>
-                      )}
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pt-0.5 text-[11px]">
+                      <label className="inline-flex cursor-pointer items-center gap-2 font-medium text-[#111113] select-none dark:text-[#F8FAFC]">
+                        <input
+                          type="checkbox"
+                          checked={coordinateViaWhatsApp}
+                          onChange={(e) =>
+                            setCoordinateViaWhatsApp(e.target.checked)
+                          }
+                          className="h-4 w-4 cursor-pointer rounded border-black/25 accent-[#16233B] dark:border-white/30 dark:accent-white"
+                        />
+                        <span>Prefiero coordinar mis medidas por WhatsApp</span>
+                      </label>
+
                       <Link
                         href="/como-medir"
                         className="inline-flex items-center gap-1 font-medium text-[#16233B] underline-offset-4 hover:underline dark:text-white/85"
@@ -655,6 +669,28 @@ export function ShirtBuilderSection() {
                         <Ruler className="h-3 w-3" aria-hidden="true" />
                         ¿Cómo me mido?
                       </Link>
+                    </div>
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                      {invalidField ? (
+                        <p className="text-red-600 dark:text-red-300" role="alert">
+                          {invalidField.label}: ingresá entre {invalidField.min}{" "}
+                          y {invalidField.max} cm.
+                        </p>
+                      ) : !hasAnyMeasurement && !coordinateViaWhatsApp ? (
+                        <p
+                          role="status"
+                          className="font-medium text-[#16233B] dark:text-gold"
+                        >
+                          Completá tus medidas en cm o marcá la opción de
+                          WhatsApp para continuar.
+                        </p>
+                      ) : (
+                        <p className="text-muted">
+                          Confección en 10–15 días · Validamos tus medidas por
+                          WhatsApp antes de cortar
+                        </p>
+                      )}
                     </div>
                   </motion.div>
                 )}
@@ -673,24 +709,32 @@ export function ShirtBuilderSection() {
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
               ) : (
-                <button
-                  type="button"
-                  disabled={Boolean(invalidField)}
-                  onClick={handleAddBespoke}
-                  className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
-                >
-                  {justAdded ? (
-                    <>
-                      <Check className="h-4 w-4" aria-hidden="true" />
-                      <span>Agregada a tu bolsa</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingBag className="h-4 w-4" aria-hidden="true" />
-                      <span>Agregar camisa a medida al carrito</span>
-                    </>
+                <div className="flex flex-col items-stretch gap-1.5 lg:items-end">
+                  <button
+                    type="button"
+                    disabled={!canSubmitBespoke}
+                    onClick={handleAddBespoke}
+                    className="ds-btn-primary w-full min-h-[48px] shadow-lg lg:w-auto"
+                  >
+                    {justAdded ? (
+                      <>
+                        <Check className="h-4 w-4" aria-hidden="true" />
+                        <span>Agregada a tu bolsa</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+                        <span>Agregar camisa a medida al carrito</span>
+                      </>
+                    )}
+                  </button>
+                  {!hasAnyMeasurement && !coordinateViaWhatsApp && (
+                    <span className="text-center text-[10.5px] text-muted lg:text-right">
+                      Confección en 10–15 días · Validamos tus medidas por
+                      WhatsApp antes de cortar
+                    </span>
                   )}
-                </button>
+                </div>
               )}
             </div>
           </div>
