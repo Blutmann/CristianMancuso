@@ -15,8 +15,8 @@ export function Footer() {
 
   return (
     <footer className="relative w-full border-t border-black/8 bg-transparent text-[#111113] dark:border-white/12 dark:text-white">
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-12 xl:pr-24">
-        <div className="liquid-glass rounded-3xl p-6 sm:p-10">
+      <div className="mx-auto w-full max-w-[1440px] px-5 py-14 sm:px-8 lg:px-12">
+        <div className="liquid-glass rounded-3xl p-5 sm:p-10">
           <div className="grid grid-cols-1 gap-10 md:grid-cols-12">
             {/* Brand Column */}
             <div className="md:col-span-5">

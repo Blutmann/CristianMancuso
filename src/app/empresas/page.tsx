@@ -26,7 +26,7 @@ export default function EmpresasPage() {
           <div className="absolute inset-0 atelier-grain opacity-75" />
         </div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+        <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
           {/* Back link */}
           <Link
             href="/"

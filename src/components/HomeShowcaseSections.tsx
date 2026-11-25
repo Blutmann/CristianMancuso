@@ -46,7 +46,7 @@ export function HomeShowcaseSections() {
         aria-labelledby="gamas-heading"
         className="relative py-12 lg:py-14"
       >
-        <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-6">
+        <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <h2
               id="gamas-heading"
@@ -178,8 +178,8 @@ export function HomeShowcaseSections() {
         aria-labelledby="invitacion-heading"
         className="relative py-12 lg:py-14"
       >
-        <div className="mx-auto max-w-5xl px-5 sm:px-8 lg:px-6">
-          <div className="liquid-glass rounded-3xl p-6 sm:p-9 lg:p-10">
+        <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
+          <div className="liquid-glass rounded-3xl p-5 sm:p-9 lg:p-10">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <h2
                 id="invitacion-heading"

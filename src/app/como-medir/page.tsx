@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function ComoMedirPage() {
   return (
-    <div className="relative min-h-screen pt-12">
+    <div className="relative min-h-screen">
       <BespokeProcess />
       <Footer />
     </div>

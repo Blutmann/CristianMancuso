@@ -62,10 +62,10 @@ export function Navbar() {
       </div>
 
       {/* Liquid Glass Floating Capsule Header with Perimeter Cuff Stitch */}
-      <header className="pointer-events-none fixed top-0 inset-x-0 z-50 px-3.5 pt-3.5 sm:px-6 sm:pt-4">
+      <header className="pointer-events-none fixed top-0 inset-x-0 z-50 px-5 pt-3.5 sm:px-8 sm:pt-4 lg:px-12">
         <nav
           aria-label="Navegación principal"
-          className={`pointer-events-auto relative mx-auto flex max-w-6xl items-center justify-between overflow-hidden rounded-2xl px-4 py-2.5 backdrop-blur-2xl sm:px-6 sm:py-3 transition-all duration-300 ${
+          className={`pointer-events-auto relative mx-auto flex w-full max-w-[1440px] items-center justify-between overflow-hidden rounded-2xl px-4 py-2.5 backdrop-blur-2xl sm:px-6 sm:py-3 transition-all duration-300 ${
             isScrolled
               ? "liquid-glass-active !bg-white/88 border-black/12 shadow-[0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#0B0B0E]/86 dark:border-white/25 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
               : "liquid-glass !bg-white/82 border-black/10 dark:!bg-[#0B0B0E]/80 dark:border-white/20"
@@ -170,7 +170,7 @@ export function Navbar() {
 
         {/* Mobile Dropdown Navigation */}
         {mobileMenuOpen && (
-          <div className="pointer-events-auto mx-auto mt-2 max-w-6xl rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-2xl md:hidden dark:border-white/15 dark:bg-[#111113]/95">
+          <div className="pointer-events-auto mx-auto mt-2 w-full max-w-[1440px] rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-2xl md:hidden dark:border-white/15 dark:bg-[#111113]/95">
             <ul className="flex flex-col gap-1">
               {NAV_LINKS.map((item) => {
                 const active = isRouteActive(item.href);

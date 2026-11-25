@@ -121,9 +121,9 @@ export function BespokeProcess() {
     <section
       id="como-medir"
       aria-labelledby="como-medir-heading"
-      className="relative w-full scroll-mt-24 bg-transparent py-16 text-[#111113] lg:py-20 dark:text-white"
+      className="relative w-full scroll-mt-24 bg-transparent pt-24 pb-16 text-[#111113] lg:pt-28 lg:pb-20 dark:text-white"
     >
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
         {/* Concise Header */}
         <div className="max-w-xl">
           <h1

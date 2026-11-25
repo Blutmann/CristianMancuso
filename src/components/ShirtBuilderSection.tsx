@@ -201,9 +201,9 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100dvh] max-w-7xl flex-col justify-between gap-2.5 px-4 pt-22 pb-5 sm:px-8 lg:h-[100svh] lg:gap-3 lg:px-12 lg:pt-24 lg:pb-5">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1440px] flex-col justify-between gap-4 px-5 pt-24 pb-8 sm:px-8 lg:h-[100svh] lg:gap-4 lg:px-12 lg:pt-28 lg:pb-6">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
-        <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <h1
             id="builder-heading"
             className="font-display text-2xl font-bold tracking-[-0.025em] text-[#111113] sm:text-3xl dark:text-white"
@@ -275,7 +275,7 @@ export function ShirtBuilderSection() {
         </div>
 
         {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
-        <div className="liquid-glass mb-2 rounded-2xl px-4 py-3.5 sm:px-5 lg:mb-0">
+        <div className="liquid-glass rounded-2xl p-4 sm:p-5">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
             {/* LEFT: Active Step Controls */}
             <div className="min-w-0 flex-1">

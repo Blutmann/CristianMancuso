@@ -855,8 +855,8 @@ export default function ShirtGLBViewer({
         </div>
       </div>
 
-      {/* Controls Bar: Fixed 44px row BELOW model on mobile (never overlaps shirt), floating on lg+ */}
-      <div className="z-20 flex h-[44px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-4 lg:bottom-4 lg:h-auto lg:pt-0">
+      {/* Controls Bar: Fixed 44px row BELOW model on mobile (never overlaps shirt), aligned to max-w-[1440px] edges on lg+ */}
+      <div className="z-20 flex h-[44px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:h-auto lg:pt-0">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"

@@ -254,9 +254,9 @@ export function CatalogSection() {
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full bg-transparent pt-28 pb-16 text-[#111113] dark:text-white"
+      className="relative w-full bg-transparent pt-24 pb-16 text-[#111113] sm:pt-28 dark:text-white"
     >
-      <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
         <h1
           id="coleccion-heading"
           className="font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
@@ -393,7 +393,7 @@ export function CatalogSection() {
           </div>
         ) : (
           <div
-            className={`mt-7 grid grid-cols-2 gap-4 sm:gap-5 ${
+            className={`mt-7 grid grid-cols-2 gap-5 ${
               gridCols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
             }`}
           >

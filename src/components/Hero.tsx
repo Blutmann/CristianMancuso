@@ -93,9 +93,9 @@ export function Hero() {
       id="hero"
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative flex min-h-[88svh] items-center bg-transparent pt-26 pb-10 text-[#111113] dark:text-white"
+      className="relative flex min-h-[88svh] items-center bg-transparent pt-24 pb-12 text-[#111113] sm:pt-28 dark:text-white"
     >
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-12 lg:gap-8 lg:px-12 xl:pr-24">
+      <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-12">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="font-display text-[clamp(2.45rem,5.2vw,4.5rem)] font-bold leading-[1.02] tracking-[-0.035em] text-[#111113] dark:text-white">
