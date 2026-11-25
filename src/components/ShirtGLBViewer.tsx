@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
+  Center,
   ContactShadows,
   Environment,
   Lightformer,
@@ -19,10 +20,10 @@ import {
 } from "@/data/catalog";
 
 const MODEL_PATH = "/models/shirt.glb";
-const DEFAULT_CAMERA_Z = 3.15;
-const MOBILE_CAMERA_Z = 2.25;
-const MIN_CAMERA_DIST = 1.35;
-const MAX_CAMERA_DIST = 4.8;
+const DEFAULT_CAMERA_Z = 3.85;
+const MOBILE_CAMERA_Z = 2.45;
+const MIN_CAMERA_DIST = 1.4;
+const MAX_CAMERA_DIST = 5.2;
 const ZOOM_STEP = 0.4;
 
 export interface ShirtGLBViewerProps {
@@ -250,10 +251,6 @@ function CameraZoomRig({
     if (typeof window === "undefined") return;
     if (window.innerWidth < 768) {
       const cam = get().camera;
-      if (cam instanceof THREE.PerspectiveCamera) {
-        cam.fov = 46;
-        cam.updateProjectionMatrix();
-      }
       cam.position.set(0, 0, MOBILE_CAMERA_Z);
       desiredDistRef.current = MOBILE_CAMERA_Z;
       if (controlsRef.current) {
@@ -395,8 +392,8 @@ function Clo3DShirtModel({
     onReady();
   }, [onReady]);
 
-  // Clone scene & materials once and compute exact [0,0,0] centering from CLO3D cm bounds
-  const { clonedScene, normScale, centerOffset } = useMemo(() => {
+  // Clone scene & materials once and compute normalized 2.0 scale from CLO3D cm bounds
+  const { clonedScene, normScale } = useMemo(() => {
     const clone = scene.clone(true);
     clone.traverse((child) => {
       if (child instanceof THREE.Mesh) {
@@ -445,22 +442,15 @@ function Clo3DShirtModel({
       }
     });
     const size = new THREE.Vector3();
-    const center = new THREE.Vector3();
     box.getSize(size);
-    box.getCenter(center);
 
     const maxDim = Math.max(size.x, size.y, size.z) || 1;
-    // Universal 1.65 normalized height (y from -0.825 to +0.825 -> ContactShadows sits cleanly at y = -0.82)
-    const scale = 1.65 / maxDim;
+    // Uniform 2.0 normalized size for strong presence across desktop and mobile
+    const scale = 2.0 / maxDim;
 
     return {
       clonedScene: clone,
       normScale: scale,
-      centerOffset: [-center.x, -center.y, -center.z] as [
-        number,
-        number,
-        number,
-      ],
     };
   }, [scene]);
 
@@ -585,7 +575,9 @@ function Clo3DShirtModel({
   return (
     <group ref={groupRef}>
       <group scale={normScale}>
-        <primitive object={clonedScene} position={centerOffset} />
+        <Center>
+          <primitive object={clonedScene} />
+        </Center>
       </group>
     </group>
   );
@@ -693,7 +685,7 @@ export default function ShirtGLBViewer({
         <Canvas
           shadows
           dpr={[1, 1.5]}
-          camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 36 }}
+          camera={{ position: [0, 0, DEFAULT_CAMERA_Z], fov: 34 }}
           gl={{
             antialias: true,
             alpha: true,
@@ -747,11 +739,11 @@ export default function ShirtGLBViewer({
           </Suspense>
 
           <ContactShadows
-            position={[0, -0.82, 0]}
+            position={[0, -1.04, 0]}
             opacity={0.28}
-            scale={3.0}
+            scale={3.2}
             blur={2.4}
-            far={1.9}
+            far={2.2}
           />
 
           <CameraZoomRig
