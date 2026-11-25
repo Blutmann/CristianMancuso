@@ -204,7 +204,7 @@ export function ShirtBuilderSection() {
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-4 px-5 pt-24 pb-8 sm:px-8 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <h1 id="builder-heading" className="ds-h2">
+          <h1 id="builder-heading" className="ds-h1-page">
             Armá tu camisa
           </h1>
 
