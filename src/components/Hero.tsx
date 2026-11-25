@@ -154,17 +154,17 @@ export function Hero() {
                 isMotionPaused
                   ? { y: 0, rotate: 0, scale: 1, rotateX: 0, rotateY: 0 }
                   : {
-                      y: [-10, 10, -10],
-                      rotate: [-1.2, 1.2, -1.2],
-                      scale: [1, 1.025, 1],
+                      y: [0, -7, 0],
+                      rotate: [-0.45, 0.45, -0.45],
+                      scale: [1, 1.015, 1],
                       rotateX: tilt.rotateX,
                       rotateY: tilt.rotateY,
                     }
               }
               transition={{
-                y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 5, repeat: Infinity, ease: "easeInOut" },
-                scale: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                y: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
+                scale: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
                 rotateX: { type: "spring", stiffness: 120, damping: 20 },
                 rotateY: { type: "spring", stiffness: 120, damping: 20 },
               }}
@@ -196,14 +196,14 @@ export function Hero() {
               aria-hidden="true"
               animate={
                 isMotionPaused
-                  ? { scale: 1, opacity: 0.25 }
+                  ? { scale: 1, opacity: 0.22 }
                   : {
-                      scale: [0.85, 1.12, 0.85],
-                      opacity: [0.18, 0.45, 0.18],
+                      scale: [1, 0.93, 1],
+                      opacity: [0.22, 0.14, 0.22],
                     }
               }
               transition={{
-                duration: 5,
+                duration: 5.5,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}

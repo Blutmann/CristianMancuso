@@ -181,9 +181,9 @@ function MinimalShirtCard({
               }}
               aria-label={`Elegir talle para ${shirt.name}`}
               title={`Agregar ${shirt.name}`}
-              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/14 bg-white/85 text-[#16233B] transition-all duration-200 hover:bg-[#16233B] hover:text-white active:scale-95 sm:h-10 sm:w-10 dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#C8A86B] text-[#0B0B0E] shadow-sm transition-all duration-200 hover:bg-[#B89759] active:scale-95 sm:h-10 sm:w-10"
             >
-              <Plus className="h-4 w-4 stroke-[2.1]" aria-hidden="true" />
+              <Plus className="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
             </button>
           </div>
         </div>

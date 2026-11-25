@@ -204,7 +204,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             <span className="ds-mono text-[11px]">{shirt.refCode}</span>
           </div>
 
-          <h1 className="ds-h1-page mt-1.5 lg:mt-2.5">{shirt.name}</h1>
+          <h1 className="mt-1.5 text-xl font-semibold tracking-tight text-[#111113] sm:text-2xl lg:mt-2 dark:text-white">
+            {shirt.name}
+          </h1>
 
           {/* Price + 3 Installments */}
           <div className="mt-2.5 flex items-baseline gap-3 lg:mt-4">
@@ -267,13 +269,13 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             </div>
           </div>
 
-          {/* Primary CTA: Agregar al carrito */}
+          {/* Primary CTA: Agregar al carrito (Dorado Sartorial #C8A86B) */}
           <div className="mt-4 space-y-2.5 lg:mt-7 lg:space-y-3">
             <button
               id="pdp-add-to-cart"
               type="button"
               onClick={handleAddToCart}
-              className="ds-btn-primary w-full min-h-[48px] shadow-lg"
+              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C8A86B] px-6 text-xs font-semibold tracking-[0.04em] text-[#0B0B0E] uppercase shadow-lg transition-all duration-200 hover:bg-[#B89759] active:scale-[0.99]"
             >
               {justAdded ? (
                 <>
