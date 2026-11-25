@@ -83,30 +83,30 @@ export function Navbar() {
         />
       </div>
 
-      {/* Liquid Glass Floating Capsule Header with Perimeter Cuff Stitch */}
-      <header className="pointer-events-none fixed inset-x-0 top-2.5 z-50">
-        <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
+      {/* Mobile Flush Full-Width Header (< lg) -> Desktop Floating Capsule with Cuff Stitch (lg+) */}
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50 lg:top-2.5">
+        <div className="mx-auto w-full lg:max-w-[1360px] lg:px-10">
           <nav
             aria-label="Navegación principal"
-            className={`pointer-events-auto relative flex w-full items-center justify-between overflow-hidden rounded-2xl px-4 py-2 backdrop-blur-2xl sm:px-5 transition-all duration-300 ${
+            className={`pointer-events-auto relative flex h-14 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-2xl transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
               isScrolled
-                ? "liquid-glass-active !bg-white/88 border-black/12 shadow-[0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#0B0B0E]/86 dark:border-white/25 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
-                : "liquid-glass !bg-white/82 border-black/10 dark:!bg-[#0B0B0E]/80 dark:border-white/20"
+                ? "liquid-glass-active !bg-white/90 border-black/12 shadow-[0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#0B0B0E]/90 dark:border-white/20 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
+                : "liquid-glass !bg-white/86 border-black/10 dark:!bg-[#0B0B0E]/84 dark:border-white/16"
             }`}
           >
-            {/* Full 4-Sided Perimeter Interior Stitch (Shirt Cuff Detail) */}
+            {/* Full 4-Sided Perimeter Interior Stitch (Desktop Capsule Detail) */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-1.5 rounded-xl border border-dashed border-black/12 dark:border-white/18"
+              className="pointer-events-none absolute inset-1.5 hidden rounded-xl border border-dashed border-black/12 lg:block dark:border-white/18"
             />
 
             {/* Brand Logo */}
             <Link
               id="nav-brand-link"
               href="/"
-              className="group relative inline-flex min-h-[44px] items-center gap-3 rounded-xl px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:focus-visible:ring-white/60"
+              className="group relative inline-flex min-h-[44px] items-center gap-3 rounded-xl px-1 py-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#16233B]/50 dark:focus-visible:ring-white/60"
             >
-              <BrandLogo markSize={28} />
+              <BrandLogo markSize={26} />
             </Link>
 
             {/* Center Navigation Links */}
@@ -194,7 +194,7 @@ export function Navbar() {
 
           {/* Mobile Dropdown Navigation */}
           {mobileMenuOpen && (
-            <div className="pointer-events-auto mt-2 w-full rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-2xl md:hidden dark:border-white/15 dark:bg-[#111113]/95">
+            <div className="pointer-events-auto mx-4 mt-2 rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-2xl md:hidden dark:border-white/15 dark:bg-[#111113]/95">
               <ul className="flex flex-col gap-1">
                 {NAV_LINKS.map((item) => {
                   const active = isRouteActive(item.href);

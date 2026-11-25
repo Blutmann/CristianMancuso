@@ -6,8 +6,10 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Check,
+  ChevronDown,
   Grid2x2,
   Grid3x3,
+  Plus,
   Search,
   Shirt,
   ShoppingBag,
@@ -73,10 +75,12 @@ function MinimalShirtCard({
   shirt,
   visualMode,
   isWide,
+  onOpenMobileSizeSheet,
 }: {
   shirt: CatalogShirt;
   visualMode: VisualMode;
   isWide: boolean;
+  onOpenMobileSizeSheet: (shirt: CatalogShirt) => void;
 }) {
   const { addToSelection, openDrawer } = useAtelier();
   const { isMotionPaused } = useMotion();
@@ -172,62 +176,75 @@ function MinimalShirtCard({
         </div>
       </Link>
 
-      {/* Quick-Add Button -> Transforms In-Place into 1-Row Commercial Size Picker */}
-      <div className="px-4 pt-1.5 pb-4">
-        <AnimatePresence mode="wait" initial={false}>
-          {pickingSize ? (
-            <motion.div
-              key="quick-sizes"
-              initial={isMotionPaused ? false : { opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={isMotionPaused ? undefined : { opacity: 0, y: -4 }}
-              transition={{ duration: 0.16 }}
-              onMouseLeave={() => setPickingSize(false)}
-              className={`grid gap-1 ${
-                shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
-              }`}
-            >
-              {sizes.map((size) => (
-                <button
-                  key={size}
-                  type="button"
-                  onClick={() => handleQuickSelectSize(size)}
-                  aria-label={`Agregar ${shirt.name} talle ${size}`}
-                  className="cursor-pointer flex min-h-[40px] w-full items-center justify-center rounded-full border border-black/12 bg-white/85 text-[11px] font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
-                >
-                  {size}
-                </button>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.button
-              key="quick-add-btn"
-              initial={isMotionPaused ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={isMotionPaused ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.14 }}
-              type="button"
-              onClick={() => setPickingSize(true)}
-              className={`cursor-pointer flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase transition-colors ${
-                justAdded
-                  ? "bg-[#16233B] text-white dark:bg-white/20 dark:text-white"
-                  : "border border-black/14 bg-white/75 text-[#111113] hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.07] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
-              }`}
-            >
-              {justAdded ? (
-                <>
-                  <Check className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Agregada</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Agregar al carrito</span>
-                </>
-              )}
-            </motion.button>
-          )}
-        </AnimatePresence>
+      {/* Quick-Add: Mobile (+ Agregar -> Bottom Sheet) | Desktop (Inline 1-Row Size Picker) */}
+      <div className="px-3.5 pt-1.5 pb-3.5 sm:px-4 sm:pb-4">
+        {/* Mobile (< sm): Spacious + Agregar button opening Bottom Sheet */}
+        <button
+          type="button"
+          onClick={() => onOpenMobileSizeSheet(shirt)}
+          className="cursor-pointer flex min-h-[44px] w-full items-center justify-center gap-1.5 rounded-full border border-black/14 bg-white/80 text-xs font-semibold tracking-[0.04em] text-[#111113] uppercase transition-colors hover:bg-[#16233B] hover:text-white sm:hidden dark:border-white/16 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+        >
+          <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+          <span>Agregar</span>
+        </button>
+
+        {/* Tablet/Desktop (sm+): Inline 1-Row Commercial Size Picker */}
+        <div className="hidden sm:block">
+          <AnimatePresence mode="wait" initial={false}>
+            {pickingSize ? (
+              <motion.div
+                key="quick-sizes"
+                initial={isMotionPaused ? false : { opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={isMotionPaused ? undefined : { opacity: 0, y: -4 }}
+                transition={{ duration: 0.16 }}
+                onMouseLeave={() => setPickingSize(false)}
+                className={`grid gap-1 ${
+                  shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
+                }`}
+              >
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => handleQuickSelectSize(size)}
+                    aria-label={`Agregar ${shirt.name} talle ${size}`}
+                    className="cursor-pointer flex min-h-[40px] w-full items-center justify-center rounded-full border border-black/12 bg-white/85 text-[11px] font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                  >
+                    {size}
+                  </button>
+                ))}
+              </motion.div>
+            ) : (
+              <motion.button
+                key="quick-add-btn"
+                initial={isMotionPaused ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={isMotionPaused ? undefined : { opacity: 0 }}
+                transition={{ duration: 0.14 }}
+                type="button"
+                onClick={() => setPickingSize(true)}
+                className={`cursor-pointer flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-full text-[11px] font-semibold tracking-[0.04em] uppercase transition-colors ${
+                  justAdded
+                    ? "bg-[#16233B] text-white dark:bg-white/20 dark:text-white"
+                    : "border border-black/14 bg-white/75 text-[#111113] hover:bg-[#16233B] hover:text-white dark:border-white/16 dark:bg-white/[0.07] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                }`}
+              >
+                {justAdded ? (
+                  <>
+                    <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Agregada</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="h-3.5 w-3.5" aria-hidden="true" />
+                    <span>Agregar al carrito</span>
+                  </>
+                )}
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </article>
   );
@@ -249,12 +266,16 @@ function normalizeSearch(value: string): string {
 }
 
 export function CatalogSection() {
-  const { selectedFabric, setSelectedFabric } = useAtelier();
+  const { selectedFabric, setSelectedFabric, addToSelection } = useAtelier();
   const { isMotionPaused } = useMotion();
   const [gridCols, setGridCols] = useState<GridCols>(4);
   const [visualMode, setVisualMode] = useState<VisualMode>("camisa");
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("featured");
+  const [mobileSheetShirt, setMobileSheetShirt] = useState<CatalogShirt | null>(
+    null
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -265,10 +286,35 @@ export function CatalogSection() {
     }
   }, [setSelectedFabric]);
 
+  // Escape key & body scroll-lock when Mobile Size Bottom Sheet is open
+  useEffect(() => {
+    if (!mobileSheetShirt) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setMobileSheetShirt(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileSheetShirt]);
+
+  const isGlobalSearchActive = searchQuery.trim().length > 0;
+
+  // Smart Global Search: when query is non-empty, search across ALL gamas
   const visibleShirts = useMemo(() => {
     const query = normalizeSearch(searchQuery.trim());
     const filtered = CATALOG_SHIRTS.filter((s) => {
-      if (selectedFabric && s.fabricId !== selectedFabric) return false;
+      if (!query && selectedFabric && s.fabricId !== selectedFabric) {
+        return false;
+      }
       if (!query) return true;
       const haystack = normalizeSearch(
         `${s.name} ${s.refCode} ${s.fabricLabel}`
@@ -285,27 +331,43 @@ export function CatalogSection() {
     return filtered;
   }, [selectedFabric, searchQuery, sortOrder]);
 
+  const handleMobileSheetSelectSize = (size: CommercialSize) => {
+    if (!mobileSheetShirt) return;
+    addToSelection(mobileSheetShirt, {
+      mode: "commercial",
+      commercialSize: size,
+    });
+    setMobileSheetShirt(null);
+  };
+
+  const mobileSheetSizes = mobileSheetShirt
+    ? mobileSheetShirt.sizeType === "alpha"
+      ? ALPHA_SIZES
+      : NUMERIC_SIZES
+    : [];
+
   return (
     <section
       id="coleccion"
       aria-labelledby="coleccion-heading"
-      className="relative w-full bg-transparent pt-24 pb-16 text-[#111113] sm:pt-28 dark:text-white"
+      className="relative w-full bg-transparent pt-20 pb-16 text-[#111113] sm:pt-24 lg:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        {/* Header Row: Title + Desktop Search/Sort */}
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <h1 id="coleccion-heading" className="ds-h1-page">
             Colección
           </h1>
 
-          {/* Quick Search + Sort Row */}
-          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
-            <div className="liquid-glass relative flex min-h-[44px] w-full items-center rounded-full px-4 sm:w-80">
+          {/* Desktop (md+): Inline Search + Sort Pills */}
+          <div className="hidden items-center gap-2.5 md:flex">
+            <div className="liquid-glass relative flex min-h-[44px] w-72 items-center rounded-full px-4 lg:w-80">
               <Search
                 className="h-4 w-4 shrink-0 text-muted"
                 aria-hidden="true"
               />
               <input
-                id="catalog-search-input"
+                id="catalog-search-input-desktop"
                 type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -328,7 +390,7 @@ export function CatalogSection() {
             <div
               role="radiogroup"
               aria-label="Ordenar colección"
-              className="liquid-glass inline-flex items-center self-start rounded-full p-1 sm:self-auto"
+              className="liquid-glass inline-flex items-center rounded-full p-1"
             >
               {SORT_OPTIONS.map((opt) => {
                 const active = sortOrder === opt.id;
@@ -353,15 +415,166 @@ export function CatalogSection() {
           </div>
         </div>
 
-        {/* Top Control Bar: Gama Filters + Visual (Camisa/Tela) + Grid (3/4 cols) */}
-        <div className="mt-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        {/* MOBILE (< md): Single Compact 1-Row Controls Bar + Collapsible Search */}
+        <div className="mt-3.5 md:hidden">
+          <div className="flex h-11 items-center gap-1.5">
+            {/* [ 🔍 ] Collapsible Search Toggle */}
+            <button
+              type="button"
+              onClick={() => setMobileSearchOpen((open) => !open)}
+              aria-expanded={mobileSearchOpen || isGlobalSearchActive}
+              aria-label="Buscar en la colección"
+              className={`cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full transition-colors ${
+                mobileSearchOpen || isGlobalSearchActive
+                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
+                  : "liquid-glass text-[#111113] dark:text-white"
+              }`}
+            >
+              <Search className="h-4 w-4" aria-hidden="true" />
+            </button>
+
+            {/* [ Todas ▾ ] Compact Gama Select */}
+            <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
+              <select
+                aria-label="Filtrar por gama de tela"
+                value={isGlobalSearchActive ? "" : (selectedFabric ?? "")}
+                onChange={(e) => {
+                  const val = e.target.value as FabricCategoryId | "";
+                  setSearchQuery("");
+                  setSelectedFabric(val ? val : null);
+                }}
+                className="h-full w-full cursor-pointer appearance-none bg-transparent pr-7 pl-3 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+              >
+                {FILTER_OPTIONS.map((opt) => (
+                  <option
+                    key={opt.label}
+                    value={opt.id ?? ""}
+                    className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
+                  >
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-muted"
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* [ Destacados ▾ ] Compact Sort Select */}
+            <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
+              <select
+                aria-label="Ordenar colección"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                className="h-full w-full cursor-pointer appearance-none bg-transparent pr-7 pl-3 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option
+                    key={opt.id}
+                    value={opt.id}
+                    className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
+                  >
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-muted"
+                aria-hidden="true"
+              />
+            </div>
+
+            {/* [ 👕 | 🧵 ] Icon-Only Visual Switcher */}
+            <div
+              role="radiogroup"
+              aria-label="Modo de visualización"
+              className="liquid-glass inline-flex min-h-[44px] shrink-0 items-center rounded-full p-0.5"
+            >
+              <button
+                type="button"
+                role="radio"
+                aria-checked={visualMode === "camisa"}
+                aria-label="Ver camisa"
+                title="Camisa"
+                onClick={() => setVisualMode("camisa")}
+                className={`cursor-pointer inline-flex h-10 w-9 items-center justify-center rounded-full transition-colors ${
+                  visualMode === "camisa"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 dark:text-white/70"
+                }`}
+              >
+                <Shirt className="h-4 w-4" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={visualMode === "tela"}
+                aria-label="Ver muestra de tela"
+                title="Tela"
+                onClick={() => setVisualMode("tela")}
+                className={`cursor-pointer inline-flex h-10 w-9 items-center justify-center rounded-full transition-colors ${
+                  visualMode === "tela"
+                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
+                    : "text-[#111113]/70 dark:text-white/70"
+                }`}
+              >
+                <SwatchBook className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+
+          {/* Collapsible Mobile Search Input */}
+          <AnimatePresence initial={false}>
+            {(mobileSearchOpen || isGlobalSearchActive) && (
+              <motion.div
+                key="mobile-search-bar"
+                initial={isMotionPaused ? false : { opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={isMotionPaused ? undefined : { opacity: 0, height: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden"
+              >
+                <div className="liquid-glass mt-2.5 flex min-h-[44px] w-full items-center rounded-full px-4">
+                  <Search
+                    className="h-4 w-4 shrink-0 text-muted"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="catalog-search-input-mobile"
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
+                    aria-label="Buscar por tela o referencia de artículo"
+                    className="w-full bg-transparent px-2.5 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      aria-label="Limpiar búsqueda"
+                      className="cursor-pointer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
+                    >
+                      <X className="h-3.5 w-3.5" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* DESKTOP (md+): Gama Filter Pills + Visual (Camisa/Tela) + Grid (3/4 cols) */}
+        <div className="mt-5 hidden items-center justify-between gap-3 md:flex">
           <div
             role="tablist"
             aria-label="Filtrar por gama de tela"
             className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5"
           >
             {FILTER_OPTIONS.map((option) => {
-              const isActive = selectedFabric === option.id;
+              const isActive =
+                !isGlobalSearchActive && selectedFabric === option.id;
               return (
                 <button
                   key={option.label}
@@ -369,7 +582,10 @@ export function CatalogSection() {
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  onClick={() => setSelectedFabric(option.id)}
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedFabric(option.id);
+                  }}
                   className={`cursor-pointer relative min-h-[40px] shrink-0 rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
                     isActive
                       ? "font-semibold text-white dark:text-[#0B0B0E]"
@@ -468,6 +684,13 @@ export function CatalogSection() {
           </div>
         </div>
 
+        {/* Global Search Notice when searching while a fabric filter was selected */}
+        {isGlobalSearchActive && selectedFabric && (
+          <p className="ds-caption mt-3 text-muted">
+            Resultados en toda la colección para “{searchQuery.trim()}”
+          </p>
+        )}
+
         {/* Minimal Product Grid */}
         {visibleShirts.length === 0 ? (
           <div className="liquid-glass mt-8 rounded-2xl p-8 text-center">
@@ -491,7 +714,7 @@ export function CatalogSection() {
           </div>
         ) : (
           <div
-            className={`mt-7 grid grid-cols-2 gap-5 ${
+            className={`mt-5 grid grid-cols-2 gap-4 sm:mt-7 sm:gap-5 ${
               gridCols === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"
             }`}
           >
@@ -501,11 +724,93 @@ export function CatalogSection() {
                 shirt={shirt}
                 visualMode={visualMode}
                 isWide={gridCols === 3}
+                onOpenMobileSizeSheet={setMobileSheetShirt}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* MOBILE BOTTOM SHEET: Spacious 48px Commercial Size Selector (< sm) */}
+      <AnimatePresence>
+        {mobileSheetShirt && (
+          <motion.div
+            key="mobile-size-sheet-backdrop"
+            initial={isMotionPaused ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setMobileSheetShirt(null);
+            }}
+            className="fixed inset-0 z-[85] flex items-end bg-black/60 backdrop-blur-sm sm:hidden"
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mobile-size-sheet-title"
+              initial={isMotionPaused ? false : { y: "100%" }}
+              animate={{ y: 0 }}
+              exit={isMotionPaused ? undefined : { y: "100%" }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="liquid-glass-active w-full rounded-t-2xl border-x-0 border-b-0 !bg-[#F7F6F3]/98 p-5 pb-8 text-[#111113] shadow-[0_-18px_48px_rgba(0,0,0,0.22)] dark:!bg-[#0B0B0E]/98 dark:text-[#F8FAFC]"
+            >
+              <div
+                aria-hidden="true"
+                className="mx-auto mb-4 h-1 w-10 rounded-full bg-black/15 dark:bg-white/20"
+              />
+
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <h2 id="mobile-size-sheet-title" className="ds-h3">
+                    {mobileSheetShirt.name}
+                  </h2>
+                  <p className="mt-0.5 text-xs text-muted">
+                    <span className="ds-mono">{mobileSheetShirt.refCode}</span>{" "}
+                    ·{" "}
+                    <span className="font-sans font-semibold text-[#111113] tabular-nums dark:text-white">
+                      {formatArsClean(mobileSheetShirt.priceArs)}
+                    </span>
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setMobileSheetShirt(null)}
+                  aria-label="Cerrar selector de talle"
+                  className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] dark:text-white"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+
+              <p className="ds-caption mt-5 text-muted uppercase">
+                Elegí tu talle comercial
+              </p>
+
+              <div
+                className={`mt-2.5 grid gap-2 ${
+                  mobileSheetShirt.sizeType === "alpha"
+                    ? "grid-cols-4"
+                    : "grid-cols-5"
+                }`}
+              >
+                {mobileSheetSizes.map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => handleMobileSheetSelectSize(size)}
+                    aria-label={`Agregar ${mobileSheetShirt.name} talle ${size}`}
+                    className="cursor-pointer flex h-12 w-full items-center justify-center rounded-full border border-black/14 bg-white/90 text-sm font-semibold text-[#111113] transition-colors active:scale-95 hover:bg-[#16233B] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
