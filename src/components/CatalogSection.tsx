@@ -354,9 +354,9 @@ export function CatalogSection() {
             )}
           </AnimatePresence>
 
-          {/* Mobile (< md) Row 1 Right Controls: [🔍 when collapsed] + [Single Circular 🧵/👕 Toggle] */}
-          <div className="flex shrink-0 items-center gap-2 md:hidden">
-            {!isMobileSearchExpanded && (
+          {/* Mobile (< md) Row 1 Right Control: [🔍 when collapsed] */}
+          {!isMobileSearchExpanded && (
+            <div className="flex shrink-0 items-center md:hidden">
               <button
                 type="button"
                 onClick={() => setMobileSearchOpen(true)}
@@ -367,28 +367,8 @@ export function CatalogSection() {
               >
                 <Search className="h-4 w-4" aria-hidden="true" />
               </button>
-            )}
-
-            <button
-              type="button"
-              onClick={handleToggleVisualMode}
-              aria-label={
-                visualMode === "camisa"
-                  ? "Cambiar a vista de tela"
-                  : "Cambiar a vista de camisa"
-              }
-              title={
-                visualMode === "camisa" ? "Ver muestras de tela" : "Ver camisas"
-              }
-              className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
-            >
-              {visualMode === "camisa" ? (
-                <SwatchBook className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Shirt className="h-4 w-4" aria-hidden="true" />
-              )}
-            </button>
-          </div>
+            </div>
+          )}
 
           {/* Desktop (md+): Inline Search + Sort Pills */}
           <div className="hidden items-center gap-2.5 md:flex">
@@ -446,9 +426,9 @@ export function CatalogSection() {
           </div>
         </div>
 
-        {/* MOBILE (< md) Row 2: Comfortable 2-column Selects ([Todas las telas ▾] + [Destacados ▾]) */}
-        <div className="mt-3 grid grid-cols-2 gap-2.5 md:hidden">
-          <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
+        {/* MOBILE (< md) Row 2: [Todas las telas ▾] + [Destacados ▾] + [🧵/👕] */}
+        <div className="mt-3 flex items-center gap-2 md:hidden">
+          <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
             <select
               aria-label="Filtrar por gama de tela"
               value={isGlobalSearchActive ? "" : (selectedFabric ?? "")}
@@ -457,7 +437,7 @@ export function CatalogSection() {
                 setSearchQuery("");
                 setSelectedFabric(val ? val : null);
               }}
-              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-7 pl-3.5 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
             >
               {FILTER_OPTIONS.map((opt) => (
                 <option
@@ -470,17 +450,17 @@ export function CatalogSection() {
               ))}
             </select>
             <ChevronDown
-              className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-muted"
               aria-hidden="true"
             />
           </div>
 
-          <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
+          <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
             <select
               aria-label="Ordenar colección"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-7 pl-3.5 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
             >
               {SORT_OPTIONS.map((opt) => (
                 <option
@@ -493,10 +473,30 @@ export function CatalogSection() {
               ))}
             </select>
             <ChevronDown
-              className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
+              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-muted"
               aria-hidden="true"
             />
           </div>
+
+          <button
+            type="button"
+            onClick={handleToggleVisualMode}
+            aria-label={
+              visualMode === "camisa"
+                ? "Cambiar a vista de tela"
+                : "Cambiar a vista de camisa"
+            }
+            title={
+              visualMode === "camisa" ? "Ver muestras de tela" : "Ver camisas"
+            }
+            className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+          >
+            {visualMode === "camisa" ? (
+              <SwatchBook className="h-4 w-4" aria-hidden="true" />
+            ) : (
+              <Shirt className="h-4 w-4" aria-hidden="true" />
+            )}
+          </button>
         </div>
 
         {/* DESKTOP (md+): Gama Filter Pills + Single Circular 🧵/👕 Toggle + Grid (3/4 cols) */}

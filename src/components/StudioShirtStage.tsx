@@ -156,7 +156,7 @@ export function StudioShirtStage({
   };
 
   return (
-    <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[380px] lg:h-full">
+    <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[400px] lg:h-full">
       {/* Subtle studio softbox halo behind the 3D garment / macro */}
       <div
         aria-hidden="true"
@@ -176,7 +176,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3 }}
-            className="relative h-[300px] w-full sm:h-[380px] lg:h-full"
+            className="relative h-[360px] w-full sm:h-[400px] lg:h-full"
           >
             {webglFailed ? (
               <ShirtStudioFallback

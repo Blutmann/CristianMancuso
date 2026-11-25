@@ -22,7 +22,7 @@ import {
 
 const MODEL_PATH = "/models/shirt.glb";
 const DEFAULT_CAMERA_Z = 3.85;
-const MOBILE_CAMERA_Z = 3.85;
+const MOBILE_CAMERA_Z = 3.2;
 const MIN_CAMERA_DIST = 1.4;
 const MAX_CAMERA_DIST = 5.2;
 const ZOOM_STEP = 0.4;
@@ -677,9 +677,9 @@ export default function ShirtGLBViewer({
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      {/* 3D Canvas Stage (compact mobile height keeps CONFIRMAR TELA visible above the fold on iPhone) */}
+      {/* 3D Canvas Stage (enlarged mobile height fills the 360px stage while keeping CONFIRMAR TELA visible) */}
       <div
-        className={`relative h-[248px] w-full sm:h-[328px] lg:h-auto lg:min-h-0 lg:flex-1 ${
+        className={`relative h-[315px] w-full sm:h-[355px] lg:h-auto lg:min-h-0 lg:flex-1 ${
           interactionMode === "pan"
             ? "cursor-move"
             : "cursor-grab active:cursor-grabbing"
@@ -894,7 +894,7 @@ export default function ShirtGLBViewer({
       </div>
 
       {/* Controls Bar: Compact -/+/Reset on mobile, full Rotar/Mover + Zoom + Presets on lg+ */}
-      <div className="z-20 flex min-h-[48px] shrink-0 items-center justify-center gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:justify-between lg:pt-0">
+      <div className="z-20 flex min-h-[40px] shrink-0 items-center justify-center gap-2 pt-0.5 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:justify-between lg:pt-0">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"
@@ -942,7 +942,7 @@ export default function ShirtGLBViewer({
               disabled={targetDistance >= MAX_CAMERA_DIST}
               aria-label="Alejar zoom"
               title="Alejar"
-              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
             >
               <Minus className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -952,7 +952,7 @@ export default function ShirtGLBViewer({
               disabled={targetDistance <= MIN_CAMERA_DIST}
               aria-label="Acercar zoom"
               title="Acercar"
-              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] disabled:cursor-not-allowed disabled:opacity-35 lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
@@ -961,7 +961,7 @@ export default function ShirtGLBViewer({
               onClick={handleReset}
               aria-label="Restablecer vista"
               title="Restablecer vista"
-              className="cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] lg:h-8 lg:min-h-0 lg:w-8 lg:min-w-0 dark:hover:bg-white/[0.12]"
+              className="cursor-pointer inline-flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-black/[0.07] lg:h-8 lg:w-8 dark:hover:bg-white/[0.12]"
             >
               <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
             </button>

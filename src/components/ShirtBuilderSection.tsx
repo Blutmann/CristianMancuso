@@ -214,16 +214,16 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-4 sm:gap-3.5 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
-        {/* TOP ROW: Clean title on left, 4-step stepper on right */}
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2 px-5 pt-20 pb-3 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
+        {/* TOP ROW: Clean title on left, slimmer 4-step stepper on right */}
+        <div className="flex flex-col gap-1.5 lg:flex-row lg:items-center lg:justify-between">
           <h1 id="builder-heading" className="ds-h1-page">
             Armá tu camisa
           </h1>
 
           <nav
             aria-label="Pasos del configurador"
-            className="liquid-glass scrollbar-none inline-flex w-full items-center gap-1 overflow-x-auto rounded-full p-1 lg:w-auto"
+            className="liquid-glass scrollbar-none inline-flex w-full items-center gap-0.5 overflow-x-auto rounded-full p-0.5 lg:w-auto lg:gap-1 lg:p-1"
           >
             {STEPS.map((item) => {
               const isActive = step === item.id;
@@ -233,7 +233,7 @@ export function ShirtBuilderSection() {
                   key={item.id}
                   type="button"
                   onClick={() => setStep(item.id)}
-                  className={`cursor-pointer relative flex min-h-[40px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors lg:flex-none lg:px-3.5 ${
+                  className={`cursor-pointer relative flex h-9 flex-1 items-center justify-center gap-1 whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors lg:h-10 lg:flex-none lg:px-3.5 ${
                     isActive
                       ? "text-white dark:text-[#0B0B0E]"
                       : isDone
@@ -268,8 +268,8 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Compact Mobile Height (keeps CTA visible on iPhone) + Full Flex Stage on Desktop */}
-        <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[380px] lg:h-auto lg:min-h-0 lg:flex-1">
+        {/* CENTER STAGE: Tall Mobile 3D Stage (h-[360px]) + Full Flex Stage on Desktop */}
+        <div className="relative flex h-[360px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[400px] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
@@ -285,9 +285,9 @@ export function ShirtBuilderSection() {
           />
         </div>
 
-        {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
-        <div className="liquid-glass rounded-2xl p-3.5 sm:p-5">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
+        {/* BOTTOM DOCK: Compact mobile padding (p-3 gap-2) + spacious desktop */}
+        <div className="liquid-glass rounded-2xl p-3 sm:p-5">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
             {/* LEFT: Active Step Controls */}
             <div className="min-w-0 flex-1">
               <AnimatePresence mode="wait">
