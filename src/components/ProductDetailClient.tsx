@@ -70,7 +70,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[1440px] px-5 pt-24 pb-16 sm:px-8 sm:pt-28 lg:px-12">
+    <div className="mx-auto w-full max-w-[1360px] px-5 pt-24 pb-16 sm:px-8 sm:pt-28 lg:px-10">
       {/* Subtle Back Link */}
       <Link
         href="/coleccion"

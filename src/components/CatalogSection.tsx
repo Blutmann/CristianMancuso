@@ -256,7 +256,7 @@ export function CatalogSection() {
       aria-labelledby="coleccion-heading"
       className="relative w-full bg-transparent pt-24 pb-16 text-[#111113] sm:pt-28 dark:text-white"
     >
-      <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
+      <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
         <h1
           id="coleccion-heading"
           className="font-display text-[clamp(1.9rem,3.4vw,2.75rem)] font-bold leading-[1.05] tracking-[-0.03em] text-[#111113] dark:text-white"
