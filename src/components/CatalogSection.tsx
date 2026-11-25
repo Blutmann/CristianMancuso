@@ -139,7 +139,7 @@ function MinimalShirtCard({
             <TailorFabricSwatch shirt={shirt} compact />
           )}
 
-          {/* Top-Left Badge (diagonally balanced with Bottom-Right +) */}
+          {/* Top-Left Badge */}
           {badge && (
             <span
               className={`pointer-events-none absolute top-2.5 left-2.5 z-10 rounded-full px-2.5 py-0.5 text-[9.5px] font-semibold tracking-[0.08em] uppercase ${badge.className}`}
@@ -147,42 +147,43 @@ function MinimalShirtCard({
               {badge.label}
             </span>
           )}
-
-          {/* Minimalist 44x44 Circular + Quick-Add Button */}
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onOpenSizeSheet(shirt);
-            }}
-            aria-label={`Elegir talle para ${shirt.name}`}
-            title={`Agregar ${shirt.name}`}
-            className="liquid-glass-active cursor-pointer absolute right-2.5 bottom-2.5 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border border-black/15 !bg-white/92 text-[#16233B] shadow-[0_8px_22px_rgba(17,17,19,0.16)] transition-all duration-200 hover:scale-105 hover:!bg-[#16233B] hover:text-white active:scale-95 dark:border-white/25 dark:!bg-[#14161D]/90 dark:text-white dark:shadow-[0_10px_26px_rgba(0,0,0,0.55)] dark:hover:!bg-white dark:hover:text-[#0B0B0E]"
-          >
-            <Plus className="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
-          </button>
         </div>
 
-        {/* Clean 4-Line Hierarchy: 1. Name -> 2. Fabric Type -> 3. Ref. Art. -> 4. Price */}
-        <div className="flex flex-1 flex-col justify-between gap-1 px-3.5 pt-2.5 pb-4 sm:px-4">
-          <div>
+        {/* Clean 4-Line Hierarchy with breathing room + circular + beside price */}
+        <div className="flex flex-1 flex-col justify-between gap-2.5 px-3.5 pt-3 pb-3.5 sm:px-4 sm:pb-4">
+          <div className="space-y-1.5">
             <h2 className="ds-h3 leading-snug">{shirt.name}</h2>
-            <p className="mt-0.5 text-xs text-muted">{shirt.fabricLabel}</p>
-            <p className="ds-mono mt-0.5 text-[11px] text-muted/85">
+            <p className="text-xs text-muted">{shirt.fabricLabel}</p>
+            <p className="ds-mono text-[11px] text-muted/85">
               {shirt.refCode}
             </p>
           </div>
 
-          <div className="mt-1.5 flex items-baseline gap-2">
-            <span className="font-sans text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
-              {formatArsClean(shirt.priceArs)}
-            </span>
-            {shirt.compareAtArs && (
-              <span className="font-sans text-xs text-muted line-through tabular-nums">
-                {formatArsClean(shirt.compareAtArs)}
+          <div className="flex items-center justify-between gap-2 pt-0.5">
+            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+              <span className="font-sans text-sm font-semibold text-[#111113] tabular-nums dark:text-white">
+                {formatArsClean(shirt.priceArs)}
               </span>
-            )}
+              {shirt.compareAtArs && (
+                <span className="font-sans text-xs text-muted line-through tabular-nums">
+                  {formatArsClean(shirt.compareAtArs)}
+                </span>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onOpenSizeSheet(shirt);
+              }}
+              aria-label={`Elegir talle para ${shirt.name}`}
+              title={`Agregar ${shirt.name}`}
+              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-black/14 bg-white/85 text-[#16233B] transition-all duration-200 hover:bg-[#16233B] hover:text-white active:scale-95 sm:h-10 sm:w-10 dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+            >
+              <Plus className="h-4 w-4 stroke-[2.1]" aria-hidden="true" />
+            </button>
           </div>
         </div>
       </Link>
@@ -202,6 +203,7 @@ export function CatalogSection() {
     null
   );
   const sizeTrackRef = useRef<HTMLDivElement | null>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -211,6 +213,13 @@ export function CatalogSection() {
       setSelectedFabric(gama);
     }
   }, [setSelectedFabric]);
+
+  // Focus mobile search input when expanded in place of title
+  useEffect(() => {
+    if (mobileSearchOpen) {
+      mobileSearchInputRef.current?.focus();
+    }
+  }, [mobileSearchOpen]);
 
   // Escape key & body scroll-lock when Size Bottom Sheet is open
   useEffect(() => {
@@ -233,6 +242,7 @@ export function CatalogSection() {
   }, [sizeSheetShirt]);
 
   const isGlobalSearchActive = searchQuery.trim().length > 0;
+  const isMobileSearchExpanded = mobileSearchOpen || isGlobalSearchActive;
 
   // Smart Global Search: when query is non-empty, search across ALL gamas
   const visibleShirts = useMemo(() => {
@@ -292,28 +302,72 @@ export function CatalogSection() {
       className="relative w-full bg-transparent pt-22 pb-16 text-[#111113] sm:pt-24 lg:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-        {/* ROW 1: Title on left + Mobile ([🔍] + [Single 🧵/👕 toggle]) | Desktop (Search + Sort) */}
-        <div className="flex items-center justify-between gap-3">
-          <h1 id="coleccion-heading" className="ds-h1-page">
+        {/* ROW 1: Mobile (Title OR Inline Expanded Search + Single 🧵/👕 toggle) | Desktop (Title + Search + Sort) */}
+        <div className="flex min-h-[44px] items-center justify-between gap-2.5">
+          {/* Desktop Title (always visible on md+) + Mobile Title (hidden while mobile search is expanded) */}
+          <h1
+            id="coleccion-heading"
+            className={`ds-h1-page ${
+              isMobileSearchExpanded ? "hidden md:block" : "block"
+            }`}
+          >
             Colección
           </h1>
 
-          {/* Mobile (< md) Row 1 Right Controls: [🔍] + [Single Circular 🧵/👕 Toggle] */}
-          <div className="flex items-center gap-2 md:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileSearchOpen((open) => !open)}
-              aria-expanded={mobileSearchOpen || isGlobalSearchActive}
-              aria-label="Buscar en la colección"
-              title="Buscar"
-              className={`cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full transition-colors ${
-                mobileSearchOpen || isGlobalSearchActive
-                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                  : "liquid-glass text-[#111113] dark:text-white"
-              }`}
-            >
-              <Search className="h-4 w-4" aria-hidden="true" />
-            </button>
+          {/* Mobile (< md) Expanded Search Input replacing Title in-place */}
+          <AnimatePresence initial={false}>
+            {isMobileSearchExpanded && (
+              <motion.div
+                key="mobile-inline-search"
+                initial={isMotionPaused ? false : { opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={isMotionPaused ? undefined : { opacity: 0, x: 12 }}
+                transition={{ duration: 0.18 }}
+                className="liquid-glass flex min-h-[44px] min-w-0 flex-1 items-center rounded-full px-3.5 md:hidden"
+              >
+                <Search
+                  className="h-4 w-4 shrink-0 text-muted"
+                  aria-hidden="true"
+                />
+                <input
+                  ref={mobileSearchInputRef}
+                  id="catalog-search-input-mobile"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar tela o Ref. Art. (ej. 2529)..."
+                  aria-label="Buscar por tela o referencia de artículo"
+                  className="w-full min-w-0 bg-transparent px-2 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setMobileSearchOpen(false);
+                  }}
+                  aria-label="Cerrar búsqueda"
+                  className="cursor-pointer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Mobile (< md) Row 1 Right Controls: [🔍 when collapsed] + [Single Circular 🧵/👕 Toggle] */}
+          <div className="flex shrink-0 items-center gap-2 md:hidden">
+            {!isMobileSearchExpanded && (
+              <button
+                type="button"
+                onClick={() => setMobileSearchOpen(true)}
+                aria-expanded={false}
+                aria-label="Buscar en la colección"
+                title="Buscar"
+                className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              >
+                <Search className="h-4 w-4" aria-hidden="true" />
+              </button>
+            )}
 
             <button
               type="button"
@@ -392,98 +446,56 @@ export function CatalogSection() {
           </div>
         </div>
 
-        {/* MOBILE (< md): Collapsible Search + Row 2 ([Todas ▾] + [Destacados ▾]) */}
-        <div className="mt-3 md:hidden">
-          <AnimatePresence initial={false}>
-            {(mobileSearchOpen || isGlobalSearchActive) && (
-              <motion.div
-                key="mobile-search-bar"
-                initial={isMotionPaused ? false : { opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={isMotionPaused ? undefined : { opacity: 0, height: 0 }}
-                transition={{ duration: 0.2 }}
-                className="overflow-hidden"
-              >
-                <div className="liquid-glass mb-2.5 flex min-h-[44px] w-full items-center rounded-full px-4">
-                  <Search
-                    className="h-4 w-4 shrink-0 text-muted"
-                    aria-hidden="true"
-                  />
-                  <input
-                    id="catalog-search-input-mobile"
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
-                    aria-label="Buscar por tela o referencia de artículo"
-                    className="w-full bg-transparent px-2.5 text-xs text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      aria-label="Limpiar búsqueda"
-                      className="cursor-pointer inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
-                    >
-                      <X className="h-3.5 w-3.5" aria-hidden="true" />
-                    </button>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+        {/* MOBILE (< md) Row 2: Comfortable 2-column Selects ([Todas las telas ▾] + [Destacados ▾]) */}
+        <div className="mt-3 grid grid-cols-2 gap-2.5 md:hidden">
+          <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
+            <select
+              aria-label="Filtrar por gama de tela"
+              value={isGlobalSearchActive ? "" : (selectedFabric ?? "")}
+              onChange={(e) => {
+                const val = e.target.value as FabricCategoryId | "";
+                setSearchQuery("");
+                setSelectedFabric(val ? val : null);
+              }}
+              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+            >
+              {FILTER_OPTIONS.map((opt) => (
+                <option
+                  key={opt.label}
+                  value={opt.id ?? ""}
+                  className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
+                >
+                  {opt.id === null ? "Todas las telas" : opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
+              aria-hidden="true"
+            />
+          </div>
 
-          {/* Row 2: Comfortable 2-column Selects ([Todas ▾] + [Destacados ▾]) */}
-          <div className="grid grid-cols-2 gap-2.5">
-            <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
-              <select
-                aria-label="Filtrar por gama de tela"
-                value={isGlobalSearchActive ? "" : (selectedFabric ?? "")}
-                onChange={(e) => {
-                  const val = e.target.value as FabricCategoryId | "";
-                  setSearchQuery("");
-                  setSelectedFabric(val ? val : null);
-                }}
-                className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
-              >
-                {FILTER_OPTIONS.map((opt) => (
-                  <option
-                    key={opt.label}
-                    value={opt.id ?? ""}
-                    className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
-                  >
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
-                aria-hidden="true"
-              />
-            </div>
-
-            <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
-              <select
-                aria-label="Ordenar colección"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value as SortOrder)}
-                className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
-              >
-                {SORT_OPTIONS.map((opt) => (
-                  <option
-                    key={opt.id}
-                    value={opt.id}
-                    className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
-                  >
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
-                aria-hidden="true"
-              />
-            </div>
+          <div className="liquid-glass relative flex min-h-[44px] items-center rounded-full">
+            <select
+              aria-label="Ordenar colección"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-8 pl-4 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
+            >
+              {SORT_OPTIONS.map((opt) => (
+                <option
+                  key={opt.id}
+                  value={opt.id}
+                  className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
+                >
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute right-3 h-3.5 w-3.5 text-muted"
+              aria-hidden="true"
+            />
           </div>
         </div>
 

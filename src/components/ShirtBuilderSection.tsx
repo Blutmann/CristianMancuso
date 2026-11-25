@@ -33,7 +33,7 @@ type MeasureKey = keyof BespokeMeasurements;
 const STEPS: { id: BuilderStep; label: string; shortLabel: string }[] = [
   { id: 1, label: "1. Tela", shortLabel: "1. Tela" },
   { id: 2, label: "2. Cuello", shortLabel: "2. Cuello" },
-  { id: 3, label: "3. Botón & Iniciales", shortLabel: "3. Detalles" },
+  { id: 3, label: "3. Botón", shortLabel: "3. Botón" },
   { id: 4, label: "4. Medidas", shortLabel: "4. Medidas" },
 ];
 
@@ -214,9 +214,9 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-4 px-5 pt-24 pb-8 sm:px-8 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-4 sm:gap-3.5 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-26 lg:pb-6">
         {/* TOP ROW: Clean title on left, 4-step stepper on right */}
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
           <h1 id="builder-heading" className="ds-h1-page">
             Armá tu camisa
           </h1>
@@ -233,7 +233,7 @@ export function ShirtBuilderSection() {
                   key={item.id}
                   type="button"
                   onClick={() => setStep(item.id)}
-                  className={`cursor-pointer relative flex min-h-[44px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors lg:min-h-[40px] lg:flex-none lg:px-3.5 ${
+                  className={`cursor-pointer relative flex min-h-[40px] flex-1 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors lg:flex-none lg:px-3.5 ${
                     isActive
                       ? "text-white dark:text-[#0B0B0E]"
                       : isDone
@@ -268,11 +268,12 @@ export function ShirtBuilderSection() {
           </nav>
         </div>
 
-        {/* CENTER STAGE: Explicit Mobile Height (iOS Safari safe) + Full Flex Stage on Desktop */}
-        <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[440px] lg:h-auto lg:min-h-0 lg:flex-1">
+        {/* CENTER STAGE: Compact Mobile Height (keeps CTA visible on iPhone) + Full Flex Stage on Desktop */}
+        <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-2xl sm:h-[380px] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}
+            onCollarChange={setCollar}
             buttonId={buttonId}
             monogramDisplay={monogramDisplay}
             monogramPlacement={monogramPlacement}
@@ -285,7 +286,7 @@ export function ShirtBuilderSection() {
         </div>
 
         {/* BOTTOM DOCK: Single straight compact .liquid-glass bar */}
-        <div className="liquid-glass rounded-2xl p-4 sm:p-5">
+        <div className="liquid-glass rounded-2xl p-3.5 sm:p-5">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between lg:gap-5">
             {/* LEFT: Active Step Controls */}
             <div className="min-w-0 flex-1">
@@ -442,34 +443,47 @@ export function ShirtBuilderSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: 0.2 }}
-                    className="grid grid-cols-2 gap-2 sm:grid-cols-5"
+                    className="scrollbar-none flex items-center gap-2 overflow-x-auto py-0.5"
                   >
                     {COLLAR_OPTIONS.map((opt) => {
                       const active = collar === opt;
                       return (
-                        <button
+                        <motion.button
                           key={opt}
                           type="button"
+                          layout={!isMotionPaused}
                           onClick={() => setCollar(opt)}
-                          className={`cursor-pointer flex min-h-[52px] flex-col justify-center rounded-xl px-3 py-2 text-left transition-all ${
+                          className={`cursor-pointer flex min-h-[44px] shrink-0 items-center gap-2 rounded-full transition-colors ${
                             active
-                              ? "bg-[#111113] text-white shadow-md dark:bg-white dark:text-[#090B10] dark:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
-                              : "border border-black/12 bg-black/[0.03] text-[#111113]/85 hover:bg-black/[0.07] dark:border-white/15 dark:bg-white/[0.04] dark:text-white/85 dark:hover:bg-white/[0.1]"
+                              ? "bg-[#16233B] px-4 py-2 text-white shadow-md dark:bg-white dark:text-[#0B0B0E] dark:shadow-[0_8px_24px_rgba(255,255,255,0.2)]"
+                              : "border border-black/12 bg-black/[0.03] px-3.5 text-[#111113]/80 hover:bg-black/[0.07] dark:border-white/15 dark:bg-white/[0.05] dark:text-white/80 dark:hover:bg-white/[0.1]"
                           }`}
                         >
-                          <span className="block truncate text-xs font-semibold">
+                          <span className="whitespace-nowrap text-xs font-semibold">
                             {opt}
                           </span>
-                          <span
-                            className={`block truncate text-[10px] ${
-                              active
-                                ? "text-white/75 dark:text-[#090B10]/70"
-                                : "text-[#111113]/55 dark:text-white/55"
-                            }`}
-                          >
-                            {COLLAR_META[opt].note}
-                          </span>
-                        </button>
+                          <AnimatePresence initial={false}>
+                            {active && (
+                              <motion.span
+                                initial={
+                                  isMotionPaused
+                                    ? false
+                                    : { opacity: 0, x: -4 }
+                                }
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={
+                                  isMotionPaused
+                                    ? undefined
+                                    : { opacity: 0, x: -4 }
+                                }
+                                transition={{ duration: 0.18 }}
+                                className="whitespace-nowrap text-[11px] opacity-80"
+                              >
+                                · {COLLAR_META[opt].note}
+                              </motion.span>
+                            )}
+                          </AnimatePresence>
+                        </motion.button>
                       );
                     })}
                   </motion.div>

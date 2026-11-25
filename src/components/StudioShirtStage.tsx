@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
+  COLLAR_OPTIONS,
   MONOGRAM_THREAD_OPTIONS,
   type BespokeMeasurements,
   type ButtonOption,
@@ -110,6 +111,7 @@ type MeasureKey = keyof BespokeMeasurements;
 export interface StudioShirtStageProps {
   shirt: CatalogShirt;
   collar: CollarOption;
+  onCollarChange?: (collar: CollarOption) => void;
   buttonId: ButtonOption;
   monogramDisplay: string;
   monogramPlacement: MonogramPlacement;
@@ -123,6 +125,7 @@ export interface StudioShirtStageProps {
 export function StudioShirtStage({
   shirt,
   collar,
+  onCollarChange,
   buttonId,
   monogramDisplay,
   monogramPlacement,
@@ -143,8 +146,17 @@ export function StudioShirtStage({
 
   const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
 
+  const handleCollarSwipe = (direction: -1 | 1) => {
+    if (!onCollarChange) return;
+    const idx = COLLAR_OPTIONS.indexOf(collar);
+    if (idx < 0) return;
+    const nextIdx =
+      (idx + direction + COLLAR_OPTIONS.length) % COLLAR_OPTIONS.length;
+    onCollarChange(COLLAR_OPTIONS[nextIdx]);
+  };
+
   return (
-    <div className="relative flex h-[390px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[440px] lg:h-full">
+    <div className="relative flex h-[300px] w-full items-center justify-center overflow-hidden rounded-2xl bg-transparent sm:h-[380px] lg:h-full">
       {/* Subtle studio softbox halo behind the 3D garment / macro */}
       <div
         aria-hidden="true"
@@ -164,7 +176,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.3 }}
-            className="relative h-[390px] w-full sm:h-[440px] lg:h-full"
+            className="relative h-[300px] w-full sm:h-[380px] lg:h-full"
           >
             {webglFailed ? (
               <ShirtStudioFallback
@@ -192,7 +204,7 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 2: Real Macro Collar Studio Photograph */}
+        {/* STEP 2: Real Macro Collar Studio Photograph with Horizontal Swipe */}
         {step === 2 && (
           <motion.div
             key="stage-collar-macro"
@@ -200,7 +212,17 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.96 }}
             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-            className="relative flex aspect-[4/3] h-[88%] max-h-[450px] max-w-[92%] items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
+            drag={onCollarChange ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.22}
+            onDragEnd={(_, info) => {
+              if (info.offset.x < -38) {
+                handleCollarSwipe(1);
+              } else if (info.offset.x > 38) {
+                handleCollarSwipe(-1);
+              }
+            }}
+            className="relative flex aspect-[4/3] h-[90%] max-h-[450px] max-w-[94%] cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-2xl border border-black/10 shadow-[0_24px_60px_rgba(0,0,0,0.14)] active:cursor-grabbing dark:border-white/18 dark:shadow-[0_28px_70px_rgba(0,0,0,0.65)]"
           >
             <AnimatePresence mode="sync">
               <motion.img
@@ -208,16 +230,16 @@ export function StudioShirtStage({
                 src={collarMeta.macroImage}
                 alt={`Macro real Cuello ${collar}`}
                 draggable={false}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.04 }}
+                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute inset-0 h-full w-full object-cover"
+                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
               />
             </AnimatePresence>
 
             {/* Floating Collar Spec Pill */}
-            <div className="liquid-glass pointer-events-none absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-2 text-xs text-[#111113] dark:text-white">
+            <div className="liquid-glass pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
               <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
               <span className="font-semibold">Cuello {collar}</span>
               <span

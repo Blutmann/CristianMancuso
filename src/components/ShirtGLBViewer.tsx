@@ -677,9 +677,9 @@ export default function ShirtGLBViewer({
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      {/* 3D Canvas Stage (explicit mobile height prevents iOS Safari canvas collapse) */}
+      {/* 3D Canvas Stage (compact mobile height keeps CONFIRMAR TELA visible above the fold on iPhone) */}
       <div
-        className={`relative h-[340px] w-full sm:h-[390px] lg:h-auto lg:min-h-0 lg:flex-1 ${
+        className={`relative h-[248px] w-full sm:h-[328px] lg:h-auto lg:min-h-0 lg:flex-1 ${
           interactionMode === "pan"
             ? "cursor-move"
             : "cursor-grab active:cursor-grabbing"
@@ -893,13 +893,13 @@ export default function ShirtGLBViewer({
         </div>
       </div>
 
-      {/* Controls Bar: Dedicated row BELOW model on mobile (>=44px touch targets), aligned to rail edges on lg+ */}
-      <div className="z-20 flex min-h-[48px] shrink-0 items-center justify-between gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:pt-0">
+      {/* Controls Bar: Compact -/+/Reset on mobile, full Rotar/Mover + Zoom + Presets on lg+ */}
+      <div className="z-20 flex min-h-[48px] shrink-0 items-center justify-center gap-2 pt-1 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:justify-between lg:pt-0">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"
             aria-label="Modo de control 3D"
-            className="liquid-glass pointer-events-auto inline-flex items-center rounded-full p-0.5 text-[11px]"
+            className="liquid-glass pointer-events-auto hidden items-center rounded-full p-0.5 text-[11px] lg:inline-flex"
           >
             <button
               type="button"
