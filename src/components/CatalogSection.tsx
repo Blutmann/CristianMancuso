@@ -109,7 +109,7 @@ function MinimalShirtCard({
           }`}
         >
           {visualMode === "camisa" ? (
-            <div className="relative flex h-full w-full items-center justify-center p-4 pb-6">
+            <div className="relative flex h-full w-full items-center justify-center px-4 pt-9 pb-5">
               <div
                 className={`relative flex h-full w-full items-center justify-center ${
                   isMotionPaused

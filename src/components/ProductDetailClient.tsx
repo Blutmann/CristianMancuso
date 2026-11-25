@@ -107,10 +107,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       </nav>
 
       {/* 2-Column Clean PDP Layout */}
-      <div className="mt-6 grid grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-12">
-        {/* LEFT COLUMN: Large Product Image + Vista Prenda / Muestra de Tela Toggle */}
+      <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
+        {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="liquid-glass relative flex aspect-[3/4] max-h-[520px] w-full items-center justify-center overflow-hidden rounded-2xl">
+          <div className="liquid-glass relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-2xl lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5]">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -119,7 +119,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="relative flex h-full w-full items-center justify-center p-6 pb-9"
+                  className="relative flex h-full w-full items-center justify-center p-4 pb-6 lg:p-6 lg:pb-9"
                 >
                   <div className="relative flex h-full w-full items-center justify-center">
                     <picture className="flex h-full w-full items-center justify-center">
@@ -139,7 +139,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   </div>
                   <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute bottom-4 left-1/2 h-4 w-44 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-xl dark:bg-black dark:opacity-55"
+                    className="pointer-events-none absolute bottom-3 left-1/2 h-4 w-40 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-xl lg:bottom-4 lg:w-44 dark:bg-black dark:opacity-55"
                   />
                 </motion.div>
               ) : (
@@ -161,14 +161,14 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
           <div
             role="radiogroup"
             aria-label="Vista del producto"
-            className="liquid-glass mt-4 inline-flex items-center rounded-full p-1"
+            className="liquid-glass mt-2.5 inline-flex items-center rounded-full p-1 lg:mt-4"
           >
             <button
               type="button"
               role="radio"
               aria-checked={viewMode === "prenda"}
               onClick={() => setViewMode("prenda")}
-              className={`cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-4 text-xs font-medium transition-colors ${
+              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors lg:min-h-[38px] lg:px-4 ${
                 viewMode === "prenda"
                   ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
@@ -182,7 +182,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               role="radio"
               aria-checked={viewMode === "tejido"}
               onClick={() => setViewMode("tejido")}
-              className={`cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-4 text-xs font-medium transition-colors ${
+              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors lg:min-h-[38px] lg:px-4 ${
                 viewMode === "tejido"
                   ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                   : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
@@ -196,7 +196,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
         {/* RIGHT COLUMN: Details, Commercial Size, Add to Cart, Bespoke Shortcut */}
         <div className="flex flex-col lg:col-span-6 lg:pt-2">
-          <div className="flex flex-wrap items-center gap-2.5 text-xs text-muted">
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted lg:gap-2.5">
             <span className="ds-caption uppercase">{shirt.fabricLabel}</span>
             <span aria-hidden="true" className="opacity-35">
               ·
@@ -204,10 +204,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             <span className="ds-mono text-[11px]">{shirt.refCode}</span>
           </div>
 
-          <h1 className="ds-h1-page mt-2.5">{shirt.name}</h1>
+          <h1 className="ds-h1-page mt-1.5 lg:mt-2.5">{shirt.name}</h1>
 
           {/* Price + 3 Installments */}
-          <div className="mt-4 flex items-baseline gap-3">
+          <div className="mt-2.5 flex items-baseline gap-3 lg:mt-4">
             <span className="font-sans text-2xl font-semibold text-[#111113] tabular-nums dark:text-white">
               {formatArsClean(shirt.priceArs)}
             </span>
@@ -217,17 +217,17 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               </span>
             )}
           </div>
-          <p className="mt-1 text-xs font-medium text-[#16233B] dark:text-gold">
+          <p className="mt-0.5 text-xs font-medium text-[#16233B] lg:mt-1 dark:text-gold">
             3 cuotas sin interés de {formatArsClean(installmentArs)}
           </p>
 
           {/* Editorial Description */}
-          <p className="ds-body mt-5 text-muted">
+          <p className="ds-body mt-3 hidden text-muted sm:block lg:mt-5">
             {getEditorialDescription(shirt)}
           </p>
 
           {/* Commercial Size Selector — 1 Single Row */}
-          <div className="mt-7">
+          <div className="mt-4 lg:mt-7">
             <div className="flex items-center justify-between">
               <span className="ds-caption font-semibold text-[#111113] uppercase dark:text-white">
                 Talle comercial
@@ -242,7 +242,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             </div>
 
             <div
-              className={`mt-2.5 grid gap-2 ${
+              className={`mt-2 grid gap-2 lg:mt-2.5 ${
                 shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
               }`}
             >
@@ -268,7 +268,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
           </div>
 
           {/* Primary CTA: Agregar al carrito */}
-          <div className="mt-7 space-y-3">
+          <div className="mt-4 space-y-2.5 lg:mt-7 lg:space-y-3">
             <button
               id="pdp-add-to-cart"
               type="button"
