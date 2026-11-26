@@ -157,9 +157,9 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex items-center bg-transparent pt-20 pb-6 text-[#111113] sm:pt-24 sm:pb-8 lg:min-h-[76svh] lg:pt-28 lg:pb-8 dark:text-white"
+      className="relative flex items-center bg-transparent pt-20 pb-8 text-[#111113] sm:pt-24 sm:pb-10 lg:min-h-[78svh] lg:pt-28 lg:pb-10 dark:text-white"
     >
-      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-7 px-4 sm:gap-8 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
+      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-6 px-4 sm:gap-7 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="ds-h1-hero">
@@ -207,7 +207,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Right Living Auto-Showcase Stage: Continuous Rotation + 3D Levitation + Interactive Pointer Tilt + Live Liquid Glass Capsule */}
+        {/* Right Living Auto-Showcase Stage: Continuous Rotation + 3D Levitation + Interactive Pointer Tilt + External Live Liquid Glass Capsule */}
         <div
           className="relative flex flex-col items-center justify-center lg:col-span-5"
           style={{ perspective: "1000px" }}
@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative mx-auto h-[clamp(320px,50svh,490px)] w-full max-w-[360px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none min-[410px]:max-w-[396px] lg:h-[520px] lg:max-w-[420px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="relative mx-auto h-[clamp(355px,54svh,520px)] w-full max-w-[360px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none min-[410px]:max-w-[396px] lg:h-[540px] lg:max-w-[420px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
@@ -317,8 +317,8 @@ export function Hero() {
               )}
             </motion.div>
 
-            {/* Independent Floating Liquid Glass Capsule overlapping bottom edge of card (zero-flicker text) */}
-            <div className="liquid-glass relative z-20 mx-auto -mt-5 flex w-max max-w-[92vw] items-center justify-between gap-3 rounded-full px-3.5 py-2 sm:-mt-6 sm:gap-4 sm:px-4.5 sm:py-2.5">
+            {/* Independent Floating Liquid Glass Capsule completely outside below card (zero-flicker text) */}
+            <div className="liquid-glass relative z-20 mx-auto mt-3.5 flex w-max max-w-[92vw] items-center justify-between gap-3 rounded-full px-3.5 py-2 sm:gap-4 sm:px-4.5 sm:py-2.5">
               <Link
                 href={`/coleccion/${currentSlide.id}`}
                 className="group min-w-0"

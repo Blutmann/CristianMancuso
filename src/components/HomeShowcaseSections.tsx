@@ -44,7 +44,7 @@ export function HomeShowcaseSections() {
       <section
         id="gamas"
         aria-labelledby="gamas-heading"
-        className="relative pt-5 pb-8 sm:pt-7 sm:pb-10 lg:pt-7 lg:pb-12"
+        className="relative pt-6 pb-8 sm:pt-8 sm:pb-10 lg:pt-8 lg:pb-12"
       >
         <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
