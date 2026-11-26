@@ -89,37 +89,51 @@ function ShirtStudioFallback({
         transition={{
           y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
           rotateY: tilt.active
-            ? { type: "spring", stiffness: 120, damping: 18 }
+            ? { type: "spring", stiffness: 320, damping: 26 }
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
           rotateX: tilt.active
-            ? { type: "spring", stiffness: 120, damping: 18 }
+            ? { type: "spring", stiffness: 320, damping: 26 }
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative aspect-[3/4] h-[92%] max-h-[410px] overflow-hidden rounded-3xl border border-black/10 bg-[#111318] shadow-[0_22px_54px_rgba(17,17,19,0.2)] will-change-transform dark:border-white/14 dark:shadow-[0_26px_64px_rgba(0,0,0,0.6)]"
+        className="relative aspect-[3/4] h-[92%] max-h-[410px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_22px_54px_rgba(17,17,19,0.16)] will-change-transform dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_26px_64px_rgba(0,0,0,0.6)]"
       >
         <AnimatePresence mode="wait">
-          <motion.picture
+          <motion.div
             key={shirt.id}
             initial={isMotionPaused ? false : { opacity: 0, scale: 0.97, y: 6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97, y: -4 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="block h-full w-full"
+            transition={{ type: "spring", stiffness: 320, damping: 26 }}
+            className="h-full w-full"
           >
-            <source
-              media="(min-width: 768px)"
-              srcSet={shirt.studioImageHd}
-              type="image/webp"
-            />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={shirt.studioImage}
-              alt={shirt.name}
-              draggable={false}
-              className="h-full w-full object-cover object-center select-none"
-            />
-          </motion.picture>
+            <picture className="block h-full w-full dark:hidden">
+              <source
+                media="(min-width: 768px)"
+                srcSet={shirt.studioImageHd}
+                type="image/webp"
+              />
+              <img
+                src={shirt.studioImage}
+                alt={shirt.name}
+                draggable={false}
+                className="h-full w-full object-cover object-center select-none"
+              />
+            </picture>
+            <picture className="hidden h-full w-full dark:block">
+              <source
+                media="(min-width: 768px)"
+                srcSet={shirt.studioImageDarkHd}
+                type="image/webp"
+              />
+              <img
+                src={shirt.studioImageDark}
+                alt={shirt.name}
+                draggable={false}
+                className="h-full w-full object-cover object-center select-none"
+              />
+            </picture>
+          </motion.div>
         </AnimatePresence>
 
         {/* Periodic soft specular sheen sweep across studio card */}
@@ -129,7 +143,7 @@ function ShirtStudioFallback({
             className="animate-sheen-sweep pointer-events-none absolute inset-y-0 left-0 w-1/2"
             style={{
               background:
-                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%)",
+                "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.16) 50%, transparent 100%)",
             }}
           />
         )}
@@ -302,14 +316,14 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 2: Full-bleed Studio Editorial Collar Frame (rounded-3xl, object-cover, adaptive Liquid Glass controls) */}
+        {/* STEP 2: Full-bleed Studio Editorial Collar Frame (Light & Dark native studio macros) */}
         {step === 2 && (
           <motion.div
             key="stage-collar-macro"
             initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ type: "spring", stiffness: 320, damping: 26 }}
             drag={onCollarChange ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.22}
@@ -320,20 +334,32 @@ export function StudioShirtStage({
                 handleCollarSwipe(-1);
               }
             }}
-            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
           >
             <AnimatePresence mode="sync">
-              <motion.img
+              <motion.div
                 key={collar}
-                src={collarMeta.macroImage}
-                alt={`Macro editorial Cuello ${collar}`}
-                draggable={false}
                 initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
                 transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center select-none dark:brightness-90 dark:contrast-105"
-              />
+                className="pointer-events-none absolute inset-0 h-full w-full select-none"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={collarMeta.macroImage}
+                  alt={`Macro editorial Cuello ${collar}`}
+                  draggable={false}
+                  className="h-full w-full object-cover object-center dark:hidden"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={collarMeta.macroImageDark}
+                  alt={`Macro editorial Cuello ${collar}`}
+                  draggable={false}
+                  className="hidden h-full w-full object-cover object-center dark:block"
+                />
+              </motion.div>
             </AnimatePresence>
 
             {/* Discreet Previous / Next Collar Arrows (Adaptive Liquid Glass) */}
@@ -377,14 +403,14 @@ export function StudioShirtStage({
           </motion.div>
         )}
 
-        {/* STEP 3: Full-bleed Studio Editorial 3/4 Cuff & Button Frame (rounded-3xl, object-cover, adaptive Liquid Glass controls) */}
+        {/* STEP 3: Full-bleed Studio Editorial White Placket & Button Frame (Light & Dark native studio macros) */}
         {step === 3 && (
           <motion.div
             key="stage-button-macro"
             initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ type: "spring", stiffness: 320, damping: 26 }}
             drag={onButtonChange ? "x" : false}
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.22}
@@ -395,20 +421,32 @@ export function StudioShirtStage({
                 handleButtonSwipe(-1);
               }
             }}
-            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
           >
             <AnimatePresence mode="sync">
-              <motion.img
+              <motion.div
                 key={selectedButton.id}
-                src={selectedButton.macroImage}
-                alt={`Macro editorial Botón ${selectedButton.label}`}
-                draggable={false}
                 initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={isMotionPaused ? undefined : { opacity: 0 }}
                 transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center select-none dark:brightness-90 dark:contrast-105"
-              />
+                className="pointer-events-none absolute inset-0 h-full w-full select-none"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selectedButton.macroImage}
+                  alt={`Macro editorial Botón ${selectedButton.label}`}
+                  draggable={false}
+                  className="h-full w-full object-cover object-center dark:hidden"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={selectedButton.macroImageDark}
+                  alt={`Macro editorial Botón ${selectedButton.label}`}
+                  draggable={false}
+                  className="hidden h-full w-full object-cover object-center dark:block"
+                />
+              </motion.div>
             </AnimatePresence>
 
             {/* Discreet Previous / Next Button Arrows (Adaptive Liquid Glass) */}

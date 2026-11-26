@@ -35,6 +35,8 @@ export interface CatalogShirt {
   sizeType: "numeric" | "alpha";
   studioImage: string;
   studioImageHd: string;
+  studioImageDark: string;
+  studioImageDarkHd: string;
 }
 
 export const CATALOG_SHIRTS: CatalogShirt[] = [
@@ -53,8 +55,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(147, 197, 253, 0.14)",
     composition: "Algodón Pima Peruano 120/2",
     sizeType: "numeric",
-    studioImage: "/images/shirts/pima-noche-mobile.webp",
-    studioImageHd: "/images/shirts/pima-noche-hd.webp",
+    studioImage: "/images/shirts/light/pima-noche-mobile.webp",
+    studioImageHd: "/images/shirts/light/pima-noche-hd.webp",
+    studioImageDark: "/images/shirts/dark/pima-noche-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/pima-noche-hd.webp",
   },
   {
     id: "pima-piura-acero",
@@ -70,8 +74,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(226, 232, 240, 0.16)",
     composition: "Algodón Pima Peruano 120/2",
     sizeType: "numeric",
-    studioImage: "/images/shirts/pima-acero-mobile.webp",
-    studioImageHd: "/images/shirts/pima-acero-hd.webp",
+    studioImage: "/images/shirts/light/pima-acero-mobile.webp",
+    studioImageHd: "/images/shirts/light/pima-acero-hd.webp",
+    studioImageDark: "/images/shirts/dark/pima-acero-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/pima-acero-hd.webp",
   },
   {
     id: "biella-lino-negro",
@@ -87,8 +93,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(200, 169, 126, 0.16)",
     composition: "100% Lino Italiano de Biella",
     sizeType: "numeric",
-    studioImage: "/images/shirts/lino-negro-mobile.webp",
-    studioImageHd: "/images/shirts/lino-negro-hd.webp",
+    studioImage: "/images/shirts/light/lino-negro-mobile.webp",
+    studioImageHd: "/images/shirts/light/lino-negro-hd.webp",
+    studioImageDark: "/images/shirts/dark/lino-negro-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/lino-negro-hd.webp",
   },
   {
     id: "biella-lino-marfil",
@@ -105,8 +113,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     isLightFabric: true,
     composition: "100% Lino Italiano de Biella",
     sizeType: "numeric",
-    studioImage: "/images/shirts/lino-marfil-mobile.webp",
-    studioImageHd: "/images/shirts/lino-marfil-hd.webp",
+    studioImage: "/images/shirts/light/lino-marfil-mobile.webp",
+    studioImageHd: "/images/shirts/light/lino-marfil-hd.webp",
+    studioImageDark: "/images/shirts/dark/lino-marfil-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/lino-marfil-hd.webp",
   },
   {
     id: "urbano-oxford-grafito",
@@ -121,8 +131,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(245, 242, 235, 0.12)",
     composition: "Algodón Urbano Oxford Easy Care",
     sizeType: "numeric",
-    studioImage: "/images/shirts/oxford-grafito-mobile.webp",
-    studioImageHd: "/images/shirts/oxford-grafito-hd.webp",
+    studioImage: "/images/shirts/light/oxford-grafito-mobile.webp",
+    studioImageHd: "/images/shirts/light/oxford-grafito-hd.webp",
+    studioImageDark: "/images/shirts/dark/oxford-grafito-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/oxford-grafito-hd.webp",
   },
   {
     id: "cuadros-ventana-lino-algodon",
@@ -139,8 +151,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     accentLineHex: "rgba(200, 169, 126, 0.28)",
     composition: "Blend Lino & Algodón Urbano",
     sizeType: "numeric",
-    studioImage: "/images/shirts/cuadros-ventana-mobile.webp",
-    studioImageHd: "/images/shirts/cuadros-ventana-hd.webp",
+    studioImage: "/images/shirts/light/cuadros-ventana-mobile.webp",
+    studioImageHd: "/images/shirts/light/cuadros-ventana-hd.webp",
+    studioImageDark: "/images/shirts/dark/cuadros-ventana-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/cuadros-ventana-hd.webp",
   },
   {
     id: "donna-cloque-raya-mineral",
@@ -157,8 +171,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     isLightFabric: true,
     composition: "Cloqué liviano · Corte femenino",
     sizeType: "alpha",
-    studioImage: "/images/shirts/donna-mineral-mobile.webp",
-    studioImageHd: "/images/shirts/donna-mineral-hd.webp",
+    studioImage: "/images/shirts/light/donna-mineral-mobile.webp",
+    studioImageHd: "/images/shirts/light/donna-mineral-hd.webp",
+    studioImageDark: "/images/shirts/dark/donna-mineral-mobile.webp",
+    studioImageDarkHd: "/images/shirts/dark/donna-mineral-hd.webp",
   },
 ];
 
@@ -174,32 +190,37 @@ export type CollarOption = (typeof COLLAR_OPTIONS)[number];
 
 export const COLLAR_META: Record<
   CollarOption,
-  { note: string; detail: string; macroImage: string }
+  { note: string; detail: string; macroImage: string; macroImageDark: string }
 > = {
   Italiano: {
     note: "Clásico versátil",
     detail: "Puntas equilibradas · Ideal con o sin corbata",
     macroImage: "/images/collars/italiano.png",
+    macroImageDark: "/images/collars/dark/italiano.png",
   },
   Francés: {
     note: "Puntas abiertas",
     detail: "Apertura amplia · Elegancia sastrera clásica",
     macroImage: "/images/collars/frances.png",
+    macroImageDark: "/images/collars/dark/frances.png",
   },
   Oxford: {
     note: "Caída suave",
     detail: "Estructura relajada · Perfecto uso diario",
     macroImage: "/images/collars/oxford.png",
+    macroImageDark: "/images/collars/dark/oxford.png",
   },
   Americano: {
     note: "Button-down",
     detail: "Puntas abotonadas · Estilo smart-casual",
     macroImage: "/images/collars/americano.png",
+    macroImageDark: "/images/collars/dark/americano.png",
   },
   Mao: {
     note: "Sin solapa",
     detail: "Cuello tirilla limpio · Silueta minimalista",
     macroImage: "/images/collars/mao.png",
+    macroImageDark: "/images/collars/dark/mao.png",
   },
 };
 
@@ -212,6 +233,7 @@ export const BUTTON_OPTIONS = [
     ring: "rgba(17, 17, 19, 0.22)",
     thread: "#B08D57",
     macroImage: "/images/buttons/blanco.png",
+    macroImageDark: "/images/buttons/dark/blanco.png",
   },
   {
     id: "Negro",
@@ -221,15 +243,17 @@ export const BUTTON_OPTIONS = [
     ring: "rgba(255, 255, 255, 0.28)",
     thread: "#9CA3AF",
     macroImage: "/images/buttons/negro.png",
+    macroImageDark: "/images/buttons/dark/negro.png",
   },
   {
     id: "Mismo tono que la camisa",
     label: "Mismo tono que la camisa",
     shortLabel: "Al tono",
-    fill: "#46586F",
-    ring: "rgba(255, 255, 255, 0.32)",
+    fill: "#F3EFE8",
+    ring: "rgba(17, 17, 19, 0.18)",
     thread: "#E2E8F0",
     macroImage: "/images/buttons/mismo-tono.png",
+    macroImageDark: "/images/buttons/dark/mismo-tono.png",
   },
   {
     id: "Nácar blanco",
@@ -239,6 +263,7 @@ export const BUTTON_OPTIONS = [
     ring: "rgba(176, 141, 87, 0.45)",
     thread: "#C8A97E",
     macroImage: "/images/buttons/nacar-blanco.png",
+    macroImageDark: "/images/buttons/dark/nacar-blanco.png",
   },
 ] as const;
 

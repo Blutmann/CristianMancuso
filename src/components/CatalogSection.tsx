@@ -99,12 +99,16 @@ function MinimalShirtCard({
   const badge = getDiscreetBadge(shirt.badge);
 
   return (
-    <article className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:text-white dark:hover:border-white/28">
+    <motion.article
+      whileHover={isMotionPaused ? undefined : { y: -4 }}
+      transition={{ type: "spring", stiffness: 320, damping: 26 }}
+      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-colors duration-300 hover:border-black/20 dark:text-white dark:hover:border-white/28"
+    >
       {/* Clickable Product Link Area */}
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
-        {/* Full-bleed Loro Piana Studio Garment Stage + Top-Left Badge */}
+        {/* Full-bleed Loro Piana Dual Light/Dark Studio Garment Stage + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#111318] ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#F4F1EC] dark:bg-[#0E0F13] ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
@@ -117,7 +121,7 @@ function MinimalShirtCard({
                     : "transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                 }`}
               >
-                <picture className="block h-full w-full">
+                <picture className="block h-full w-full dark:hidden">
                   <source
                     media="(min-width: 768px)"
                     srcSet={shirt.studioImageHd}
@@ -125,6 +129,19 @@ function MinimalShirtCard({
                   />
                   <img
                     src={shirt.studioImage}
+                    alt={shirt.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover object-top"
+                  />
+                </picture>
+                <picture className="hidden h-full w-full dark:block">
+                  <source
+                    media="(min-width: 768px)"
+                    srcSet={shirt.studioImageDarkHd}
+                    type="image/webp"
+                  />
+                  <img
+                    src={shirt.studioImageDark}
                     alt={shirt.name}
                     loading="lazy"
                     className="h-full w-full object-cover object-top"
@@ -168,8 +185,11 @@ function MinimalShirtCard({
               )}
             </div>
 
-            <button
+            <motion.button
               type="button"
+              whileHover={isMotionPaused ? undefined : { scale: 1.08 }}
+              whileTap={isMotionPaused ? undefined : { scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -177,14 +197,14 @@ function MinimalShirtCard({
               }}
               aria-label={`Elegir talle para ${shirt.name}`}
               title={`Agregar ${shirt.name}`}
-              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#16233B] text-white shadow-sm transition-all duration-200 hover:bg-[#1E2F4D] active:scale-95 sm:h-10 sm:w-10 dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#16233B] text-white shadow-sm transition-colors duration-200 hover:bg-[#1E2F4D] sm:h-10 sm:w-10 dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
             >
               <Plus className="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
-            </button>
+            </motion.button>
           </div>
         </div>
       </Link>
-    </article>
+    </motion.article>
   );
 }
 
@@ -666,10 +686,10 @@ export function CatalogSection() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="size-sheet-title"
-              initial={isMotionPaused ? false : { y: 40, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={isMotionPaused ? undefined : { y: 32, opacity: 0 }}
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              initial={isMotionPaused ? false : { y: 40, opacity: 0, scale: 0.98 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              exit={isMotionPaused ? undefined : { y: 32, opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
               className="liquid-glass-active w-full rounded-t-2xl border-x-0 border-b-0 !bg-[#F7F6F3]/98 p-5 pb-8 text-[#111113] shadow-[0_-18px_48px_rgba(0,0,0,0.22)] sm:max-w-md sm:rounded-2xl sm:border sm:p-6 dark:!bg-[#0B0B0E]/98 dark:text-[#F8FAFC]"
             >
               <div
@@ -732,15 +752,18 @@ export function CatalogSection() {
                   className="scrollbar-none flex flex-1 items-center gap-2 overflow-x-auto py-0.5"
                 >
                   {sheetSizes.map((size) => (
-                    <button
+                    <motion.button
                       key={size}
                       type="button"
+                      whileHover={isMotionPaused ? undefined : { scale: 1.05 }}
+                      whileTap={isMotionPaused ? undefined : { scale: 0.93 }}
+                      transition={{ type: "spring", stiffness: 320, damping: 26 }}
                       onClick={() => handleSelectSize(size)}
                       aria-label={`Agregar ${sizeSheetShirt.name} talle ${size}`}
-                      className="cursor-pointer flex h-12 min-w-[52px] shrink-0 items-center justify-center rounded-full border border-black/14 bg-white/90 px-4 text-sm font-semibold text-[#111113] transition-colors active:scale-95 hover:bg-[#16233B] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                      className="cursor-pointer flex h-12 min-w-[52px] shrink-0 items-center justify-center rounded-full border border-black/14 bg-white/90 px-4 text-sm font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
                     >
                       {size}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
 

@@ -110,7 +110,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
         {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#111318] shadow-[0_20px_50px_rgba(17,17,19,0.14)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+          <div className="relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -118,10 +118,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 26 }}
                   className="relative h-full w-full"
                 >
-                  <picture className="block h-full w-full">
+                  <picture className="block h-full w-full dark:hidden">
                     <source
                       media="(min-width: 768px)"
                       srcSet={shirt.studioImageHd}
@@ -129,6 +129,20 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     />
                     <img
                       src={shirt.studioImage}
+                      alt={shirt.name}
+                      loading="eager"
+                      fetchPriority="high"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </picture>
+                  <picture className="hidden h-full w-full dark:block">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageDarkHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImageDark}
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
@@ -245,19 +259,22 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               {sizes.map((size) => {
                 const active = selectedSize === size;
                 return (
-                  <button
+                  <motion.button
                     key={size}
                     type="button"
                     aria-pressed={active}
+                    whileHover={isMotionPaused ? undefined : { scale: 1.04 }}
+                    whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-full text-xs font-semibold transition-all ${
+                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-full text-xs font-semibold transition-colors ${
                       active
                         ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                         : "border border-black/12 bg-white/55 text-[#111113]/80 hover:border-black/25 hover:bg-white/80 dark:border-white/16 dark:bg-white/[0.04] dark:text-white/80 dark:hover:border-white/30 dark:hover:bg-white/[0.1]"
                     }`}
                   >
                     {size}
-                  </button>
+                  </motion.button>
                 );
               })}
             </div>
@@ -265,11 +282,14 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
           {/* Primary CTA: Exclusive Solid Protagonist (#16233B / dark:bg-white) */}
           <div className="mt-4 space-y-2.5 lg:mt-7 lg:space-y-3">
-            <button
+            <motion.button
               id="pdp-add-to-cart"
               type="button"
+              whileHover={isMotionPaused ? undefined : { scale: 1.01 }}
+              whileTap={isMotionPaused ? undefined : { scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
               onClick={handleAddToCart}
-              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#16233B] px-6 text-xs font-semibold tracking-[0.04em] text-white uppercase shadow-lg transition-all duration-200 hover:bg-[#1E2F4D] active:scale-[0.99] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#16233B] px-6 text-xs font-semibold tracking-[0.04em] text-white uppercase shadow-lg transition-colors duration-200 hover:bg-[#1E2F4D] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
             >
               {justAdded ? (
                 <>
@@ -282,7 +302,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   <span>Agregar al carrito</span>
                 </>
               )}
-            </button>
+            </motion.button>
 
             <p className="text-center text-xs text-muted">
               Despacho en 24–48 hs · Cambios y ajustes sin cargo
@@ -311,33 +331,51 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
         <div className="mt-6 grid grid-cols-2 gap-5 md:grid-cols-4">
           {relatedShirts.map((item) => (
-            <Link
+            <motion.div
               key={item.id}
-              href={`/coleccion/${item.id}`}
-              className="group liquid-glass flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/28"
+              whileHover={isMotionPaused ? undefined : { y: -4 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
             >
-              <div className="relative aspect-[4/4.4] w-full overflow-hidden bg-[#111318]">
-                <picture className="block h-full w-full">
-                  <source
-                    media="(min-width: 768px)"
-                    srcSet={item.studioImageHd}
-                    type="image/webp"
-                  />
-                  <img
-                    src={item.studioImage}
-                    alt={item.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
-                </picture>
-              </div>
-              <div className="p-3">
-                <p className="ds-h3 truncate text-xs sm:text-sm">{item.name}</p>
-                <p className="mt-0.5 font-sans text-xs font-medium text-muted tabular-nums">
-                  {formatArsClean(item.priceArs)}
-                </p>
-              </div>
-            </Link>
+              <Link
+                href={`/coleccion/${item.id}`}
+                className="group liquid-glass flex h-full flex-col overflow-hidden rounded-2xl transition-colors duration-300 hover:border-black/20 dark:hover:border-white/28"
+              >
+                <div className="relative aspect-[4/4.4] w-full overflow-hidden bg-[#F4F1EC] dark:bg-[#0E0F13]">
+                  <picture className="block h-full w-full dark:hidden">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={item.studioImageHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={item.studioImage}
+                      alt={item.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                  </picture>
+                  <picture className="hidden h-full w-full dark:block">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={item.studioImageDarkHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={item.studioImageDark}
+                      alt={item.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                  </picture>
+                </div>
+                <div className="p-3">
+                  <p className="ds-h3 truncate text-xs sm:text-sm">{item.name}</p>
+                  <p className="mt-0.5 font-sans text-xs font-medium text-muted tabular-nums">
+                    {formatArsClean(item.priceArs)}
+                  </p>
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </section>

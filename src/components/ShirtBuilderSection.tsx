@@ -361,10 +361,10 @@ export function ShirtBuilderSection() {
                 {step === 1 && (
                   <motion.div
                     key="dock-step-1"
-                    initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
+                    initial={isMotionPaused ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
+                    exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     className="flex flex-col gap-2"
                   >
                     {/* Clean Typographic Category Tabs with Active Underline (Zero Boxes) */}
@@ -403,6 +403,11 @@ export function ShirtBuilderSection() {
                                     ? undefined
                                     : "builder-cat-underline"
                                 }
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 320,
+                                  damping: 26,
+                                }}
                                 className="absolute right-0 -bottom-[7px] left-0 h-[2px] rounded-full bg-[#111113] dark:bg-white"
                               />
                             )}
@@ -427,13 +432,14 @@ export function ShirtBuilderSection() {
                               swatchItemRefs.current[shirt.id] = el;
                             }}
                             layout
+                            whileTap={isMotionPaused ? undefined : { scale: 0.95 }}
                             transition={
                               isMotionPaused
                                 ? { duration: 0 }
                                 : {
                                     type: "spring",
                                     stiffness: 320,
-                                    damping: 28,
+                                    damping: 26,
                                   }
                             }
                             type="button"
@@ -472,7 +478,11 @@ export function ShirtBuilderSection() {
                                       ? undefined
                                       : { opacity: 0, x: -6 }
                                   }
-                                  transition={{ duration: 0.2 }}
+                                  transition={{
+                                    type: "spring",
+                                    stiffness: 320,
+                                    damping: 26,
+                                  }}
                                   className="flex flex-col whitespace-nowrap"
                                 >
                                   <span className="text-xs font-semibold text-[#111113] dark:text-white">
@@ -507,21 +517,28 @@ export function ShirtBuilderSection() {
                   <motion.div
                     key="dock-step-2"
                     ref={collarTrackRef}
-                    initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
+                    initial={isMotionPaused ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
+                    exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     className="scrollbar-none flex items-center gap-2 overflow-x-auto overscroll-x-contain px-0.5 py-0.5"
                   >
                     {COLLAR_OPTIONS.map((opt) => {
                       const active = collar === opt;
                       return (
-                        <button
+                        <motion.button
                           key={opt}
                           ref={(el) => {
                             collarItemRefs.current[opt] = el;
                           }}
                           type="button"
+                          whileHover={isMotionPaused ? undefined : { scale: 1.03 }}
+                          whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 320,
+                            damping: 26,
+                          }}
                           onClick={() => setCollar(opt)}
                           className={`cursor-pointer flex min-h-[44px] shrink-0 items-center justify-center rounded-full px-4 text-xs transition-colors ${
                             active
@@ -530,7 +547,7 @@ export function ShirtBuilderSection() {
                           }`}
                         >
                           <span className="whitespace-nowrap">{opt}</span>
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </motion.div>
@@ -540,21 +557,28 @@ export function ShirtBuilderSection() {
                   <motion.div
                     key="dock-step-3"
                     ref={buttonTrackRef}
-                    initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
+                    initial={isMotionPaused ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
+                    exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     className="scrollbar-none flex items-center gap-2 overflow-x-auto overscroll-x-contain px-0.5 py-0.5"
                   >
                     {BUTTON_OPTIONS.map((btn) => {
                       const active = buttonId === btn.id;
                       return (
-                        <button
+                        <motion.button
                           key={btn.id}
                           ref={(el) => {
                             buttonItemRefs.current[btn.id] = el;
                           }}
                           type="button"
+                          whileHover={isMotionPaused ? undefined : { scale: 1.03 }}
+                          whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 320,
+                            damping: 26,
+                          }}
                           onClick={() => setButtonId(btn.id)}
                           className={`cursor-pointer flex min-h-[44px] shrink-0 items-center gap-2 rounded-full px-4 text-xs transition-colors ${
                             active
@@ -573,7 +597,7 @@ export function ShirtBuilderSection() {
                           <span className="whitespace-nowrap">
                             {btn.shortLabel}
                           </span>
-                        </button>
+                        </motion.button>
                       );
                     })}
                   </motion.div>
@@ -582,10 +606,10 @@ export function ShirtBuilderSection() {
                 {step === 4 && (
                   <motion.div
                     key="dock-step-4"
-                    initial={isMotionPaused ? false : { opacity: 0, y: 6 }}
+                    initial={isMotionPaused ? false : { opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                    transition={{ duration: 0.2 }}
+                    exit={isMotionPaused ? undefined : { opacity: 0, y: -8 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     className="flex flex-col gap-2"
                   >
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
