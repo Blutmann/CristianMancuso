@@ -242,7 +242,13 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               </Link>
             </div>
 
-            <div className="mt-2 grid grid-cols-5 gap-2 lg:mt-2.5">
+            <div
+              className={`mt-2 grid gap-2 lg:mt-2.5 ${
+                shirt.sizeType === "alpha"
+                  ? "grid-cols-3 sm:grid-cols-6"
+                  : "grid-cols-5"
+              }`}
+            >
               {sizes.map((size) => {
                 const active = selectedSize === size;
                 return (
@@ -254,7 +260,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
                     transition={{ type: "spring", stiffness: 320, damping: 26 }}
                     onClick={() => setSelectedSize(size)}
-                    className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+                    className={`cursor-pointer flex min-h-[40px] w-full items-center justify-center rounded-full text-xs font-semibold transition-colors lg:min-h-[44px] ${
                       active
                         ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                         : "border border-black/12 bg-white/55 text-[#111113]/80 hover:border-black/25 hover:bg-white/80 dark:border-white/16 dark:bg-white/[0.04] dark:text-white/80 dark:hover:border-white/30 dark:hover:bg-white/[0.1]"
