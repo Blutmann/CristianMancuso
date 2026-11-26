@@ -12,6 +12,7 @@ import {
   Plus,
   Search,
   Shirt,
+  SlidersHorizontal,
   SwatchBook,
   X,
 } from "lucide-react";
@@ -22,6 +23,7 @@ import {
   type CatalogShirt,
   type CommercialSize,
   type ShirtBadge,
+  type ShirtPattern,
 } from "@/data/catalog";
 import type { FabricCategoryId } from "@/data/fabrics";
 import { useAtelier } from "@/context/AtelierContext";
@@ -32,8 +34,21 @@ const FILTER_OPTIONS: { id: FabricCategoryId | null; label: string }[] = [
   { id: null, label: "Todas" },
   { id: "urbano", label: "Algodón 100%" },
   { id: "pima", label: "Pima Peruano" },
-  { id: "italiano", label: "Italiano" },
+  { id: "italiano", label: "Lino Italiano" },
   { id: "donna", label: "Donna" },
+];
+
+const SIZE_FILTER_OPTIONS: (CommercialSize | null)[] = [
+  null,
+  ...NUMERIC_SIZES,
+  ...ALPHA_SIZES,
+];
+
+const PATTERN_FILTER_OPTIONS: { id: ShirtPattern | null; label: string }[] = [
+  { id: null, label: "Todas" },
+  { id: "lisa", label: "Lisas" },
+  { id: "rayas", label: "Rayas" },
+  { id: "cuadros", label: "Cuadros" },
 ];
 
 const VALID_GAMAS = new Set<FabricCategoryId>([
@@ -216,11 +231,17 @@ export function CatalogSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("featured");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<CommercialSize | null>(null);
+  const [selectedPattern, setSelectedPattern] = useState<ShirtPattern | null>(
+    null
+  );
   const [sizeSheetShirt, setSizeSheetShirt] = useState<CatalogShirt | null>(
     null
   );
   const sizeTrackRef = useRef<HTMLDivElement | null>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement | null>(null);
+  const desktopFilterRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -237,6 +258,37 @@ export function CatalogSection() {
       mobileSearchInputRef.current?.focus();
     }
   }, [mobileSearchOpen]);
+
+  // Escape key & outside-click close for Filter Popover / Mobile Sheet
+  useEffect(() => {
+    if (!filtersOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setFiltersOpen(false);
+      }
+    };
+
+    const handlePointerDown = (e: MouseEvent) => {
+      if (
+        desktopFilterRef.current &&
+        desktopFilterRef.current.contains(e.target as Node)
+      ) {
+        return;
+      }
+      // On desktop (>= 768px), clicking outside the anchored popover closes it
+      if (window.innerWidth >= 768) {
+        setFiltersOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, [filtersOpen]);
 
   // Escape key & body scroll-lock when Size Bottom Sheet is open
   useEffect(() => {
@@ -261,11 +313,31 @@ export function CatalogSection() {
   const isGlobalSearchActive = searchQuery.trim().length > 0;
   const isMobileSearchExpanded = mobileSearchOpen || isGlobalSearchActive;
 
-  // Smart Global Search: when query is non-empty, search across ALL gamas
+  const activeFilterCount =
+    (selectedFabric ? 1 : 0) +
+    (selectedSize ? 1 : 0) +
+    (selectedPattern ? 1 : 0);
+
+  const clearAllFilters = () => {
+    setSelectedFabric(null);
+    setSelectedSize(null);
+    setSelectedPattern(null);
+  };
+
   const visibleShirts = useMemo(() => {
     const query = normalizeSearch(searchQuery.trim());
     const filtered = CATALOG_SHIRTS.filter((s) => {
       if (!query && selectedFabric && s.fabricId !== selectedFabric) {
+        return false;
+      }
+      if (selectedSize) {
+        const availableSizes: readonly string[] =
+          s.sizeType === "alpha" ? ALPHA_SIZES : NUMERIC_SIZES;
+        if (!availableSizes.includes(selectedSize)) {
+          return false;
+        }
+      }
+      if (selectedPattern && s.pattern !== selectedPattern) {
         return false;
       }
       if (!query) return true;
@@ -282,7 +354,12 @@ export function CatalogSection() {
       return [...filtered].sort((a, b) => b.priceArs - a.priceArs);
     }
     return filtered;
-  }, [selectedFabric, searchQuery, sortOrder]);
+  }, [selectedFabric, selectedSize, selectedPattern, searchQuery, sortOrder]);
+
+  const activeFabricLabel =
+    FILTER_OPTIONS.find((f) => f.id === selectedFabric)?.label ?? null;
+  const activePatternLabel =
+    PATTERN_FILTER_OPTIONS.find((p) => p.id === selectedPattern)?.label ?? null;
 
   const handleToggleVisualMode = () => {
     setVisualMode((prev) => (prev === "camisa" ? "tela" : "camisa"));
@@ -443,34 +520,27 @@ export function CatalogSection() {
           </div>
         </div>
 
-        {/* MOBILE (< md) Row 2: [Todas las telas ▾] + [Destacados ▾] + [🧵/👕] */}
+        {/* MOBILE (< md) Row 2: [Filtros (N)] + [Destacados ▾] + [🧵/👕] */}
         <div className="mt-3 flex items-center gap-2 md:hidden">
-          <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
-            <select
-              aria-label="Filtrar por gama de tela"
-              value={isGlobalSearchActive ? "" : (selectedFabric ?? "")}
-              onChange={(e) => {
-                const val = e.target.value as FabricCategoryId | "";
-                setSearchQuery("");
-                setSelectedFabric(val ? val : null);
-              }}
-              className="h-full w-full cursor-pointer appearance-none bg-transparent pr-7 pl-3.5 text-xs font-medium text-[#111113] focus:outline-none dark:text-[#F8FAFC]"
-            >
-              {FILTER_OPTIONS.map((opt) => (
-                <option
-                  key={opt.label}
-                  value={opt.id ?? ""}
-                  className="bg-[#F7F6F3] text-[#111113] dark:bg-[#14161D] dark:text-white"
-                >
-                  {opt.id === null ? "Todas las telas" : opt.label}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              className="pointer-events-none absolute right-2.5 h-3.5 w-3.5 text-muted"
-              aria-hidden="true"
-            />
-          </div>
+          <button
+            id="catalog-filters-trigger-mobile"
+            type="button"
+            aria-expanded={filtersOpen}
+            aria-controls="catalog-filters-sheet"
+            onClick={() => setFiltersOpen((prev) => !prev)}
+            className={`liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3.5 text-xs font-semibold transition-colors ${
+              activeFilterCount > 0 || filtersOpen
+                ? "border-[#16233B]/45 text-[#16233B] dark:border-white/45 dark:text-white"
+                : "text-[#111113] dark:text-[#F8FAFC]"
+            }`}
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+            <span>
+              {activeFilterCount > 0
+                ? `Filtros (${activeFilterCount})`
+                : "Filtros"}
+            </span>
+          </button>
 
           <div className="liquid-glass relative flex min-h-[44px] min-w-0 flex-1 items-center rounded-full">
             <select
@@ -516,50 +586,213 @@ export function CatalogSection() {
           </button>
         </div>
 
-        {/* DESKTOP (md+): Gama Filter Pills + Single Circular 🧵/👕 Toggle + Grid (3/4 cols) */}
+        {/* DESKTOP (md+): Liquid Glass Filtros Popover Trigger + Quick Fabric Pills + Visual Mode Toggle + Grid (3/4 cols) */}
         <div className="mt-5 hidden items-center justify-between gap-3 md:flex">
-          <div
-            role="tablist"
-            aria-label="Filtrar por gama de tela"
-            className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5"
-          >
-            {FILTER_OPTIONS.map((option) => {
-              const isActive =
-                !isGlobalSearchActive && selectedFabric === option.id;
-              return (
-                <button
-                  key={option.label}
-                  id={`catalog-filter-${option.id ?? "all"}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedFabric(option.id);
-                  }}
-                  className={`cursor-pointer relative min-h-[40px] shrink-0 rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
-                    isActive
-                      ? "font-semibold text-white dark:text-[#0B0B0E]"
-                      : "border border-black/10 bg-white/60 text-[#111113]/75 hover:bg-white dark:border-white/10 dark:bg-white/[0.05] dark:text-white/70 dark:hover:bg-white/[0.1] dark:hover:text-white"
+          <div className="flex items-center gap-2.5">
+            <div ref={desktopFilterRef} className="relative">
+              <button
+                id="catalog-filters-trigger-desktop"
+                type="button"
+                aria-expanded={filtersOpen}
+                aria-controls="catalog-filters-popover"
+                onClick={() => setFiltersOpen((prev) => !prev)}
+                className={`liquid-glass cursor-pointer inline-flex min-h-[42px] items-center gap-2 rounded-full px-4 text-xs font-semibold transition-colors ${
+                  activeFilterCount > 0 || filtersOpen
+                    ? "border-[#16233B]/45 text-[#16233B] dark:border-white/45 dark:text-white"
+                    : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
+                }`}
+              >
+                <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden="true" />
+                <span>
+                  {activeFilterCount > 0
+                    ? `Filtros (${activeFilterCount})`
+                    : "Filtros"}
+                </span>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 opacity-60 transition-transform duration-200 ${
+                    filtersOpen ? "rotate-180" : ""
                   }`}
-                >
-                  {isActive && (
-                    <motion.span
-                      layoutId={
-                        isMotionPaused ? undefined : "catalog-filter-pill"
-                      }
-                      transition={{
-                        type: "spring",
-                        stiffness: 380,
-                        damping: 32,
-                      }}
-                      className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
-                    />
-                  )}
-                  <span className="relative z-10">{option.label}</span>
-                </button>
-              );
-            })}
+                  aria-hidden="true"
+                />
+              </button>
+
+              {/* Desktop Anchored Liquid Glass Filter Popover */}
+              <AnimatePresence>
+                {filtersOpen && (
+                  <motion.div
+                    id="catalog-filters-popover"
+                    role="dialog"
+                    aria-label="Filtros de colección"
+                    initial={
+                      isMotionPaused ? false : { opacity: 0, y: 8, scale: 0.98 }
+                    }
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={
+                      isMotionPaused
+                        ? undefined
+                        : { opacity: 0, y: 6, scale: 0.98 }
+                    }
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                    className="liquid-glass-active absolute top-full left-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
+                  >
+                    <div className="space-y-4">
+                      {/* Tipo de tela */}
+                      <div>
+                        <p className="ds-caption font-semibold text-muted uppercase">
+                          Tipo de tela
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {FILTER_OPTIONS.map((opt) => {
+                            const active = selectedFabric === opt.id;
+                            return (
+                              <button
+                                key={opt.label}
+                                type="button"
+                                aria-pressed={active}
+                                onClick={() => {
+                                  setSearchQuery("");
+                                  setSelectedFabric(opt.id);
+                                }}
+                                className={`cursor-pointer inline-flex min-h-[38px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                    : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                }`}
+                              >
+                                {opt.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Talle */}
+                      <div>
+                        <p className="ds-caption font-semibold text-muted uppercase">
+                          Talle
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {SIZE_FILTER_OPTIONS.map((sz) => {
+                            const active = selectedSize === sz;
+                            return (
+                              <button
+                                key={sz ?? "all-sizes"}
+                                type="button"
+                                aria-pressed={active}
+                                onClick={() => setSelectedSize(sz)}
+                                className={`cursor-pointer inline-flex min-h-[40px] min-w-[44px] items-center justify-center rounded-full px-3 text-xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                    : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                }`}
+                              >
+                                {sz ?? "Todos"}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Trama */}
+                      <div>
+                        <p className="ds-caption font-semibold text-muted uppercase">
+                          Trama
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {PATTERN_FILTER_OPTIONS.map((pat) => {
+                            const active = selectedPattern === pat.id;
+                            return (
+                              <button
+                                key={pat.label}
+                                type="button"
+                                aria-pressed={active}
+                                onClick={() => setSelectedPattern(pat.id)}
+                                className={`cursor-pointer inline-flex min-h-[38px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
+                                  active
+                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                    : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                }`}
+                              >
+                                {pat.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between gap-3 border-t border-black/10 pt-3.5 dark:border-white/10">
+                        <button
+                          type="button"
+                          onClick={clearAllFilters}
+                          disabled={activeFilterCount === 0}
+                          className="cursor-pointer min-h-[40px] px-2 text-xs font-semibold text-muted transition-colors hover:text-[#111113] disabled:cursor-not-allowed disabled:opacity-40 dark:hover:text-white"
+                        >
+                          Limpiar
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setFiltersOpen(false)}
+                          className="ds-btn-primary !min-h-[40px] !px-5"
+                        >
+                          {visibleShirts.length === 0
+                            ? "0 camisas"
+                            : visibleShirts.length === 1
+                              ? "Ver 1 camisa"
+                              : `Ver ${visibleShirts.length} camisas`}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Quick Gama Pills on Desktop */}
+            <div
+              role="tablist"
+              aria-label="Filtrar por gama de tela"
+              className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5"
+            >
+              {FILTER_OPTIONS.map((option) => {
+                const isActive =
+                  !isGlobalSearchActive && selectedFabric === option.id;
+                return (
+                  <button
+                    key={option.label}
+                    id={`catalog-filter-${option.id ?? "all"}`}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      setSearchQuery("");
+                      setSelectedFabric(option.id);
+                    }}
+                    className={`cursor-pointer relative min-h-[40px] shrink-0 rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
+                      isActive
+                        ? "font-semibold text-white dark:text-[#0B0B0E]"
+                        : "border border-black/10 bg-white/60 text-[#111113]/75 hover:bg-white dark:border-white/10 dark:bg-white/[0.05] dark:text-white/70 dark:hover:bg-white/[0.1] dark:hover:text-white"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId={
+                          isMotionPaused ? undefined : "catalog-filter-pill"
+                        }
+                        transition={{
+                          type: "spring",
+                          stiffness: 380,
+                          damping: 32,
+                        }}
+                        className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
+                      />
+                    )}
+                    <span className="relative z-10">{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
@@ -621,6 +854,52 @@ export function CatalogSection() {
           </div>
         </div>
 
+        {/* Active Removable Filter Chips */}
+        {activeFilterCount > 0 && (
+          <div
+            aria-label="Filtros activos"
+            className="mt-3 flex flex-wrap items-center gap-1.5"
+          >
+            {activeFabricLabel && (
+              <button
+                type="button"
+                onClick={() => setSelectedFabric(null)}
+                className="liquid-glass cursor-pointer inline-flex min-h-[32px] items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              >
+                <span>{activeFabricLabel}</span>
+                <X className="h-3 w-3 opacity-65" aria-hidden="true" />
+              </button>
+            )}
+            {selectedSize && (
+              <button
+                type="button"
+                onClick={() => setSelectedSize(null)}
+                className="liquid-glass cursor-pointer inline-flex min-h-[32px] items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              >
+                <span>Talle {selectedSize}</span>
+                <X className="h-3 w-3 opacity-65" aria-hidden="true" />
+              </button>
+            )}
+            {activePatternLabel && (
+              <button
+                type="button"
+                onClick={() => setSelectedPattern(null)}
+                className="liquid-glass cursor-pointer inline-flex min-h-[32px] items-center gap-1.5 rounded-full px-3 text-xs font-medium text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              >
+                <span>{activePatternLabel}</span>
+                <X className="h-3 w-3 opacity-65" aria-hidden="true" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              className="cursor-pointer px-2 text-xs font-semibold text-muted underline-offset-4 transition-colors hover:text-[#111113] hover:underline dark:hover:text-white"
+            >
+              Limpiar todo
+            </button>
+          </div>
+        )}
+
         {/* Global Search Notice when searching while a fabric filter was selected */}
         {isGlobalSearchActive && selectedFabric && (
           <p className="ds-caption mt-3 text-muted">
@@ -632,21 +911,21 @@ export function CatalogSection() {
         {visibleShirts.length === 0 ? (
           <div className="liquid-glass mt-8 rounded-2xl p-8 text-center">
             <p className="ds-body text-muted">
-              No encontramos camisas para{" "}
+              No encontramos camisas{" "}
               {searchQuery.trim()
-                ? `“${searchQuery.trim()}”`
-                : "la gama seleccionada"}
+                ? `para “${searchQuery.trim()}”`
+                : "con los filtros seleccionados"}
               .
             </p>
             <button
               type="button"
               onClick={() => {
                 setSearchQuery("");
-                setSelectedFabric(null);
+                clearAllFilters();
               }}
               className="ds-btn-primary mt-4"
             >
-              Limpiar búsqueda
+              Limpiar filtros
             </button>
           </div>
         ) : (
@@ -667,6 +946,162 @@ export function CatalogSection() {
           </div>
         )}
       </div>
+
+      {/* MOBILE FILTER BOTTOM SHEET (< md) */}
+      <AnimatePresence>
+        {filtersOpen && (
+          <motion.div
+            key="mobile-filter-sheet-backdrop"
+            initial={isMotionPaused ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={isMotionPaused ? undefined : { opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setFiltersOpen(false);
+            }}
+            className="fixed inset-0 z-[85] flex items-end justify-center bg-black/55 backdrop-blur-sm md:hidden"
+          >
+            <motion.div
+              id="catalog-filters-sheet"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filtros de colección"
+              initial={isMotionPaused ? false : { y: 48, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={isMotionPaused ? undefined : { y: 40, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              className="liquid-glass-active max-h-[85svh] w-full overflow-y-auto rounded-t-3xl border-x-0 border-b-0 !bg-[#F7F6F3]/98 p-5 pb-7 text-[#111113] shadow-[0_-18px_48px_rgba(0,0,0,0.22)] dark:!bg-[#0B0B0E]/98 dark:text-[#F8FAFC]"
+            >
+              <div
+                aria-hidden="true"
+                className="mx-auto mb-3.5 h-1 w-10 rounded-full bg-black/15 dark:bg-white/20"
+              />
+
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="ds-h3">Filtros</h2>
+                <button
+                  type="button"
+                  onClick={() => setFiltersOpen(false)}
+                  aria-label="Cerrar filtros"
+                  className="liquid-glass cursor-pointer inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111113] dark:text-white"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+
+              <div className="mt-4 space-y-5">
+                {/* Tipo de tela */}
+                <div>
+                  <p className="ds-caption font-semibold text-muted uppercase">
+                    Tipo de tela
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {FILTER_OPTIONS.map((opt) => {
+                      const active = selectedFabric === opt.id;
+                      return (
+                        <button
+                          key={opt.label}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => {
+                            setSearchQuery("");
+                            setSelectedFabric(opt.id);
+                          }}
+                          className={`cursor-pointer inline-flex min-h-[40px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
+                            active
+                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                              : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Talle */}
+                <div>
+                  <p className="ds-caption font-semibold text-muted uppercase">
+                    Talle
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {SIZE_FILTER_OPTIONS.map((sz) => {
+                      const active = selectedSize === sz;
+                      return (
+                        <button
+                          key={sz ?? "all-sizes-mob"}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => setSelectedSize(sz)}
+                          className={`cursor-pointer inline-flex min-h-[40px] min-w-[46px] items-center justify-center rounded-full px-3.5 text-xs font-medium transition-colors ${
+                            active
+                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                              : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                          }`}
+                        >
+                          {sz ?? "Todos"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Trama */}
+                <div>
+                  <p className="ds-caption font-semibold text-muted uppercase">
+                    Trama
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {PATTERN_FILTER_OPTIONS.map((pat) => {
+                      const active = selectedPattern === pat.id;
+                      return (
+                        <button
+                          key={pat.label}
+                          type="button"
+                          aria-pressed={active}
+                          onClick={() => setSelectedPattern(pat.id)}
+                          className={`cursor-pointer inline-flex min-h-[40px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
+                            active
+                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                              : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                          }`}
+                        >
+                          {pat.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="flex items-center justify-between gap-3 border-t border-black/10 pt-4 dark:border-white/10">
+                  <button
+                    type="button"
+                    onClick={clearAllFilters}
+                    disabled={activeFilterCount === 0}
+                    className="cursor-pointer min-h-[44px] px-3 text-xs font-semibold text-muted transition-colors hover:text-[#111113] disabled:cursor-not-allowed disabled:opacity-40 dark:hover:text-white"
+                  >
+                    Limpiar
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setFiltersOpen(false)}
+                    className="ds-btn-primary flex-1"
+                  >
+                    {visibleShirts.length === 0
+                      ? "0 camisas"
+                      : visibleShirts.length === 1
+                        ? "Ver 1 camisa"
+                        : `Ver ${visibleShirts.length} camisas`}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* SCALABLE SIZE BOTTOM SHEET (Mobile Bottom Sheet / Desktop Compact Modal) */}
       <AnimatePresence>

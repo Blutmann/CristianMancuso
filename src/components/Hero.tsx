@@ -170,7 +170,7 @@ export function Hero() {
           </h1>
 
           <p className="ds-body mt-3 max-w-xl text-muted sm:mt-4">
-            Algodón Pima y lino italiano. Envíos a todo el país y exterior · A medida sin costo extra.
+            Telas nobles · A medida sin costo extra.
           </p>
 
           {/* 2 Clean Primary / Secondary CTAs — Single row even at 360px */}

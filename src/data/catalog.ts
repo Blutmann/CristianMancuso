@@ -17,6 +17,8 @@ export type WeaveKind =
   | "windowpane"
   | "mineral-stripe";
 
+export type ShirtPattern = "lisa" | "rayas" | "cuadros";
+
 export interface CatalogShirt {
   id: string;
   name: string;
@@ -27,6 +29,7 @@ export interface CatalogShirt {
   compareAtArs?: number;
   badge?: ShirtBadge;
   weaveKind: WeaveKind;
+  pattern: ShirtPattern;
   baseHex: string;
   secondaryHex: string;
   accentLineHex: string;
@@ -50,6 +53,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     compareAtArs: 140000,
     badge: "DESTACADO",
     weaveKind: "twill",
+    pattern: "lisa",
     baseHex: "#101A2B",
     secondaryHex: "#1B2C47",
     accentLineHex: "rgba(147, 197, 253, 0.14)",
@@ -69,6 +73,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     priceArs: 120000,
     compareAtArs: 140000,
     weaveKind: "twill",
+    pattern: "lisa",
     baseHex: "#2C394B",
     secondaryHex: "#44576D",
     accentLineHex: "rgba(226, 232, 240, 0.16)",
@@ -88,6 +93,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     priceArs: 200000,
     badge: "EDICIÓN LIMITADA",
     weaveKind: "linen",
+    pattern: "lisa",
     baseHex: "#141518",
     secondaryHex: "#24262B",
     accentLineHex: "rgba(200, 169, 126, 0.16)",
@@ -107,6 +113,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     priceArs: 200000,
     badge: "NOVEDAD",
     weaveKind: "linen",
+    pattern: "lisa",
     baseHex: "#E8E1D3",
     secondaryHex: "#D6CBB8",
     accentLineHex: "rgba(122, 102, 74, 0.18)",
@@ -126,6 +133,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     fabricLabel: "Algodón Urbano",
     priceArs: 79000,
     weaveKind: "oxford",
+    pattern: "lisa",
     baseHex: "#2A2D34",
     secondaryHex: "#3C414B",
     accentLineHex: "rgba(245, 242, 235, 0.12)",
@@ -146,6 +154,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     compareAtArs: 120000,
     badge: "OFERTA",
     weaveKind: "windowpane",
+    pattern: "cuadros",
     baseHex: "#1C2430",
     secondaryHex: "#273345",
     accentLineHex: "rgba(200, 169, 126, 0.28)",
@@ -165,6 +174,7 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     priceArs: 62000,
     badge: "NOVEDAD",
     weaveKind: "mineral-stripe",
+    pattern: "rayas",
     baseHex: "#D8D3CC",
     secondaryHex: "#C5BEB5",
     accentLineHex: "rgba(56, 70, 88, 0.24)",
