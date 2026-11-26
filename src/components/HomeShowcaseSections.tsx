@@ -44,7 +44,7 @@ export function HomeShowcaseSections() {
       <section
         id="gamas"
         aria-labelledby="gamas-heading"
-        className="relative pt-4 pb-12 sm:pt-6 lg:pt-6 lg:pb-14"
+        className="relative pt-4 pb-8 sm:pt-6 sm:pb-10 lg:pt-6 lg:pb-12"
       >
         <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -61,7 +61,7 @@ export function HomeShowcaseSections() {
             </Link>
           </div>
 
-          <div className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2">
             {FABRIC_RANGES.map((gama, idx) => {
               const visual = GAMA_VISUAL[gama.id];
               return (
@@ -171,7 +171,7 @@ export function HomeShowcaseSections() {
       <section
         id="invitacion-medida"
         aria-labelledby="invitacion-heading"
-        className="relative py-12 lg:py-14"
+        className="relative py-8 sm:py-10 lg:py-12"
       >
         <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
           <div className="liquid-glass rounded-2xl p-5 sm:p-9 lg:p-10">

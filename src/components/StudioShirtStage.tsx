@@ -232,8 +232,6 @@ export function StudioShirtStage({
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
   const collarMeta = COLLAR_META[collar];
 
-  const formatLiveCm = (val: string) => (val ? `${val} cm` : "-- cm");
-
   const handleCollarSwipe = (direction: -1 | 1) => {
     if (!onCollarChange) return;
     const idx = COLLAR_OPTIONS.indexOf(collar);
@@ -503,22 +501,26 @@ export function StudioShirtStage({
               [
                 {
                   key: "cuello",
-                  label: "Cuello",
+                  code: "(A)",
+                  name: "Cuello",
                   pos: "left-1/2 top-3.5 -translate-x-1/2",
                 },
                 {
                   key: "pecho",
-                  label: "Pecho",
+                  code: "(B)",
+                  name: "Pecho",
                   pos: "right-3 top-1/2 -translate-y-1/2 sm:right-6",
                 },
                 {
                   key: "manga",
-                  label: "Manga",
+                  code: "(C)",
+                  name: "Manga",
                   pos: "left-3 top-[44%] -translate-y-1/2 sm:left-6",
                 },
                 {
                   key: "largo",
-                  label: "Largo",
+                  code: "(D)",
+                  name: "Largo",
                   pos: "bottom-3.5 right-3 sm:right-6",
                 },
               ] as const
@@ -528,15 +530,20 @@ export function StudioShirtStage({
               return (
                 <div
                   key={item.key}
-                  className={`liquid-glass absolute inline-flex items-baseline gap-2 rounded-full px-3.5 py-2 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
+                  aria-label={`${item.name}: ${measurements[item.key] ? `${measurements[item.key]} cm` : "sin completar"}`}
+                  className={`liquid-glass absolute inline-flex items-baseline gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
                     active
                       ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
-                      : "text-[#111113]/70 dark:text-white/70"
+                      : "text-[#111113]/75 dark:text-white/75"
                   }`}
                 >
-                  <span className="font-medium opacity-75">{item.label}</span>
+                  <span className="font-mono font-bold text-[#16233B] dark:text-[#D6C3A5]">
+                    {item.code}
+                  </span>
                   <span className="font-mono text-sm font-bold text-[#111113] sm:text-base dark:text-white">
-                    {formatLiveCm(measurements[item.key])}
+                    {measurements[item.key]
+                      ? `${measurements[item.key]} cm`
+                      : "— cm"}
                   </span>
                 </div>
               );

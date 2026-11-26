@@ -226,7 +226,7 @@ export function Hero() {
             onPointerMove={handleStagePointerMove}
             onPointerLeave={handleStagePointerLeave}
             onPointerCancel={handleStagePointerLeave}
-            className="relative flex w-full max-w-[340px] flex-col items-center sm:max-w-[385px] lg:max-w-[400px] will-change-transform"
+            className="relative mx-auto flex w-full flex-col items-center will-change-transform"
           >
             <motion.div
               animate={
@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative h-[38svh] min-h-[260px] max-h-[340px] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none lg:h-[460px] lg:max-h-none dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="relative mx-auto h-[45svh] min-h-[320px] max-h-[410px] w-full max-w-[290px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none sm:max-w-[330px] lg:h-[490px] lg:max-h-none lg:max-w-[380px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
@@ -266,7 +266,7 @@ export function Hero() {
                     opacity: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
                     scale: { duration: 3.5, ease: "easeOut" },
                   }}
-                  className="absolute inset-0 h-full w-full px-2 pt-2 pb-14 sm:px-3 sm:pt-3 sm:pb-15"
+                  className="absolute inset-0 h-full w-full p-2.5 sm:p-3"
                 >
                   {/* Light Mode Loro Piana Ivory Studio Photograph */}
                   <picture className="block h-full w-full dark:hidden">
@@ -315,92 +315,92 @@ export function Hero() {
                   }}
                 />
               )}
-
-              {/* Live Floating Liquid Glass Capsule inside bottom edge of card */}
-              <div className="liquid-glass absolute right-2.5 bottom-2.5 left-2.5 z-20 flex items-center justify-between gap-2.5 rounded-2xl px-3 py-2 sm:right-3 sm:bottom-3 sm:left-3 sm:px-3.5 sm:py-2.5">
-                <Link
-                  href={`/coleccion/${currentSlide.id}`}
-                  className="group min-w-0 flex-1"
-                >
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.div
-                      key={currentSlide.id}
-                      initial={
-                        isMotionPaused ? false : { opacity: 0, y: 6 }
-                      }
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 320,
-                        damping: 26,
-                      }}
-                      className="flex items-center gap-1.5 truncate text-xs"
-                    >
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#16233B] dark:bg-[#D6C3A5]" />
-                      <span className="truncate font-semibold text-[#111113] group-hover:underline dark:text-white">
-                        {currentSlide.name}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="text-[#111113]/35 dark:text-white/35"
-                      >
-                        ·
-                      </span>
-                      <span className="truncate text-[#111113]/70 dark:text-white/75">
-                        {currentSlide.fabric}
-                      </span>
-                    </motion.div>
-                  </AnimatePresence>
-                </Link>
-
-                {/* Minimalist Interactive Progress Indicators */}
-                <div
-                  role="tablist"
-                  aria-label="Seleccionar camisa destacada"
-                  className="flex shrink-0 items-center gap-1.5"
-                >
-                  {HERO_SHOWCASE_SLIDES.map((slide, idx) => {
-                    const isActive = idx === activeIndex;
-                    return (
-                      <button
-                        key={slide.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={isActive}
-                        aria-label={`Ver ${slide.name}`}
-                        onClick={() => setActiveIndex(idx)}
-                        className="relative flex h-5 items-center justify-center px-0.5 cursor-pointer"
-                      >
-                        <span
-                          className={`relative block h-1.5 overflow-hidden rounded-full transition-all duration-300 ${
-                            isActive
-                              ? "w-6 bg-black/15 dark:bg-white/20"
-                              : "w-1.5 bg-black/25 hover:bg-black/45 dark:bg-white/30 dark:hover:bg-white/60"
-                          }`}
-                        >
-                          {isActive && (
-                            <motion.span
-                              key={`progress-${slide.id}-${isMotionPaused ? "paused" : "live"}`}
-                              initial={{ scaleX: isMotionPaused ? 1 : 0 }}
-                              animate={{ scaleX: 1 }}
-                              transition={{
-                                duration: isMotionPaused
-                                  ? 0
-                                  : SHOWCASE_INTERVAL_MS / 1000,
-                                ease: "linear",
-                              }}
-                              style={{ transformOrigin: "left center" }}
-                              className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
-                            />
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
             </motion.div>
+
+            {/* Independent Floating Liquid Glass Capsule overlapping bottom edge of card */}
+            <div className="liquid-glass relative z-20 mx-auto -mt-6 flex w-max max-w-[92vw] items-center justify-between gap-3.5 rounded-full px-4 py-2 sm:gap-4 sm:px-4.5 sm:py-2.5">
+              <Link
+                href={`/coleccion/${currentSlide.id}`}
+                className="group min-w-0"
+              >
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={currentSlide.id}
+                    initial={
+                      isMotionPaused ? false : { opacity: 0, y: 6 }
+                    }
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 320,
+                      damping: 26,
+                    }}
+                    className="flex items-center gap-1.5 whitespace-nowrap text-xs"
+                  >
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#16233B] dark:bg-[#D6C3A5]" />
+                    <span className="font-semibold text-[#111113] group-hover:underline dark:text-white">
+                      {currentSlide.name}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="text-[#111113]/35 dark:text-white/35"
+                    >
+                      ·
+                    </span>
+                    <span className="text-[#111113]/70 dark:text-white/75">
+                      {currentSlide.fabric}
+                    </span>
+                  </motion.div>
+                </AnimatePresence>
+              </Link>
+
+              {/* Minimalist Interactive Progress Indicators */}
+              <div
+                role="tablist"
+                aria-label="Seleccionar camisa destacada"
+                className="flex shrink-0 items-center gap-1.5"
+              >
+                {HERO_SHOWCASE_SLIDES.map((slide, idx) => {
+                  const isActive = idx === activeIndex;
+                  return (
+                    <button
+                      key={slide.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Ver ${slide.name}`}
+                      onClick={() => setActiveIndex(idx)}
+                      className="relative flex h-5 items-center justify-center px-0.5 cursor-pointer"
+                    >
+                      <span
+                        className={`relative block h-1.5 overflow-hidden rounded-full transition-all duration-300 ${
+                          isActive
+                            ? "w-6 bg-black/15 dark:bg-white/20"
+                            : "w-1.5 bg-black/25 hover:bg-black/45 dark:bg-white/30 dark:hover:bg-white/60"
+                        }`}
+                      >
+                        {isActive && (
+                          <motion.span
+                            key={`progress-${slide.id}-${isMotionPaused ? "paused" : "live"}`}
+                            initial={{ scaleX: isMotionPaused ? 1 : 0 }}
+                            animate={{ scaleX: 1 }}
+                            transition={{
+                              duration: isMotionPaused
+                                ? 0
+                                : SHOWCASE_INTERVAL_MS / 1000,
+                              ease: "linear",
+                            }}
+                            style={{ transformOrigin: "left center" }}
+                            className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
+                          />
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Synchronized Breathing Elliptical Floor Shadow */}
             <motion.div
@@ -418,7 +418,7 @@ export function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="pointer-events-none mt-2 h-5 w-52 rounded-full bg-[#111113] blur-xl dark:bg-black"
+              className="pointer-events-none mt-2 h-4 w-48 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
           </div>
         </div>

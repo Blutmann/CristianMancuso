@@ -9,7 +9,7 @@ import {
   Ruler,
   Shirt,
   ShoppingBag,
-  ZoomIn,
+  SwatchBook,
 } from "lucide-react";
 import {
   ALPHA_SIZES,
@@ -164,11 +164,11 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               )}
             </AnimatePresence>
 
-            {/* Compact Floating Liquid Glass View Toggle inside bottom-right corner */}
+            {/* Compact Icon-Only Circular Liquid Glass View Toggle inside bottom-right corner */}
             <motion.button
               type="button"
-              whileHover={isMotionPaused ? undefined : { scale: 1.04 }}
-              whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
+              whileHover={isMotionPaused ? undefined : { scale: 1.06 }}
+              whileTap={isMotionPaused ? undefined : { scale: 0.92 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
               onClick={() =>
                 setViewMode((prev) => (prev === "prenda" ? "tejido" : "prenda"))
@@ -176,21 +176,18 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               aria-pressed={viewMode === "tejido"}
               aria-label={
                 viewMode === "prenda"
-                  ? "Ver muestra de tela"
-                  : "Volver a vista prenda"
+                  ? "Cambiar a muestra de tela"
+                  : "Cambiar a vista de prenda"
               }
-              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold text-[#111113] shadow-sm transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              title={
+                viewMode === "prenda" ? "Ver muestra de tela" : "Ver prenda"
+              }
+              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111113] shadow-sm transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
             >
               {viewMode === "prenda" ? (
-                <>
-                  <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Muestra de tela</span>
-                </>
+                <SwatchBook className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <>
-                  <Shirt className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>Vista prenda</span>
-                </>
+                <Shirt className="h-4 w-4" aria-hidden="true" />
               )}
             </motion.button>
           </div>

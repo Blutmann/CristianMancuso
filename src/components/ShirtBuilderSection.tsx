@@ -52,10 +52,10 @@ const MEASURE_FIELDS: {
   min: number;
   max: number;
 }[] = [
-  { key: "cuello", label: "Cuello", placeholder: "40", min: 32, max: 54 },
-  { key: "pecho", label: "Pecho", placeholder: "55", min: 42, max: 78 },
-  { key: "manga", label: "Manga", placeholder: "64", min: 52, max: 78 },
-  { key: "largo", label: "Largo", placeholder: "74", min: 62, max: 94 },
+  { key: "cuello", label: "(A) Cuello", placeholder: "40", min: 32, max: 54 },
+  { key: "pecho", label: "(B) Pecho", placeholder: "55", min: 42, max: 78 },
+  { key: "manga", label: "(C) Manga", placeholder: "64", min: 52, max: 78 },
+  { key: "largo", label: "(D) Largo", placeholder: "74", min: 62, max: 94 },
 ];
 
 function getSwatchStyle(shirt: CatalogShirt): React.CSSProperties {
