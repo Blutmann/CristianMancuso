@@ -4,76 +4,60 @@ export function AmbientStudioBackdrop() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#F7F6F3] transition-colors duration-500 dark:bg-[#0B0B0E]"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#F7F6F3] transition-colors duration-500 dark:bg-[#0B0B0E]"
     >
-      {/* MOBILE (< 768px): Static lightweight CSS gradient (zero heavy blur orbs) */}
-      <div
-        className="absolute inset-0 md:hidden dark:hidden"
-        style={{
-          background:
-            "linear-gradient(145deg, #FFFFFF 0%, #F7F6F3 48%, #EFECE5 100%)",
-        }}
-      />
-      <div
-        className="hidden absolute inset-0 dark:block md:dark:hidden"
-        style={{
-          background:
-            "linear-gradient(145deg, #12151E 0%, #0B0B0E 52%, #0E1320 100%)",
-        }}
-      />
-
-      {/* DESKTOP (>= 768px) LIGHT MODE: Warm alabaster + subtle architectural daylight beams */}
-      <div className="hidden absolute inset-0 opacity-100 transition-opacity duration-500 md:block dark:opacity-0">
+      {/* LIGHT MODE: Living warm sand (#E8DFD1), luminous ivory (#FFFFFF), and soft mist blue (#DDE3EC) orbs */}
+      <div className="absolute inset-0 opacity-100 transition-opacity duration-500 dark:opacity-0">
         <div
-          className="animate-orb-slow absolute -top-[16%] left-[12%] h-[58vh] w-[58vh] rounded-full blur-[120px]"
+          className="animate-orb-slow absolute -top-[14%] -left-[10%] h-[58vh] w-[58vh] rounded-full blur-[95px] md:blur-[125px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(226,232,240,0.45) 48%, transparent 74%)",
+              "radial-gradient(circle, rgba(232,223,209,0.92) 0%, rgba(232,223,209,0.42) 48%, transparent 74%)",
           }}
         />
         <div
-          className="animate-orb-reverse absolute top-[32%] -right-[8%] h-[54vh] w-[54vh] rounded-full blur-[130px]"
+          className="animate-orb-reverse absolute top-[26%] -right-[12%] h-[56vh] w-[56vh] rounded-full blur-[100px] md:blur-[130px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(214,205,190,0.42) 0%, rgba(226,232,240,0.22) 50%, transparent 75%)",
+              "radial-gradient(circle, rgba(221,227,236,0.9) 0%, rgba(221,227,236,0.4) 48%, transparent 74%)",
           }}
         />
         <div
-          className="absolute inset-0 opacity-55"
+          className="animate-orb-drift-third absolute -bottom-[14%] left-[22%] h-[52vh] w-[52vh] rounded-full blur-[90px] md:blur-[120px]"
           style={{
             background:
-              "linear-gradient(122deg, transparent 15%, rgba(255,255,255,0.75) 38%, transparent 56%, rgba(22,35,59,0.035) 76%, transparent 92%)",
+              "radial-gradient(circle, rgba(255,255,255,0.98) 0%, rgba(232,223,209,0.38) 52%, transparent 76%)",
           }}
         />
       </div>
 
-      {/* DESKTOP (>= 768px) DARK MODE: Deep obsidian + luminous studio diagonal light beams */}
-      <div className="hidden absolute inset-0 opacity-0 transition-opacity duration-500 md:block dark:opacity-100">
+      {/* DARK MODE: Living midnight navy (#16233B) and deep graphite (#1C1F28) ambient studio light orbs */}
+      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 dark:opacity-100">
         <div
-          className="animate-orb-slow absolute -top-[14%] left-[18%] h-[56vh] w-[56vh] rounded-full blur-[120px]"
+          className="animate-orb-slow absolute -top-[14%] -left-[8%] h-[60vh] w-[60vh] rounded-full blur-[95px] md:blur-[125px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(226,232,240,0.16) 0%, rgba(148,163,184,0.07) 44%, transparent 72%)",
+              "radial-gradient(circle, rgba(22,35,59,0.85) 0%, rgba(22,35,59,0.38) 48%, transparent 74%)",
           }}
         />
         <div
-          className="animate-orb-reverse absolute top-[30%] -right-[10%] h-[58vh] w-[58vh] rounded-full blur-[130px]"
+          className="animate-orb-reverse absolute top-[28%] -right-[10%] h-[58vh] w-[58vh] rounded-full blur-[100px] md:blur-[130px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(59,130,246,0.14) 0%, rgba(30,41,59,0.18) 46%, transparent 74%)",
+              "radial-gradient(circle, rgba(28,31,40,0.95) 0%, rgba(56,74,108,0.28) 48%, transparent 75%)",
           }}
         />
         <div
-          className="absolute inset-0 opacity-75"
+          className="animate-orb-drift-third absolute -bottom-[16%] left-[18%] h-[52vh] w-[52vh] rounded-full blur-[95px] md:blur-[120px]"
           style={{
             background:
-              "linear-gradient(122deg, transparent 12%, rgba(255,255,255,0.065) 36%, transparent 54%, rgba(148,163,184,0.055) 76%, transparent 92%)",
+              "radial-gradient(circle, rgba(22,35,59,0.65) 0%, rgba(28,31,40,0.32) 52%, transparent 76%)",
           }}
         />
       </div>
 
-      {/* Subtle fine weave film grain (desktop only) */}
-      <div className="atelier-grain hidden absolute inset-0 md:block" />
+      {/* Subtle fine weave film grain */}
+      <div className="atelier-grain absolute inset-0" />
     </div>
   );
 }

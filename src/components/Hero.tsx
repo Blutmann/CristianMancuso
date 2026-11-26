@@ -152,24 +152,32 @@ export function Hero() {
             <motion.div
               animate={
                 isMotionPaused
-                  ? { y: 0, rotate: 0, scale: 1, rotateX: 0, rotateY: 0 }
+                  ? { y: 0, rotateX: 0, rotateY: 0 }
                   : {
-                      y: [0, -7, 0],
-                      rotate: [-0.45, 0.45, -0.45],
-                      scale: [1, 1.015, 1],
-                      rotateX: tilt.rotateX,
-                      rotateY: tilt.rotateY,
+                      y: [0, -12, 0],
+                      rotateY:
+                        tilt.rotateY !== 0
+                          ? tilt.rotateY
+                          : [-2.5, 2.5, -2.5],
+                      rotateX:
+                        tilt.rotateX !== 0
+                          ? tilt.rotateX
+                          : [1.2, -1.2, 1.2],
                     }
               }
               transition={{
-                y: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
-                scale: { duration: 5.5, repeat: Infinity, ease: "easeInOut" },
-                rotateX: { type: "spring", stiffness: 120, damping: 20 },
-                rotateY: { type: "spring", stiffness: 120, damping: 20 },
+                y: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+                rotateY:
+                  tilt.rotateY !== 0
+                    ? { type: "spring", stiffness: 120, damping: 18 }
+                    : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
+                rotateX:
+                  tilt.rotateX !== 0
+                    ? { type: "spring", stiffness: 120, damping: 18 }
+                    : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative aspect-[3/4] w-full px-2 py-4 select-none"
+              className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#111318] shadow-[0_26px_64px_rgba(17,17,19,0.2)] select-none dark:border-white/14 dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <picture className="block h-full w-full">
                 <source
@@ -183,12 +191,24 @@ export function Hero() {
                   loading="eager"
                   fetchPriority="high"
                   draggable={false}
-                  initial={isMotionPaused ? false : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
-                  className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_44px_rgba(0,0,0,0.65)]"
+                  className="h-full w-full object-cover object-center"
                 />
               </picture>
+
+              {/* Periodic soft specular sheen sweep across studio card */}
+              {!isMotionPaused && (
+                <div
+                  aria-hidden="true"
+                  className="animate-sheen-sweep pointer-events-none absolute inset-y-0 left-0 w-1/2"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%)",
+                  }}
+                />
+              )}
             </motion.div>
 
             {/* Synchronized Breathing Elliptical Floor Shadow */}
@@ -198,16 +218,16 @@ export function Hero() {
                 isMotionPaused
                   ? { scale: 1, opacity: 0.22 }
                   : {
-                      scale: [1, 0.93, 1],
-                      opacity: [0.22, 0.14, 0.22],
+                      scale: [1, 0.88, 1],
+                      opacity: [0.24, 0.12, 0.24],
                     }
               }
               transition={{
-                duration: 5.5,
+                duration: 4.2,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="pointer-events-none -mt-1 h-5 w-48 rounded-full bg-[#111113] blur-xl dark:bg-black"
+              className="pointer-events-none mt-2 h-5 w-52 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
           </div>
         </div>

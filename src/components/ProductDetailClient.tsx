@@ -110,7 +110,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
         {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="liquid-glass relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-2xl lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5]">
+          <div className="relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#111318] shadow-[0_20px_50px_rgba(17,17,19,0.14)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -119,28 +119,22 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="relative flex h-full w-full items-center justify-center p-4 pb-6 lg:p-6 lg:pb-9"
+                  className="relative h-full w-full"
                 >
-                  <div className="relative flex h-full w-full items-center justify-center">
-                    <picture className="flex h-full w-full items-center justify-center">
-                      <source
-                        media="(min-width: 768px)"
-                        srcSet={shirt.studioImageHd}
-                        type="image/webp"
-                      />
-                      <img
-                        src={shirt.studioImage}
-                        alt={shirt.name}
-                        loading="eager"
-                        fetchPriority="high"
-                        className="h-full w-full object-contain drop-shadow-[0_24px_34px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_28px_42px_rgba(0,0,0,0.62)]"
-                      />
-                    </picture>
-                  </div>
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute bottom-3 left-1/2 h-4 w-40 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-xl lg:bottom-4 lg:w-44 dark:bg-black dark:opacity-55"
-                  />
+                  <picture className="block h-full w-full">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImage}
+                      alt={shirt.name}
+                      loading="eager"
+                      fetchPriority="high"
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </picture>
                 </motion.div>
               ) : (
                 <motion.div
@@ -157,21 +151,21 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             </AnimatePresence>
           </div>
 
-          {/* Subtle View Toggle below photo */}
+          {/* Subtle View Toggle below photo (Border + Glass Tint Active State) */}
           <div
             role="radiogroup"
             aria-label="Vista del producto"
-            className="liquid-glass mt-2.5 inline-flex items-center rounded-full p-1 lg:mt-4"
+            className="liquid-glass mt-2.5 inline-flex items-center gap-1 rounded-full p-1 lg:mt-4"
           >
             <button
               type="button"
               role="radio"
               aria-checked={viewMode === "prenda"}
               onClick={() => setViewMode("prenda")}
-              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors lg:min-h-[38px] lg:px-4 ${
+              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all lg:min-h-[38px] lg:px-4 ${
                 viewMode === "prenda"
-                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                  : "border border-transparent text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
               <Shirt className="h-3.5 w-3.5" aria-hidden="true" />
@@ -182,10 +176,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               role="radio"
               aria-checked={viewMode === "tejido"}
               onClick={() => setViewMode("tejido")}
-              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-medium transition-colors lg:min-h-[38px] lg:px-4 ${
+              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all lg:min-h-[38px] lg:px-4 ${
                 viewMode === "tejido"
-                  ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                  : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                  : "border border-transparent text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
               }`}
             >
               <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
@@ -228,7 +222,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             {getEditorialDescription(shirt)}
           </p>
 
-          {/* Commercial Size Selector — 1 Single Row */}
+          {/* Commercial Size Selector — 1 Single Row (Border + Glass Tint Active State) */}
           <div className="mt-4 lg:mt-7">
             <div className="flex items-center justify-between">
               <span className="ds-caption font-semibold text-[#111113] uppercase dark:text-white">
@@ -258,8 +252,8 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     onClick={() => setSelectedSize(size)}
                     className={`cursor-pointer flex min-h-[44px] w-full items-center justify-center rounded-full text-xs font-semibold transition-all ${
                       active
-                        ? "bg-[#16233B] text-white shadow-sm dark:bg-white dark:text-[#0B0B0E]"
-                        : "border border-black/12 bg-white/75 text-[#111113]/85 hover:bg-white dark:border-white/16 dark:bg-white/[0.06] dark:text-white/85 dark:hover:bg-white/[0.14]"
+                        ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                        : "border border-black/12 bg-white/55 text-[#111113]/80 hover:border-black/25 hover:bg-white/80 dark:border-white/16 dark:bg-white/[0.04] dark:text-white/80 dark:hover:border-white/30 dark:hover:bg-white/[0.1]"
                     }`}
                   >
                     {size}
@@ -269,13 +263,13 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             </div>
           </div>
 
-          {/* Primary CTA: Agregar al carrito (Dorado Sartorial #C8A86B) */}
+          {/* Primary CTA: Exclusive Solid Protagonist (#16233B / dark:bg-white) */}
           <div className="mt-4 space-y-2.5 lg:mt-7 lg:space-y-3">
             <button
               id="pdp-add-to-cart"
               type="button"
               onClick={handleAddToCart}
-              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#C8A86B] px-6 text-xs font-semibold tracking-[0.04em] text-[#0B0B0E] uppercase shadow-lg transition-all duration-200 hover:bg-[#B89759] active:scale-[0.99]"
+              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#16233B] px-6 text-xs font-semibold tracking-[0.04em] text-white uppercase shadow-lg transition-all duration-200 hover:bg-[#1E2F4D] active:scale-[0.99] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
             >
               {justAdded ? (
                 <>
@@ -320,10 +314,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             <Link
               key={item.id}
               href={`/coleccion/${item.id}`}
-              className="group liquid-glass flex flex-col overflow-hidden rounded-2xl p-3 transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/28"
+              className="group liquid-glass flex flex-col overflow-hidden rounded-2xl transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:hover:border-white/28"
             >
-              <div className="relative flex aspect-[4/4.4] w-full items-center justify-center p-2">
-                <picture className="flex h-full w-full items-center justify-center">
+              <div className="relative aspect-[4/4.4] w-full overflow-hidden bg-[#111318]">
+                <picture className="block h-full w-full">
                   <source
                     media="(min-width: 768px)"
                     srcSet={item.studioImageHd}
@@ -333,11 +327,11 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     src={item.studioImage}
                     alt={item.name}
                     loading="lazy"
-                    className="h-full w-full object-contain drop-shadow-[0_10px_14px_rgba(17,17,19,0.18)] transition-transform duration-500 group-hover:scale-[1.04] dark:drop-shadow-[0_12px_18px_rgba(0,0,0,0.5)]"
+                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 </picture>
               </div>
-              <div className="mt-2 px-1">
+              <div className="p-3">
                 <p className="ds-h3 truncate text-xs sm:text-sm">{item.name}</p>
                 <p className="mt-0.5 font-sans text-xs font-medium text-muted tabular-nums">
                   {formatArsClean(item.priceArs)}

@@ -102,22 +102,22 @@ function MinimalShirtCard({
     <article className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-all duration-300 hover:-translate-y-0.5 hover:border-black/20 dark:text-white dark:hover:border-white/28">
       {/* Clickable Product Link Area */}
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
-        {/* Clean Borderless Studio Garment Stage + Top-Left Badge + Bottom-Right Circular + */}
+        {/* Full-bleed Loro Piana Studio Garment Stage + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-transparent ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#111318] ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
           {visualMode === "camisa" ? (
-            <div className="relative flex h-full w-full items-center justify-center px-4 pt-9 pb-5">
+            <div className="relative h-full w-full overflow-hidden">
               <div
-                className={`relative flex h-full w-full items-center justify-center ${
+                className={`relative h-full w-full ${
                   isMotionPaused
                     ? ""
-                    : "transition-transform duration-500 ease-out group-hover:-translate-y-1.5 group-hover:scale-[1.04]"
+                    : "transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                 }`}
               >
-                <picture className="flex h-full w-full items-center justify-center">
+                <picture className="block h-full w-full">
                   <source
                     media="(min-width: 768px)"
                     srcSet={shirt.studioImageHd}
@@ -127,14 +127,10 @@ function MinimalShirtCard({
                     src={shirt.studioImage}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-contain drop-shadow-[0_14px_18px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_16px_22px_rgba(0,0,0,0.58)]"
+                    className="h-full w-full object-cover object-top"
                   />
                 </picture>
               </div>
-              <span
-                aria-hidden="true"
-                className="pointer-events-none absolute bottom-2.5 left-1/2 h-2.5 w-24 -translate-x-1/2 rounded-full bg-[#111113] opacity-20 blur-md transition-opacity duration-500 group-hover:opacity-15 dark:bg-black dark:opacity-55"
-              />
             </div>
           ) : (
             <TailorFabricSwatch shirt={shirt} compact />
@@ -150,7 +146,7 @@ function MinimalShirtCard({
           )}
         </div>
 
-        {/* Clean 4-Line Hierarchy with breathing room + circular + beside price */}
+        {/* Clean 4-Line Hierarchy with breathing room + exclusive solid CTA + beside price */}
         <div className="flex flex-1 flex-col justify-between gap-2.5 px-3.5 pt-3 pb-3.5 sm:px-4 sm:pb-4">
           <div className="space-y-1.5">
             <h2 className="ds-h3 leading-snug">{shirt.name}</h2>
@@ -181,7 +177,7 @@ function MinimalShirtCard({
               }}
               aria-label={`Elegir talle para ${shirt.name}`}
               title={`Agregar ${shirt.name}`}
-              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#C8A86B] text-[#0B0B0E] shadow-sm transition-all duration-200 hover:bg-[#B89759] active:scale-95 sm:h-10 sm:w-10"
+              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#16233B] text-white shadow-sm transition-all duration-200 hover:bg-[#1E2F4D] active:scale-95 sm:h-10 sm:w-10 dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
             >
               <Plus className="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
             </button>
