@@ -489,7 +489,7 @@ export function StudioShirtStage({
         )}
       </AnimatePresence>
 
-      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts over the 3D Garment */}
+      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts over the Garment */}
       <AnimatePresence>
         {step === 4 && (
           <motion.div
@@ -504,22 +504,22 @@ export function StudioShirtStage({
                 {
                   key: "cuello",
                   label: "Cuello",
-                  pos: "left-1/2 top-4 -translate-x-1/2",
+                  pos: "left-1/2 top-3 -translate-x-1/2 sm:top-4",
                 },
                 {
                   key: "pecho",
                   label: "Pecho",
-                  pos: "right-4 top-1/2 -translate-y-1/2 sm:right-10",
+                  pos: "right-2.5 top-[42%] -translate-y-1/2 sm:right-6",
                 },
                 {
                   key: "manga",
                   label: "Manga",
-                  pos: "left-4 top-[44%] -translate-y-1/2 sm:left-10",
+                  pos: "left-2.5 top-[42%] -translate-y-1/2 sm:left-6",
                 },
                 {
                   key: "largo",
                   label: "Largo",
-                  pos: "bottom-4 right-4 sm:right-10",
+                  pos: "bottom-3 right-2.5 sm:bottom-4 sm:right-6",
                 },
               ] as const
             ).map((item) => {
@@ -528,14 +528,16 @@ export function StudioShirtStage({
               return (
                 <div
                   key={item.key}
-                  className={`liquid-glass absolute rounded-full px-3 py-1 text-[11px] transition-all ${item.pos} ${
+                  className={`liquid-glass absolute flex min-w-[96px] flex-col items-center rounded-2xl px-3.5 py-2 text-center transition-all sm:min-w-[116px] sm:px-4 sm:py-2.5 ${item.pos} ${
                     active
-                      ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
-                      : "text-[#111113]/65 dark:text-white/65"
+                      ? "border-2 border-[#16233B]/75 text-[#111113] shadow-[0_12px_28px_rgba(22,35,59,0.18)] dark:border-white/75 dark:text-white dark:shadow-[0_14px_32px_rgba(0,0,0,0.55)]"
+                      : "text-[#111113]/80 shadow-md dark:text-white/80"
                   }`}
                 >
-                  <span className="mr-1.5 opacity-70">{item.label}</span>
-                  <span className="font-mono font-semibold text-[#111113] dark:text-white">
+                  <span className="text-[11px] font-semibold tracking-[0.06em] uppercase opacity-75 sm:text-xs">
+                    {item.label}
+                  </span>
+                  <span className="mt-0.5 font-mono text-sm font-bold text-[#111113] tabular-nums sm:text-base dark:text-white">
                     {formatLiveCm(measurements[item.key])}
                   </span>
                 </div>

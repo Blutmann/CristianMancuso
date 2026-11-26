@@ -9,7 +9,7 @@ import {
   Ruler,
   Shirt,
   ShoppingBag,
-  ZoomIn,
+  SwatchBook,
 } from "lucide-react";
 import {
   ALPHA_SIZES,
@@ -108,9 +108,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
       {/* 2-Column Clean PDP Layout */}
       <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
-        {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
+        {/* LEFT COLUMN: Full-Garment Uncropped Photo Stage + Compact Circular Swatch/Shirt Toggle */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="relative flex h-[38svh] min-h-[250px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+          <div className="relative flex aspect-[3/4] max-h-[430px] w-full max-w-[360px] items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] sm:max-h-[480px] sm:max-w-[400px] lg:max-h-[560px] lg:max-w-none dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -119,7 +119,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="relative h-full w-full"
+                  className="relative h-full w-full p-2 sm:p-3"
                 >
                   <picture className="block h-full w-full dark:hidden">
                     <source
@@ -132,7 +132,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-cover object-center"
+                      className="h-full w-full object-contain object-center"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -146,7 +146,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-cover object-center"
+                      className="h-full w-full object-contain object-center"
                     />
                   </picture>
                 </motion.div>
@@ -163,42 +163,34 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
 
-          {/* Subtle View Toggle below photo (Border + Glass Tint Active State) */}
-          <div
-            role="radiogroup"
-            aria-label="Vista del producto"
-            className="liquid-glass mt-2.5 inline-flex items-center gap-1 rounded-full p-1 lg:mt-4"
-          >
-            <button
+            {/* Compact Circular Visual Mode Toggle (same pattern as CatalogSection filters) */}
+            <motion.button
               type="button"
-              role="radio"
-              aria-checked={viewMode === "prenda"}
-              onClick={() => setViewMode("prenda")}
-              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all lg:min-h-[38px] lg:px-4 ${
+              whileHover={isMotionPaused ? undefined : { scale: 1.06 }}
+              whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              onClick={() =>
+                setViewMode((prev) => (prev === "prenda" ? "tejido" : "prenda"))
+              }
+              aria-label={
                 viewMode === "prenda"
-                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
-                  : "border border-transparent text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-              }`}
+                  ? "Cambiar a muestra de tela"
+                  : "Cambiar a vista de prenda"
+              }
+              title={
+                viewMode === "prenda"
+                  ? "Ver muestra de tela"
+                  : "Ver vista de prenda"
+              }
+              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
             >
-              <Shirt className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Vista Prenda</span>
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked={viewMode === "tejido"}
-              onClick={() => setViewMode("tejido")}
-              className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold transition-all lg:min-h-[38px] lg:px-4 ${
-                viewMode === "tejido"
-                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
-                  : "border border-transparent text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-              }`}
-            >
-              <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Muestra de Tela</span>
-            </button>
+              {viewMode === "prenda" ? (
+                <SwatchBook className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Shirt className="h-4 w-4" aria-hidden="true" />
+              )}
+            </motion.button>
           </div>
         </div>
 

@@ -157,9 +157,9 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex min-h-[88svh] items-center bg-transparent pt-24 pb-12 text-[#111113] sm:pt-28 dark:text-white"
+      className="relative flex min-h-[70svh] items-center bg-transparent pt-24 pb-6 text-[#111113] sm:pt-28 sm:pb-8 lg:min-h-[74svh] lg:pb-10 dark:text-white"
     >
-      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-8 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
+      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-7 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="ds-h1-hero">
@@ -226,7 +226,7 @@ export function Hero() {
             onPointerMove={handleStagePointerMove}
             onPointerLeave={handleStagePointerLeave}
             onPointerCancel={handleStagePointerLeave}
-            className="relative flex w-full max-w-[340px] flex-col items-center sm:max-w-[385px] lg:max-w-[410px] will-change-transform"
+            className="relative flex w-full max-w-[290px] flex-col items-center sm:max-w-[330px] lg:max-w-[355px] will-change-transform"
           >
             <motion.div
               animate={
@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="relative aspect-[4/4.85] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
@@ -266,7 +266,7 @@ export function Hero() {
                     opacity: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
                     scale: { duration: 3.5, ease: "easeOut" },
                   }}
-                  className="absolute inset-0 h-full w-full"
+                  className="absolute inset-0 h-full w-full pb-14"
                 >
                   {/* Light Mode Loro Piana Ivory Studio Photograph */}
                   <picture className="block h-full w-full dark:hidden">
@@ -281,7 +281,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full object-cover object-center"
+                      className="h-full w-full object-contain object-center"
                     />
                   </picture>
 
@@ -298,7 +298,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full object-cover object-center"
+                      className="h-full w-full object-contain object-center"
                     />
                   </picture>
                 </motion.div>
@@ -317,7 +317,7 @@ export function Hero() {
               )}
 
               {/* Live Floating Liquid Glass Capsule (Garment Name + Fabric + Interactive Progress Dots) */}
-              <div className="liquid-glass absolute right-3 bottom-3 left-3 z-20 flex items-center justify-between gap-3 rounded-2xl px-3.5 py-2.5">
+              <div className="liquid-glass absolute right-2.5 bottom-2.5 left-2.5 z-20 flex items-center justify-between gap-2 rounded-2xl px-3 py-2">
                 <Link
                   href={`/coleccion/${currentSlide.id}`}
                   className="group min-w-0 flex-1"
@@ -326,30 +326,26 @@ export function Hero() {
                     <motion.div
                       key={currentSlide.id}
                       initial={
-                        isMotionPaused ? false : { opacity: 0, y: 6 }
+                        isMotionPaused ? false : { opacity: 0, y: 5 }
                       }
                       animate={{ opacity: 1, y: 0 }}
-                      exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
+                      exit={isMotionPaused ? undefined : { opacity: 0, y: -5 }}
                       transition={{
                         type: "spring",
                         stiffness: 320,
                         damping: 26,
                       }}
-                      className="flex items-center gap-1.5 truncate text-xs"
+                      className="flex items-center gap-2 min-w-0"
                     >
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#16233B] dark:bg-[#D6C3A5]" />
-                      <span className="truncate font-semibold text-[#111113] group-hover:underline dark:text-white">
-                        {currentSlide.name}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="text-[#111113]/35 dark:text-white/35"
-                      >
-                        ·
-                      </span>
-                      <span className="truncate text-[#111113]/70 dark:text-white/75">
-                        {currentSlide.fabric}
-                      </span>
+                      <div className="min-w-0 leading-tight">
+                        <p className="truncate text-[11.5px] font-semibold text-[#111113] group-hover:underline dark:text-white">
+                          {currentSlide.name}
+                        </p>
+                        <p className="truncate text-[10.5px] text-[#111113]/70 dark:text-white/75">
+                          {currentSlide.fabric}
+                        </p>
+                      </div>
                     </motion.div>
                   </AnimatePresence>
                 </Link>
@@ -358,7 +354,7 @@ export function Hero() {
                 <div
                   role="tablist"
                   aria-label="Seleccionar camisa destacada"
-                  className="flex shrink-0 items-center gap-1.5"
+                  className="flex shrink-0 items-center gap-1"
                 >
                   {HERO_SHOWCASE_SLIDES.map((slide, idx) => {
                     const isActive = idx === activeIndex;
@@ -375,7 +371,7 @@ export function Hero() {
                         <span
                           className={`relative block h-1.5 overflow-hidden rounded-full transition-all duration-300 ${
                             isActive
-                              ? "w-6 bg-black/15 dark:bg-white/20"
+                              ? "w-5 bg-black/15 dark:bg-white/20"
                               : "w-1.5 bg-black/25 hover:bg-black/45 dark:bg-white/30 dark:hover:bg-white/60"
                           }`}
                         >
@@ -418,7 +414,7 @@ export function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="pointer-events-none mt-2 h-5 w-52 rounded-full bg-[#111113] blur-xl dark:bg-black"
+              className="pointer-events-none mt-1.5 h-4 w-48 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
           </div>
         </div>
@@ -427,7 +423,7 @@ export function Hero() {
       {/* Sartorial SVG Thread Line Connecting Hero -> 4 Gamas on Scroll */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-12 left-1/2 z-10 hidden h-24 w-24 -translate-x-1/2 lg:block"
+        className="pointer-events-none absolute -bottom-7 left-1/2 z-10 hidden h-14 w-16 -translate-x-1/2 lg:block"
       >
         <svg viewBox="0 0 80 120" className="h-full w-full overflow-visible" fill="none">
           <path
