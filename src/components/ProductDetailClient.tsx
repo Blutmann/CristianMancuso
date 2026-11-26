@@ -9,7 +9,7 @@ import {
   Ruler,
   Shirt,
   ShoppingBag,
-  SwatchBook,
+  ZoomIn,
 } from "lucide-react";
 import {
   ALPHA_SIZES,
@@ -108,9 +108,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
       {/* 2-Column Clean PDP Layout */}
       <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
-        {/* LEFT COLUMN: Full-Garment Uncropped Photo Stage + Compact Circular Swatch/Shirt Toggle */}
+        {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
         <div className="flex flex-col items-center lg:col-span-6">
-          <div className="relative flex aspect-[3/4] max-h-[430px] w-full max-w-[360px] items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] sm:max-h-[480px] sm:max-w-[400px] lg:max-h-[560px] lg:max-w-none dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+          <div className="relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
             <AnimatePresence mode="wait">
               {viewMode === "prenda" ? (
                 <motion.div
@@ -164,31 +164,33 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               )}
             </AnimatePresence>
 
-            {/* Compact Circular Visual Mode Toggle (same pattern as CatalogSection filters) */}
+            {/* Compact Floating Liquid Glass View Toggle inside bottom-right corner */}
             <motion.button
               type="button"
-              whileHover={isMotionPaused ? undefined : { scale: 1.06 }}
+              whileHover={isMotionPaused ? undefined : { scale: 1.04 }}
               whileTap={isMotionPaused ? undefined : { scale: 0.94 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
               onClick={() =>
                 setViewMode((prev) => (prev === "prenda" ? "tejido" : "prenda"))
               }
+              aria-pressed={viewMode === "tejido"}
               aria-label={
                 viewMode === "prenda"
-                  ? "Cambiar a muestra de tela"
-                  : "Cambiar a vista de prenda"
-              }
-              title={
-                viewMode === "prenda"
                   ? "Ver muestra de tela"
-                  : "Ver vista de prenda"
+                  : "Volver a vista prenda"
               }
-              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-xs font-semibold text-[#111113] shadow-sm transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
             >
               {viewMode === "prenda" ? (
-                <SwatchBook className="h-4 w-4" aria-hidden="true" />
+                <>
+                  <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Muestra de tela</span>
+                </>
               ) : (
-                <Shirt className="h-4 w-4" aria-hidden="true" />
+                <>
+                  <Shirt className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Vista prenda</span>
+                </>
               )}
             </motion.button>
           </div>
