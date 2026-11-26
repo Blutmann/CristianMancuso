@@ -157,9 +157,9 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex items-center bg-transparent pt-22 pb-6 text-[#111113] sm:pt-24 sm:pb-8 lg:min-h-[76svh] lg:pt-28 lg:pb-8 dark:text-white"
+      className="relative flex items-center bg-transparent pt-20 pb-3 text-[#111113] sm:pt-24 sm:pb-6 lg:min-h-[76svh] lg:pt-28 lg:pb-8 dark:text-white"
     >
-      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-6 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
+      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-5 px-4 sm:gap-6 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="ds-h1-hero">
@@ -169,12 +169,12 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="ds-body mt-3.5 max-w-xl text-muted sm:mt-4">
+          <p className="ds-body mt-3 max-w-xl text-muted sm:mt-4">
             Telas italianas y peruanas. Envíos a todo el país y exterior.
           </p>
 
-          {/* 2 Clean Primary / Secondary CTAs */}
-          <div className="mt-5 flex flex-wrap items-center gap-3 sm:mt-7 sm:gap-3.5">
+          {/* 2 Clean Primary / Secondary CTAs — Single row even at 360px */}
+          <div className="mt-4 flex flex-nowrap items-center gap-2 sm:mt-7 sm:flex-wrap sm:gap-3.5">
             <motion.div
               whileHover={isMotionPaused ? undefined : { scale: 1.02 }}
               whileTap={isMotionPaused ? undefined : { scale: 0.97 }}
@@ -183,10 +183,10 @@ export function Hero() {
               <Link
                 id="hero-cta-coleccion"
                 href="/coleccion"
-                className="ds-btn-primary shadow-[0_14px_34px_rgba(22,35,59,0.2)] dark:shadow-[0_14px_34px_rgba(255,255,255,0.16)]"
+                className="ds-btn-primary !min-h-[40px] !gap-1.5 !px-3.5 !py-2.5 !text-[11px] whitespace-nowrap shadow-[0_14px_34px_rgba(22,35,59,0.2)] sm:!min-h-[44px] sm:!gap-2 sm:!px-6 sm:!text-xs dark:shadow-[0_14px_34px_rgba(255,255,255,0.16)]"
               >
                 <span>Ver Colección</span>
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
               </Link>
             </motion.div>
 
@@ -198,9 +198,9 @@ export function Hero() {
               <Link
                 id="hero-cta-medida"
                 href="/a-medida"
-                className="ds-btn-secondary"
+                className="ds-btn-secondary !min-h-[40px] !gap-1.5 !px-3.5 !py-2.5 !text-[11px] whitespace-nowrap sm:!min-h-[44px] sm:!gap-2 sm:!px-5 sm:!text-xs"
               >
-                <Ruler className="h-4 w-4" aria-hidden="true" />
+                <Ruler className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
                 <span>Armá tu camisa</span>
               </Link>
             </motion.div>
@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative mx-auto h-[45svh] min-h-[320px] max-h-[410px] w-full max-w-[290px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none sm:max-w-[330px] lg:h-[490px] lg:max-h-none lg:max-w-[380px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="relative mx-auto h-[clamp(255px,42svh,440px)] w-full max-w-[270px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none min-[410px]:max-w-[335px] sm:max-w-[360px] lg:h-[500px] lg:max-w-[390px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
@@ -317,42 +317,35 @@ export function Hero() {
               )}
             </motion.div>
 
-            {/* Independent Floating Liquid Glass Capsule overlapping bottom edge of card */}
-            <div className="liquid-glass relative z-20 mx-auto -mt-6 flex w-max max-w-[92vw] items-center justify-between gap-3.5 rounded-full px-4 py-2 sm:gap-4 sm:px-4.5 sm:py-2.5">
+            {/* Independent Floating Liquid Glass Capsule overlapping bottom edge of card (zero-flicker text) */}
+            <div className="liquid-glass relative z-20 mx-auto -mt-5 flex w-max max-w-[92vw] items-center justify-between gap-3 rounded-full px-3.5 py-2 sm:-mt-6 sm:gap-4 sm:px-4.5 sm:py-2.5">
               <Link
                 href={`/coleccion/${currentSlide.id}`}
                 className="group min-w-0"
               >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={currentSlide.id}
-                    initial={
-                      isMotionPaused ? false : { opacity: 0, y: 6 }
-                    }
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={isMotionPaused ? undefined : { opacity: 0, y: -6 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 320,
-                      damping: 26,
-                    }}
-                    className="flex items-center gap-1.5 whitespace-nowrap text-xs"
+                <motion.div
+                  key={currentSlide.id}
+                  initial={
+                    isMotionPaused ? false : { opacity: 0.45, y: 2 }
+                  }
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                  className="flex min-w-0 items-center gap-1.5 whitespace-nowrap text-xs"
+                >
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#16233B] dark:bg-[#D6C3A5]" />
+                  <span className="font-semibold text-[#111113] group-hover:underline dark:text-white">
+                    {currentSlide.name}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="text-[#111113]/35 dark:text-white/35"
                   >
-                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#16233B] dark:bg-[#D6C3A5]" />
-                    <span className="font-semibold text-[#111113] group-hover:underline dark:text-white">
-                      {currentSlide.name}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="text-[#111113]/35 dark:text-white/35"
-                    >
-                      ·
-                    </span>
-                    <span className="text-[#111113]/70 dark:text-white/75">
-                      {currentSlide.fabric}
-                    </span>
-                  </motion.div>
-                </AnimatePresence>
+                    ·
+                  </span>
+                  <span className="text-[#111113]/70 dark:text-white/75">
+                    {currentSlide.fabric}
+                  </span>
+                </motion.div>
               </Link>
 
               {/* Minimalist Interactive Progress Indicators */}
@@ -407,10 +400,10 @@ export function Hero() {
               aria-hidden="true"
               animate={
                 isMotionPaused
-                  ? { scale: 1, opacity: 0.2 }
+                  ? { scale: 1, opacity: 0.18 }
                   : {
                       scale: [1, 0.86, 1],
-                      opacity: [0.22, 0.1, 0.22],
+                      opacity: [0.2, 0.09, 0.2],
                     }
               }
               transition={{
@@ -418,7 +411,7 @@ export function Hero() {
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="pointer-events-none mt-2 h-4 w-48 rounded-full bg-[#111113] blur-xl dark:bg-black"
+              className="pointer-events-none mt-1.5 h-3 w-44 rounded-full bg-[#111113] blur-xl dark:bg-black"
             />
           </div>
         </div>
@@ -427,7 +420,7 @@ export function Hero() {
       {/* Sartorial SVG Thread Line Connecting Hero -> 4 Gamas on Scroll */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-6 left-1/2 z-10 hidden h-14 w-20 -translate-x-1/2 lg:block"
+        className="pointer-events-none absolute -bottom-3 left-1/2 z-10 hidden h-6 w-16 -translate-x-1/2 sm:-bottom-5 sm:h-10 lg:block"
       >
         <svg viewBox="0 0 80 120" className="h-full w-full overflow-visible" fill="none">
           <path
