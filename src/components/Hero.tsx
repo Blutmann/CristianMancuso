@@ -157,9 +157,9 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex items-center bg-transparent pt-20 pb-3 text-[#111113] sm:pt-24 sm:pb-6 lg:min-h-[76svh] lg:pt-28 lg:pb-8 dark:text-white"
+      className="relative flex items-center bg-transparent pt-20 pb-6 text-[#111113] sm:pt-24 sm:pb-8 lg:min-h-[76svh] lg:pt-28 lg:pb-8 dark:text-white"
     >
-      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-5 px-4 sm:gap-6 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
+      <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-7 px-4 sm:gap-8 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="ds-h1-hero">
@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative mx-auto h-[clamp(255px,42svh,440px)] w-full max-w-[270px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none min-[410px]:max-w-[335px] sm:max-w-[360px] lg:h-[500px] lg:max-w-[390px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="relative mx-auto h-[clamp(320px,50svh,490px)] w-full max-w-[360px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none min-[410px]:max-w-[396px] lg:h-[520px] lg:max-w-[420px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
@@ -266,7 +266,7 @@ export function Hero() {
                     opacity: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
                     scale: { duration: 3.5, ease: "easeOut" },
                   }}
-                  className="absolute inset-0 h-full w-full p-2.5 sm:p-3"
+                  className="absolute inset-0 h-full w-full p-0"
                 >
                   {/* Light Mode Loro Piana Ivory Studio Photograph */}
                   <picture className="block h-full w-full dark:hidden">
@@ -281,7 +281,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full object-contain object-center"
+                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%]"
                     />
                   </picture>
 
@@ -298,7 +298,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full object-contain object-center"
+                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%]"
                     />
                   </picture>
                 </motion.div>
