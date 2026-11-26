@@ -242,11 +242,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               </Link>
             </div>
 
-            <div
-              className={`mt-2 grid gap-2 lg:mt-2.5 ${
-                shirt.sizeType === "alpha" ? "grid-cols-4" : "grid-cols-5"
-              }`}
-            >
+            <div className="mt-2 grid grid-cols-5 gap-2 lg:mt-2.5">
               {sizes.map((size) => {
                 const active = selectedSize === size;
                 return (

@@ -34,15 +34,23 @@ const FILTER_OPTIONS: { id: FabricCategoryId | null; label: string }[] = [
   { id: null, label: "Todas" },
   { id: "urbano", label: "Algodón 100%" },
   { id: "pima", label: "Pima Peruano" },
-  { id: "italiano", label: "Lino Italiano" },
-  { id: "donna", label: "Donna" },
+  { id: "italiano", label: "Italiano" },
+  { id: "donna", label: "Donna Mancuso" },
 ];
 
-const SIZE_FILTER_OPTIONS: (CommercialSize | null)[] = [
-  null,
-  ...NUMERIC_SIZES,
-  ...ALPHA_SIZES,
+const FABRIC_ROW_1: { id: FabricCategoryId | null; label: string }[] = [
+  { id: "urbano", label: "Algodón 100%" },
+  { id: "pima", label: "Pima Peruano" },
+  { id: "italiano", label: "Italiano" },
 ];
+
+const FABRIC_ROW_2: { id: FabricCategoryId | null; label: string }[] = [
+  { id: "donna", label: "Donna Mancuso" },
+  { id: null, label: "Todas" },
+];
+
+const SIZE_ROW_1: CommercialSize[] = [...NUMERIC_SIZES];
+const SIZE_ROW_2: (CommercialSize | null)[] = [...ALPHA_SIZES, null];
 
 const PATTERN_FILTER_OPTIONS: { id: ShirtPattern | null; label: string }[] = [
   { id: null, label: "Todas" },
@@ -636,60 +644,107 @@ export function CatalogSection() {
                     className="liquid-glass-active absolute top-full left-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
                   >
                     <div className="space-y-4">
-                      {/* Tipo de tela */}
+                      {/* Tipo de tela — 2 logical rows */}
                       <div>
                         <p className="ds-caption font-semibold text-muted uppercase">
                           Tipo de tela
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {FILTER_OPTIONS.map((opt) => {
-                            const active = selectedFabric === opt.id;
-                            return (
-                              <button
-                                key={opt.label}
-                                type="button"
-                                aria-pressed={active}
-                                onClick={() => {
-                                  setSearchQuery("");
-                                  setSelectedFabric(opt.id);
-                                }}
-                                className={`cursor-pointer inline-flex min-h-[38px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
-                                  active
-                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
-                                    : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
-                                }`}
-                              >
-                                {opt.label}
-                              </button>
-                            );
-                          })}
+                        <div className="mt-2 flex flex-col gap-2">
+                          <div className="flex flex-nowrap items-center gap-1.5">
+                            {FABRIC_ROW_1.map((opt) => {
+                              const active = selectedFabric === opt.id;
+                              return (
+                                <button
+                                  key={opt.label}
+                                  type="button"
+                                  aria-pressed={active}
+                                  onClick={() => {
+                                    setSearchQuery("");
+                                    setSelectedFabric(opt.id);
+                                  }}
+                                  className={`cursor-pointer inline-flex min-h-[38px] items-center whitespace-nowrap rounded-full px-3.5 text-xs font-medium transition-colors ${
+                                    active
+                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                  }`}
+                                >
+                                  {opt.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <div className="flex flex-nowrap items-center gap-1.5">
+                            {FABRIC_ROW_2.map((opt) => {
+                              const active = selectedFabric === opt.id;
+                              return (
+                                <button
+                                  key={opt.label}
+                                  type="button"
+                                  aria-pressed={active}
+                                  onClick={() => {
+                                    setSearchQuery("");
+                                    setSelectedFabric(opt.id);
+                                  }}
+                                  className={`cursor-pointer inline-flex min-h-[38px] items-center whitespace-nowrap rounded-full px-3.5 text-xs font-medium transition-colors ${
+                                    active
+                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                  }`}
+                                >
+                                  {opt.label}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
 
-                      {/* Talle */}
+                      {/* Talle — Row 1: Numeric 38-46 | Row 2: Alpha XS-XL + Todos */}
                       <div>
                         <p className="ds-caption font-semibold text-muted uppercase">
                           Talle
                         </p>
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {SIZE_FILTER_OPTIONS.map((sz) => {
-                            const active = selectedSize === sz;
-                            return (
-                              <button
-                                key={sz ?? "all-sizes"}
-                                type="button"
-                                aria-pressed={active}
-                                onClick={() => setSelectedSize(sz)}
-                                className={`cursor-pointer inline-flex min-h-[40px] min-w-[44px] items-center justify-center rounded-full px-3 text-xs font-medium transition-colors ${
-                                  active
-                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
-                                    : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
-                                }`}
-                              >
-                                {sz ?? "Todos"}
-                              </button>
-                            );
-                          })}
+                        <div className="mt-2 flex flex-col gap-2">
+                          <div className="flex flex-nowrap items-center gap-1.5">
+                            {SIZE_ROW_1.map((sz) => {
+                              const active = selectedSize === sz;
+                              return (
+                                <button
+                                  key={sz}
+                                  type="button"
+                                  aria-pressed={active}
+                                  onClick={() => setSelectedSize(sz)}
+                                  className={`cursor-pointer inline-flex min-h-[40px] min-w-[44px] items-center justify-center rounded-full px-3 text-xs font-medium transition-colors ${
+                                    active
+                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                  }`}
+                                >
+                                  {sz}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          <div className="flex flex-nowrap items-center gap-1.5">
+                            {SIZE_ROW_2.map((sz) => {
+                              const active = selectedSize === sz;
+                              return (
+                                <button
+                                  key={sz ?? "all-sizes"}
+                                  type="button"
+                                  aria-pressed={active}
+                                  onClick={() => setSelectedSize(sz)}
+                                  className={`cursor-pointer inline-flex min-h-[40px] min-w-[42px] items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
+                                    active
+                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
+                                  }`}
+                                >
+                                  {sz ?? "Todos"}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
 
@@ -990,60 +1045,107 @@ export function CatalogSection() {
               </div>
 
               <div className="mt-4 space-y-5">
-                {/* Tipo de tela */}
+                {/* Tipo de tela — 2 logical rows */}
                 <div>
                   <p className="ds-caption font-semibold text-muted uppercase">
                     Tipo de tela
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {FILTER_OPTIONS.map((opt) => {
-                      const active = selectedFabric === opt.id;
-                      return (
-                        <button
-                          key={opt.label}
-                          type="button"
-                          aria-pressed={active}
-                          onClick={() => {
-                            setSearchQuery("");
-                            setSelectedFabric(opt.id);
-                          }}
-                          className={`cursor-pointer inline-flex min-h-[40px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
-                            active
-                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
-                              : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
-                          }`}
-                        >
-                          {opt.label}
-                        </button>
-                      );
-                    })}
+                  <div className="mt-2 flex flex-col gap-2">
+                    <div className="flex flex-nowrap items-center gap-1.5">
+                      {FABRIC_ROW_1.map((opt) => {
+                        const active = selectedFabric === opt.id;
+                        return (
+                          <button
+                            key={opt.label}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => {
+                              setSearchQuery("");
+                              setSelectedFabric(opt.id);
+                            }}
+                            className={`cursor-pointer inline-flex min-h-[40px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
+                              active
+                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex flex-nowrap items-center gap-1.5">
+                      {FABRIC_ROW_2.map((opt) => {
+                        const active = selectedFabric === opt.id;
+                        return (
+                          <button
+                            key={opt.label}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => {
+                              setSearchQuery("");
+                              setSelectedFabric(opt.id);
+                            }}
+                            className={`cursor-pointer inline-flex min-h-[40px] items-center whitespace-nowrap rounded-full px-3.5 text-xs font-medium transition-colors ${
+                              active
+                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
-                {/* Talle */}
+                {/* Talle — Row 1: Numeric 38-46 | Row 2: Alpha XS-XL + Todos */}
                 <div>
                   <p className="ds-caption font-semibold text-muted uppercase">
                     Talle
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {SIZE_FILTER_OPTIONS.map((sz) => {
-                      const active = selectedSize === sz;
-                      return (
-                        <button
-                          key={sz ?? "all-sizes-mob"}
-                          type="button"
-                          aria-pressed={active}
-                          onClick={() => setSelectedSize(sz)}
-                          className={`cursor-pointer inline-flex min-h-[40px] min-w-[46px] items-center justify-center rounded-full px-3.5 text-xs font-medium transition-colors ${
-                            active
-                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
-                              : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
-                          }`}
-                        >
-                          {sz ?? "Todos"}
-                        </button>
-                      );
-                    })}
+                  <div className="mt-2 flex flex-col gap-2">
+                    <div className="flex flex-nowrap items-center gap-1.5">
+                      {SIZE_ROW_1.map((sz) => {
+                        const active = selectedSize === sz;
+                        return (
+                          <button
+                            key={sz}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => setSelectedSize(sz)}
+                            className={`cursor-pointer inline-flex min-h-[40px] min-w-[44px] items-center justify-center rounded-full px-3 text-xs font-medium transition-colors ${
+                              active
+                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                            }`}
+                          >
+                            {sz}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex flex-nowrap items-center gap-1.5">
+                      {SIZE_ROW_2.map((sz) => {
+                        const active = selectedSize === sz;
+                        return (
+                          <button
+                            key={sz ?? "all-sizes-mob"}
+                            type="button"
+                            aria-pressed={active}
+                            onClick={() => setSelectedSize(sz)}
+                            className={`cursor-pointer inline-flex min-h-[40px] min-w-[40px] items-center justify-center whitespace-nowrap rounded-full px-2.5 text-xs font-medium transition-colors ${
+                              active
+                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
+                            }`}
+                          >
+                            {sz ?? "Todos"}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 

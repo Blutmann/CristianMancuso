@@ -287,7 +287,7 @@ export const MONOGRAM_THREAD_OPTIONS = [
 ] as const;
 
 export const NUMERIC_SIZES = ["38", "40", "42", "44", "46"] as const;
-export const ALPHA_SIZES = ["S", "M", "L", "XL"] as const;
+export const ALPHA_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
 export type ButtonOption = (typeof BUTTON_OPTIONS)[number]["id"];
 export type MonogramPlacement = (typeof MONOGRAM_PLACEMENTS)[number];
