@@ -163,14 +163,14 @@ export function Hero() {
         {/* Left Editorial Copy */}
         <div className="lg:col-span-7">
           <h1 className="ds-h1-hero">
-            Tu camisa a medida,{" "}
-            <span className="text-[#16233B] dark:text-white/80">
-              sin costo extra.
+            Camisas de autor,{" "}
+            <span className="text-[#16233B] dark:text-[#E5E9F0]">
+              listas o a tu medida.
             </span>
           </h1>
 
           <p className="ds-body mt-3 max-w-xl text-muted sm:mt-4">
-            Telas italianas y peruanas. Envíos a todo el país y exterior.
+            Algodón Pima y lino italiano. Envíos a todo el país y exterior · A medida sin costo extra.
           </p>
 
           {/* 2 Clean Primary / Secondary CTAs — Single row even at 360px */}
