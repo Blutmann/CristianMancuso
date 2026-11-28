@@ -204,8 +204,14 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
             </button>
           </div>
 
-          {/* Main Photo Stage */}
-          <div className="relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-[520px] lg:min-h-0 lg:max-h-[540px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+          {/* Main Photo Stage — Liquid Glass */}
+          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-[520px] lg:min-h-0 lg:max-h-[540px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
+            {/* Top crystalline Liquid Glass specular highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/35 via-white/10 to-transparent dark:from-white/14 dark:via-white/[0.03]"
+            />
+
             <AnimatePresence mode="wait">
               {viewMode === "prenda" && (
                 <motion.div
@@ -227,7 +233,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-contain object-center"
+                      className="h-full w-full object-contain object-center mix-blend-multiply"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -278,7 +284,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top"
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">

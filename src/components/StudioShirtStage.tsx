@@ -96,8 +96,14 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_22px_54px_rgba(17,17,19,0.16)] will-change-transform sm:h-[350px] lg:h-[52vh] lg:min-h-[430px] lg:max-h-[540px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_26px_64px_rgba(0,0,0,0.6)]"
+        className="liquid-glass relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)]"
       >
+        {/* Top crystalline Liquid Glass specular highlight */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/35 via-white/10 to-transparent dark:from-white/14 dark:via-white/[0.03]"
+        />
+
         <AnimatePresence mode="wait">
           <motion.div
             key={shirt.id}
@@ -117,7 +123,7 @@ function ShirtStudioFallback({
                 src={shirt.studioImage}
                 alt={shirt.name}
                 draggable={false}
-                className="h-full w-full object-cover object-center select-none"
+                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply select-none"
               />
             </picture>
             <picture className="hidden h-full w-full dark:block">
@@ -130,7 +136,7 @@ function ShirtStudioFallback({
                 src={shirt.studioImageDark}
                 alt={shirt.name}
                 draggable={false}
-                className="h-full w-full object-cover object-center select-none"
+                className="h-full w-full scale-[1.10] object-contain object-center select-none"
               />
             </picture>
           </motion.div>
@@ -253,7 +259,7 @@ export function StudioShirtStage({
   const show3DViewer = is3DActive && !webglFailed;
 
   return (
-    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[460px]">
+    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[520px]">
       {/* Persistent corner 3D / Foto toggle button for Step 1 & Step 4 */}
       {(step === 1 || step === 4) && (
         <button
@@ -504,7 +510,7 @@ export function StudioShirtStage({
             transition={{ duration: 0.25 }}
             className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
           >
-            <div className="relative h-full w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[460px]">
+            <div className="relative h-full w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[520px]">
               {(
                 [
                   {

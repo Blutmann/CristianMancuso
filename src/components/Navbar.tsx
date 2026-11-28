@@ -88,12 +88,18 @@ export function Navbar() {
         <div className="mx-auto w-full lg:max-w-[1360px] lg:px-10">
           <nav
             aria-label="Navegación principal"
-            className={`pointer-events-auto relative flex h-16 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-2xl transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
+            className={`pointer-events-auto relative flex h-16 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-2xl saturate-200 transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
               isScrolled
-                ? "liquid-glass-active !bg-white/90 border-black/12 shadow-[0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#0B0B0E]/90 dark:border-white/20 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
-                : "liquid-glass !bg-white/86 border-black/10 dark:!bg-[#0B0B0E]/84 dark:border-white/16"
+                ? "liquid-glass-active !bg-white/48 border-white/65 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85),0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#111113]/48 dark:border-white/24 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
+                : "liquid-glass !bg-white/48 border-white/55 dark:!bg-[#111113]/48 dark:border-white/20"
             }`}
           >
+            {/* Top specular rim highlight */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/35"
+            />
+
             {/* Full 4-Sided Perimeter Interior Stitch (Desktop Capsule Detail) */}
             <div
               aria-hidden="true"

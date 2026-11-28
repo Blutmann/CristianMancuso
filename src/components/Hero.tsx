@@ -248,8 +248,14 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_26px_64px_rgba(17,17,19,0.16)] select-none lg:h-[520px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="liquid-glass relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_26px_64px_rgba(17,17,19,0.14)] select-none lg:h-[520px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
+              {/* Top crystalline Liquid Glass specular highlight */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/35 via-white/10 to-transparent dark:from-white/14 dark:via-white/[0.03]"
+              />
+
               <AnimatePresence mode="sync" initial={false}>
                 <motion.div
                   key={currentSlide.id}
@@ -281,7 +287,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%]"
+                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] mix-blend-multiply"
                     />
                   </picture>
 
