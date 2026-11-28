@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  ArrowRight,
+  Check,
   ChevronDown,
   Grid2x2,
   Grid3x3,
@@ -226,6 +228,7 @@ export function CatalogSection() {
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<SortOrder>("featured");
+  const [sortOpen, setSortOpen] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<CommercialSize | null>(null);
   const [selectedPattern, setSelectedPattern] = useState<ShirtPattern | null>(
@@ -236,6 +239,7 @@ export function CatalogSection() {
   );
   const mobileSearchInputRef = useRef<HTMLInputElement | null>(null);
   const desktopFilterRef = useRef<HTMLDivElement | null>(null);
+  const desktopSortRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -283,6 +287,34 @@ export function CatalogSection() {
       document.removeEventListener("mousedown", handlePointerDown);
     };
   }, [filtersOpen]);
+
+  // Escape key & outside-click close for Desktop Sort Dropdown
+  useEffect(() => {
+    if (!sortOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSortOpen(false);
+      }
+    };
+
+    const handlePointerDown = (e: MouseEvent) => {
+      if (
+        desktopSortRef.current &&
+        desktopSortRef.current.contains(e.target as Node)
+      ) {
+        return;
+      }
+      setSortOpen(false);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handlePointerDown);
+    };
+  }, [sortOpen]);
 
   // Escape key & body scroll-lock when Size Bottom Sheet is open
   useEffect(() => {
@@ -354,6 +386,8 @@ export function CatalogSection() {
     FILTER_OPTIONS.find((f) => f.id === selectedFabric)?.label ?? null;
   const activePatternLabel =
     PATTERN_FILTER_OPTIONS.find((p) => p.id === selectedPattern)?.label ?? null;
+  const activeSortLabel =
+    SORT_OPTIONS.find((s) => s.id === sortOrder)?.label ?? "Destacados";
 
   const handleToggleVisualMode = () => {
     setVisualMode((prev) => (prev === "camisa" ? "tela" : "camisa"));
@@ -381,17 +415,26 @@ export function CatalogSection() {
       className="relative w-full bg-transparent pt-20 pb-16 text-[#111113] sm:pt-24 lg:pt-28 dark:text-white"
     >
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
-        {/* ROW 1: Mobile (Title OR Inline Expanded Search + Single 🧵/👕 toggle) | Desktop (Title + Search + Sort) */}
+        {/* ROW 1: Mobile (Title OR Inline Expanded Search) | Desktop (Title + live count) */}
         <div className="flex min-h-[44px] items-center justify-between gap-2.5">
-          {/* Desktop Title (always visible on md+) + Mobile Title (hidden while mobile search is expanded) */}
-          <h1
-            id="coleccion-heading"
-            className={`ds-h1-page ${
-              isMobileSearchExpanded ? "hidden md:block" : "block"
+          {/* Desktop Title + Micro-counter (always visible on md+) | Mobile Title (hidden while mobile search is expanded) */}
+          <div
+            className={`items-baseline gap-3 ${
+              isMobileSearchExpanded ? "hidden md:flex" : "flex"
             }`}
           >
-            Colección
-          </h1>
+            <h1 id="coleccion-heading" className="ds-h1-page">
+              Colección
+            </h1>
+            <span
+              id="catalog-results-count"
+              aria-live="polite"
+              className="text-xs font-medium text-muted tabular-nums"
+            >
+              {visibleShirts.length}{" "}
+              {visibleShirts.length === 1 ? "prenda" : "prendas"}
+            </span>
+          </div>
 
           {/* Mobile (< md) Expanded Search Input replacing Title in-place */}
           <AnimatePresence initial={false}>
@@ -516,10 +559,10 @@ export function CatalogSection() {
           </button>
         </div>
 
-        {/* DESKTOP (md+) Level 2: Single Unified Toolbar — Left: Search | Right: [Filtros ⌄] + [Sort] + [View] + [3 × 3 | 4 × 4] */}
+        {/* DESKTOP (md+) Level 2: Single Unified Toolbar — Left: Search (max-w-md) | Right: [Filtros ▾] + [Destacados ▾] + [🧵/👕] + [4 × 4 / 3 × 3] */}
         <div className="mt-5 hidden items-center justify-between gap-3 md:flex">
-          {/* Left: Search */}
-          <div className="liquid-glass relative flex min-h-[44px] w-64 shrink-0 items-center rounded-full px-4 lg:w-72 xl:w-80">
+          {/* Left: Comfortable wider Search */}
+          <div className="liquid-glass relative flex min-h-[44px] w-full max-w-md items-center rounded-full px-4">
             <Search
               className="h-4 w-4 shrink-0 text-muted"
               aria-hidden="true"
@@ -545,18 +588,22 @@ export function CatalogSection() {
             )}
           </div>
 
-          {/* Right: [Filtros ⌄] + [Destacados | Menor precio | Mayor precio] + [🧵/👕] + [3 × 3 | 4 × 4] */}
-          <div className="flex items-center gap-2 lg:gap-2.5">
+          {/* Right: [Filtros ▾] + [Destacados ▾] + [🧵/👕] + [4 × 4 / 3 × 3] */}
+          <div className="flex shrink-0 items-center gap-2 lg:gap-2.5">
+            {/* Desktop Filters Dropdown */}
             <div ref={desktopFilterRef} className="relative">
               <button
                 id="catalog-filters-trigger-desktop"
                 type="button"
                 aria-expanded={filtersOpen}
                 aria-controls="catalog-filters-popover"
-                onClick={() => setFiltersOpen((prev) => !prev)}
+                onClick={() => {
+                  setSortOpen(false);
+                  setFiltersOpen((prev) => !prev);
+                }}
                 className={`liquid-glass cursor-pointer inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full px-4 text-xs font-semibold transition-colors ${
                   activeFilterCount > 0 || filtersOpen
-                    ? "border-[#16233B]/45 text-[#16233B] dark:border-white/45 dark:text-white"
+                    ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                     : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
                 }`}
               >
@@ -591,7 +638,7 @@ export function CatalogSection() {
                         : { opacity: 0, y: 6, scale: 0.98 }
                     }
                     transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                    className="liquid-glass-active absolute top-full right-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block lg:left-0 lg:right-auto dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
+                    className="liquid-glass-active absolute top-full right-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
                   >
                     <div className="space-y-4">
                       {/* Tipo de tela — Todas first */}
@@ -613,7 +660,7 @@ export function CatalogSection() {
                                 }}
                                 className={`cursor-pointer inline-flex min-h-[38px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                                   active
-                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                    ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                     : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
                                 }`}
                               >
@@ -641,7 +688,7 @@ export function CatalogSection() {
                                   onClick={() => setSelectedSize(sz)}
                                   className={`cursor-pointer inline-flex min-h-[38px] min-w-[40px] items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                                     active
-                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                       : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
                                   }`}
                                 >
@@ -661,7 +708,7 @@ export function CatalogSection() {
                                   onClick={() => setSelectedSize(sz)}
                                   className={`cursor-pointer inline-flex min-h-[38px] min-w-[40px] items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                                     active
-                                      ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                      ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                       : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
                                   }`}
                                 >
@@ -689,7 +736,7 @@ export function CatalogSection() {
                                 onClick={() => setSelectedPattern(pat.id)}
                                 className={`cursor-pointer inline-flex min-h-[38px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
                                   active
-                                    ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                    ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                     : "border border-black/12 bg-white/75 text-[#111113]/80 hover:border-black/25 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80 dark:hover:border-white/30"
                                 }`}
                               >
@@ -714,7 +761,7 @@ export function CatalogSection() {
                         <button
                           type="button"
                           onClick={() => setFiltersOpen(false)}
-                          className="ds-btn-primary !min-h-[40px] !px-5"
+                          className="cursor-pointer inline-flex min-h-[40px] items-center justify-center rounded-full border-2 border-[#16233B] bg-[#16233B]/10 px-5 text-xs font-semibold text-[#16233B] transition-colors hover:bg-[#16233B]/15 dark:border-white dark:bg-white/12 dark:text-white dark:hover:bg-white/18"
                         >
                           {visibleShirts.length === 0
                             ? "0 camisas"
@@ -729,37 +776,89 @@ export function CatalogSection() {
               </AnimatePresence>
             </div>
 
-            {/* Sort Radio Pills */}
-            <div
-              role="radiogroup"
-              aria-label="Ordenar colección"
-              className="liquid-glass inline-flex items-center rounded-full p-1"
-            >
-              {SORT_OPTIONS.map((opt) => {
-                const active = sortOrder === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={active}
-                    onClick={() => setSortOrder(opt.id)}
-                    className={`cursor-pointer inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
-                      active
-                        ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                        : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                    }`}
+            {/* Desktop Sort Dropdown (Option B — Compact Liquid Glass, sibling of Filtros) */}
+            <div ref={desktopSortRef} className="relative">
+              <button
+                id="catalog-sort-trigger-desktop"
+                type="button"
+                aria-expanded={sortOpen}
+                aria-haspopup="listbox"
+                aria-controls="catalog-sort-popover"
+                onClick={() => {
+                  setFiltersOpen(false);
+                  setSortOpen((prev) => !prev);
+                }}
+                className={`liquid-glass cursor-pointer inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full px-4 text-xs font-semibold transition-colors ${
+                  sortOrder !== "featured" || sortOpen
+                    ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                    : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
+                }`}
+              >
+                <span>{activeSortLabel}</span>
+                <ChevronDown
+                  className={`h-3.5 w-3.5 opacity-60 transition-transform duration-200 ${
+                    sortOpen ? "rotate-180" : ""
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+
+              <AnimatePresence>
+                {sortOpen && (
+                  <motion.div
+                    id="catalog-sort-popover"
+                    role="listbox"
+                    aria-label="Ordenar colección"
+                    initial={
+                      isMotionPaused ? false : { opacity: 0, y: 8, scale: 0.98 }
+                    }
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={
+                      isMotionPaused
+                        ? undefined
+                        : { opacity: 0, y: 6, scale: 0.98 }
+                    }
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                    className="liquid-glass-active absolute top-full right-0 z-40 mt-2.5 w-48 rounded-2xl !bg-[#F7F6F3]/95 p-1.5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
                   >
-                    {opt.label}
-                  </button>
-                );
-              })}
+                    <div className="flex flex-col gap-1">
+                      {SORT_OPTIONS.map((opt) => {
+                        const active = sortOrder === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            role="option"
+                            aria-selected={active}
+                            onClick={() => {
+                              setSortOrder(opt.id);
+                              setSortOpen(false);
+                            }}
+                            className={`cursor-pointer flex min-h-[38px] w-full items-center justify-between rounded-xl px-3 text-left text-xs transition-colors ${
+                              active
+                                ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                                : "border border-transparent font-medium text-[#111113]/80 hover:bg-black/[0.04] hover:text-[#111113] dark:text-white/80 dark:hover:bg-white/[0.06] dark:hover:text-white"
+                            }`}
+                          >
+                            <span>{opt.label}</span>
+                            {active && (
+                              <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Single Circular Visual Mode Toggle */}
+            {/* Single Circular Visual Mode Toggle (Camisa / Tela) */}
             <button
+              id="catalog-visual-toggle-desktop"
               type="button"
               onClick={handleToggleVisualMode}
+              aria-pressed={visualMode === "tela"}
               aria-label={
                 visualMode === "camisa"
                   ? "Cambiar a vista de tela"
@@ -768,7 +867,11 @@ export function CatalogSection() {
               title={
                 visualMode === "camisa" ? "Ver muestras de tela" : "Ver camisas"
               }
-              className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              className={`liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full transition-colors ${
+                visualMode === "tela"
+                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                  : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              }`}
             >
               {visualMode === "camisa" ? (
                 <SwatchBook className="h-4 w-4" aria-hidden="true" />
@@ -777,41 +880,40 @@ export function CatalogSection() {
               )}
             </button>
 
-            {/* Grid Columns Toggle: 3 × 3 | 4 × 4 */}
-            <div
-              role="radiogroup"
-              aria-label="Columnas de la grilla"
-              className="liquid-glass hidden items-center rounded-full p-1 lg:inline-flex"
+            {/* Single Compact Grid Density Toggle: 4 × 4 ↔ 3 × 3 */}
+            <button
+              id="catalog-grid-toggle-desktop"
+              type="button"
+              onClick={() => setGridCols((prev) => (prev === 4 ? 3 : 4))}
+              aria-pressed={gridCols === 3}
+              aria-label={
+                gridCols === 4
+                  ? "Cambiar grilla a 3 columnas"
+                  : "Cambiar grilla a 4 columnas"
+              }
+              title={
+                gridCols === 4
+                  ? "Grilla 4 × 4 (clic para 3 × 3)"
+                  : "Grilla 3 × 3 (clic para 4 × 4)"
+              }
+              className={`liquid-glass cursor-pointer hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-xs font-semibold transition-colors lg:inline-flex ${
+                gridCols === 3
+                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                  : "border border-[#16233B]/30 text-[#111113] hover:border-[#16233B]/60 dark:border-white/30 dark:text-white dark:hover:border-white/60"
+              }`}
             >
-              <button
-                type="button"
-                role="radio"
-                aria-checked={gridCols === 3}
-                onClick={() => setGridCols(3)}
-                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
-                  gridCols === 3
-                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                }`}
-              >
-                <Grid2x2 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>3 × 3</span>
-              </button>
-              <button
-                type="button"
-                role="radio"
-                aria-checked={gridCols === 4}
-                onClick={() => setGridCols(4)}
-                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
-                  gridCols === 4
-                    ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                    : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                }`}
-              >
-                <Grid3x3 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>4 × 4</span>
-              </button>
-            </div>
+              {gridCols === 4 ? (
+                <>
+                  <Grid3x3 className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>4 × 4</span>
+                </>
+              ) : (
+                <>
+                  <Grid2x2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>3 × 3</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
 
@@ -904,6 +1006,43 @@ export function CatalogSection() {
                 onOpenSizeSheet={setSizeSheetShirt}
               />
             ))}
+
+            {/* Bespoke Bridge Card — harmonizes the 8th slot in 4×4 and invites custom tailoring */}
+            <motion.article
+              layout
+              whileHover={isMotionPaused ? undefined : { y: -4 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              className="group liquid-glass flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-dashed border-black/22 p-5 transition-colors duration-300 hover:border-[#16233B]/45 sm:p-6 dark:border-white/24 dark:hover:border-white/45"
+            >
+              <div className="flex flex-1 flex-col justify-between gap-6">
+                <div className="space-y-3">
+                  <span className="inline-flex w-fit items-center rounded-full border border-[#16233B]/20 bg-[#16233B]/[0.05] px-2.5 py-1 text-[10px] font-semibold tracking-[0.14em] text-[#16233B] uppercase dark:border-white/20 dark:bg-white/[0.06] dark:text-[#D6C3A5]">
+                    A medida sin cargo
+                  </span>
+
+                  <h2 className="font-display text-lg leading-snug font-semibold tracking-tight text-[#111113] sm:text-xl dark:text-white">
+                    ¿Buscás otro cuello, botón o tela?
+                  </h2>
+
+                  <p className="text-xs leading-relaxed text-muted sm:text-sm">
+                    Configurá tu camisa paso a paso con nuestras telas italianas
+                    y peruanas.
+                  </p>
+                </div>
+
+                <Link
+                  id="catalog-bespoke-bridge-cta"
+                  href="/a-medida"
+                  className="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-full border border-[#16233B]/35 bg-[#16233B]/[0.05] px-4 text-xs font-semibold text-[#16233B] transition-colors duration-200 hover:border-[#16233B] hover:bg-[#16233B]/10 dark:border-white/30 dark:bg-white/[0.05] dark:text-white dark:hover:border-white dark:hover:bg-white/12"
+                >
+                  <span>Armá tu camisa</span>
+                  <ArrowRight
+                    className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </div>
+            </motion.article>
           </div>
         )}
       </div>
@@ -970,7 +1109,7 @@ export function CatalogSection() {
                           }}
                           className={`cursor-pointer inline-flex min-h-[38px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                             active
-                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                              ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                               : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
                           }`}
                         >
@@ -998,7 +1137,7 @@ export function CatalogSection() {
                             onClick={() => setSelectedSize(sz)}
                             className={`cursor-pointer inline-flex min-h-[38px] min-w-[40px] items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                               active
-                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                 : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
                             }`}
                           >
@@ -1018,7 +1157,7 @@ export function CatalogSection() {
                             onClick={() => setSelectedSize(sz)}
                             className={`cursor-pointer inline-flex min-h-[38px] min-w-[40px] items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                               active
-                                ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                                ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                                 : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
                             }`}
                           >
@@ -1046,7 +1185,7 @@ export function CatalogSection() {
                           onClick={() => setSelectedPattern(pat.id)}
                           className={`cursor-pointer inline-flex min-h-[40px] items-center rounded-full px-3.5 text-xs font-medium transition-colors ${
                             active
-                              ? "bg-[#16233B] font-semibold text-white dark:bg-white dark:text-[#0B0B0E]"
+                              ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
                               : "border border-black/12 bg-white/80 text-[#111113]/80 dark:border-white/15 dark:bg-white/[0.06] dark:text-white/80"
                           }`}
                         >
