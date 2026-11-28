@@ -147,7 +147,7 @@ export function Hero() {
     <section
       ref={sectionRef}
       id="hero"
-      className="relative flex items-center bg-transparent pt-20 pb-8 text-[#111113] sm:pt-24 sm:pb-10 lg:min-h-0 lg:pt-28 lg:pb-4 dark:text-white"
+      className="relative flex items-center bg-transparent pt-20 pb-4 text-[#111113] sm:pt-24 sm:pb-5 lg:min-h-0 lg:pt-28 lg:pb-6 dark:text-white"
     >
       <div className="mx-auto grid w-full max-w-[1360px] grid-cols-1 items-center gap-6 px-4 sm:gap-7 sm:px-8 lg:grid-cols-12 lg:gap-10 lg:px-10">
         {/* Left Editorial Copy */}

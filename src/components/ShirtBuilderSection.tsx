@@ -390,7 +390,7 @@ export function ShirtBuilderSection() {
         </div>
 
         {/* CENTER STAGE: Borderless Floating Shirt (Steps 1 & 4) + Editorial Studio Frame (Steps 2 & 3) */}
-        <div className="relative flex h-[360px] w-full items-center justify-center sm:h-[400px] lg:h-auto lg:min-h-0 lg:flex-1">
+        <div className="relative flex h-[clamp(350px,49svh,450px)] w-full items-center justify-center sm:h-[clamp(380px,50svh,460px)] lg:h-auto lg:min-h-0 lg:flex-1">
           <StudioShirtStage
             shirt={selectedShirt}
             collar={collar}

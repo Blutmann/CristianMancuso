@@ -21,8 +21,8 @@ import {
 } from "@/data/catalog";
 
 const MODEL_PATH = "/models/shirt.glb";
-const DEFAULT_CAMERA_Z = 4.25;
-const MOBILE_CAMERA_Z = 3.85;
+const DEFAULT_CAMERA_Z = 3.85;
+const MOBILE_CAMERA_Z = 3.4;
 const MIN_CAMERA_DIST = 1.4;
 const MAX_CAMERA_DIST = 5.6;
 const ZOOM_STEP = 0.4;
@@ -897,8 +897,8 @@ export default function ShirtGLBViewer({
         </div>
       </div>
 
-      {/* Controls Bar: Compact -/+/Reset on mobile, full Rotar/Mover + Zoom + Presets on lg+ */}
-      <div className="z-20 flex min-h-[40px] shrink-0 items-center justify-center gap-2 pt-0.5 lg:pointer-events-none lg:absolute lg:inset-x-0 lg:bottom-4 lg:min-h-0 lg:justify-between lg:pt-0">
+      {/* Controls Bar: Flush bottom-center (-/+/Reset) on mobile, flush bottom-left & bottom-right on lg+ */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex items-center justify-center gap-2 lg:justify-between">
         <div className="flex items-center gap-2">
           <div
             role="radiogroup"

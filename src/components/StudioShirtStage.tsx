@@ -116,7 +116,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px] dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
+        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[clamp(340px,47svh,430px)] overflow-hidden rounded-3xl shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[clamp(370px,49svh,450px)] lg:h-[66vh] lg:min-h-[560px] lg:max-h-[660px] dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
@@ -264,8 +264,8 @@ export function StudioShirtStage({
               transition={{ duration: 0.28 }}
               className={
                 show3DViewer
-                  ? "relative h-[420px] w-full sm:h-[480px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px]"
-                  : "relative flex h-[320px] w-full items-center justify-center sm:h-[360px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px]"
+                  ? "relative h-[clamp(350px,49svh,450px)] w-full sm:h-[clamp(380px,50svh,460px)] lg:h-[66vh] lg:min-h-[560px] lg:max-h-[660px]"
+                  : "relative flex h-[clamp(350px,49svh,450px)] w-full items-center justify-center sm:h-[clamp(380px,50svh,460px)] lg:h-[66vh] lg:min-h-[560px] lg:max-h-[660px]"
               }
             >
               {show3DViewer ? (

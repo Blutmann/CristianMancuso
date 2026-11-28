@@ -204,10 +204,13 @@ export function Navbar() {
             </div>
           </nav>
 
-          {/* Mobile Dropdown Navigation */}
+          {/* Mobile Dropdown Navigation — Liquid Glass */}
           {mobileMenuOpen && (
-            <div className="pointer-events-auto mx-4 mt-2 rounded-2xl border border-black/10 bg-white/95 p-4 shadow-xl backdrop-blur-2xl md:hidden dark:border-white/15 dark:bg-[#111113]/95">
-              <ul className="flex flex-col gap-1">
+            <div
+              id="nav-mobile-menu"
+              className="liquid-glass pointer-events-auto mx-4 mt-2 rounded-2xl !bg-white/62 p-3.5 shadow-[0_18px_46px_rgba(22,35,59,0.14)] backdrop-blur-2xl saturate-200 md:hidden dark:!bg-[#111113]/65 dark:shadow-[0_22px_54px_rgba(0,0,0,0.62)]"
+            >
+              <ul className="flex flex-col gap-1.5">
                 {NAV_LINKS.map((item) => {
                   const active = isRouteActive(item.href);
                   return (
@@ -215,10 +218,10 @@ export function Navbar() {
                       <Link
                         href={item.href}
                         onClick={() => setMobileMenuOpen(false)}
-                        className={`flex min-h-[44px] items-center rounded-xl px-3.5 py-2 text-sm font-medium tracking-[0.06em] uppercase transition-colors ${
+                        className={`flex min-h-[44px] items-center rounded-xl px-3.5 py-2 text-sm tracking-[0.06em] uppercase transition-colors ${
                           active
-                            ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                            : "text-[#111113]/80 hover:bg-black/[0.05] dark:text-white/80 dark:hover:bg-white/[0.06]"
+                            ? "border-2 border-[#16233B] bg-[#16233B]/10 font-semibold text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                            : "border border-transparent font-medium text-[#111113]/80 hover:bg-black/[0.05] dark:text-white/80 dark:hover:bg-white/[0.06]"
                         }`}
                       >
                         {item.label}
