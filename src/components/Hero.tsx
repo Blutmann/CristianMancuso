@@ -248,7 +248,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="liquid-glass relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_26px_64px_rgba(17,17,19,0.14)] select-none lg:h-[520px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="liquid-glass relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_26px_64px_rgba(17,17,19,0.14)] select-none lg:h-[520px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               {/* Top crystalline Liquid Glass specular highlight */}
               <div
@@ -304,7 +304,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%]"
+                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
                     />
                   </picture>
                 </motion.div>

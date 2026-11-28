@@ -96,7 +96,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)]"
+        className="liquid-glass relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)]"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
@@ -136,7 +136,7 @@ function ShirtStudioFallback({
                 src={shirt.studioImageDark}
                 alt={shirt.name}
                 draggable={false}
-                className="h-full w-full scale-[1.10] object-contain object-center select-none"
+                className="h-full w-full scale-[1.10] object-contain object-center select-none dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
               />
             </picture>
           </motion.div>

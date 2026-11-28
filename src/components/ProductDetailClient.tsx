@@ -205,7 +205,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
           </div>
 
           {/* Main Photo Stage — Liquid Glass */}
-          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-[520px] lg:min-h-0 lg:max-h-[540px] dark:!bg-[#0E0F13]/72 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
+          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:aspect-[4/4.6] lg:h-[520px] lg:w-auto lg:min-h-0 lg:max-h-[540px] lg:flex-none dark:!bg-[#0E0F13]/82 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
             {/* Top crystalline Liquid Glass specular highlight */}
             <div
               aria-hidden="true"
@@ -220,7 +220,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="relative h-full w-full p-2 sm:p-3"
+                  className="relative h-full w-full p-0"
                 >
                   <picture className="block h-full w-full dark:hidden">
                     <source
@@ -233,7 +233,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-contain object-center mix-blend-multiply"
+                      className="h-full w-full object-cover object-center mix-blend-multiply"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -247,7 +247,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-contain object-center"
+                      className="h-full w-full object-cover object-center dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
                     />
                   </picture>
                 </motion.div>
@@ -296,7 +296,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImageDark}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top"
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
                     />
                   </picture>
                 </motion.div>

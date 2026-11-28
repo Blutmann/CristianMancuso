@@ -120,7 +120,7 @@ function MinimalShirtCard({
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
         {/* Full-bleed Loro Piana Dual Light/Dark Studio Garment Stage + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#F4F1EC] dark:bg-[#0E0F13] ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#F4F1EC] dark:!bg-[#0E0F13]/82 ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
@@ -156,7 +156,7 @@ function MinimalShirtCard({
                     src={shirt.studioImageDark}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-cover object-top dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
                   />
                 </picture>
               </div>
@@ -867,11 +867,7 @@ export function CatalogSection() {
               title={
                 visualMode === "camisa" ? "Ver muestras de tela" : "Ver camisas"
               }
-              className={`liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full transition-colors ${
-                visualMode === "tela"
-                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
-                  : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
-              }`}
+              className="liquid-glass cursor-pointer inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
             >
               {visualMode === "camisa" ? (
                 <SwatchBook className="h-4 w-4" aria-hidden="true" />
@@ -880,7 +876,7 @@ export function CatalogSection() {
               )}
             </button>
 
-            {/* Single Compact Grid Density Toggle: 4 × 4 ↔ 3 × 3 */}
+            {/* Twin Circular Icon-Only Grid Density Toggle (4 cols ↔ 3 cols) */}
             <button
               id="catalog-grid-toggle-desktop"
               type="button"
@@ -893,25 +889,15 @@ export function CatalogSection() {
               }
               title={
                 gridCols === 4
-                  ? "Grilla 4 × 4 (clic para 3 × 3)"
-                  : "Grilla 3 × 3 (clic para 4 × 4)"
+                  ? "Cambiar a grilla 3 × 3"
+                  : "Cambiar a grilla 4 × 4"
               }
-              className={`liquid-glass cursor-pointer hidden min-h-[44px] shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 text-xs font-semibold transition-colors lg:inline-flex ${
-                gridCols === 3
-                  ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
-                  : "border border-[#16233B]/30 text-[#111113] hover:border-[#16233B]/60 dark:border-white/30 dark:text-white dark:hover:border-white/60"
-              }`}
+              className="liquid-glass cursor-pointer hidden h-10 w-10 shrink-0 items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 lg:inline-flex dark:text-white dark:hover:border-white/30"
             >
               {gridCols === 4 ? (
-                <>
-                  <Grid3x3 className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>4 × 4</span>
-                </>
+                <Grid2x2 className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <>
-                  <Grid2x2 className="h-3.5 w-3.5" aria-hidden="true" />
-                  <span>3 × 3</span>
-                </>
+                <Grid3x3 className="h-4 w-4" aria-hidden="true" />
               )}
             </button>
           </div>
