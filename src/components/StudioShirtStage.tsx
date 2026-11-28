@@ -70,10 +70,8 @@ function ShirtStudioFallback({
     setTilt({ rotateX: 0, rotateY: 0, active: false });
   };
 
-  const lightSrc = showBack ? shirt.backImage : shirt.studioImage;
-  const lightHd = showBack ? shirt.backImageHd : shirt.studioImageHd;
-  const darkSrc = showBack ? shirt.backImageDark : shirt.studioImageDark;
-  const darkHd = showBack ? shirt.backImageDarkHd : shirt.studioImageDarkHd;
+  const mobSrc = showBack ? shirt.backImage : shirt.studioImage;
+  const hdSrc = showBack ? shirt.backImageHd : shirt.studioImageHd;
 
   return (
     <div
@@ -118,7 +116,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-white/35 shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
+        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px] dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
@@ -139,32 +137,19 @@ function ShirtStudioFallback({
                 : { opacity: 0, scale: 0.97, rotateY: -12 }
             }
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="h-full w-full"
+            className="h-full w-full p-3 sm:p-4"
           >
-            <picture className="block h-full w-full dark:hidden">
+            <picture className="block h-full w-full">
               <source
                 media="(min-width: 768px)"
-                srcSet={lightHd}
+                srcSet={hdSrc}
                 type="image/webp"
               />
               <img
-                src={lightSrc}
+                src={mobSrc}
                 alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
                 draggable={false}
-                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] select-none dark:brightness-100 dark:contrast-100"
-              />
-            </picture>
-            <picture className="hidden h-full w-full dark:block">
-              <source
-                media="(min-width: 768px)"
-                srcSet={darkHd}
-                type="image/webp"
-              />
-              <img
-                src={darkSrc}
-                alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
-                draggable={false}
-                className="h-full w-full scale-[1.10] object-contain object-center select-none dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                className="h-full w-full object-contain object-center drop-shadow-[0_18px_26px_rgba(17,17,19,0.22)] select-none dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
               />
             </picture>
           </motion.div>

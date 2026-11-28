@@ -114,26 +114,26 @@ function MinimalShirtCard({
     <motion.article
       whileHover={isMotionPaused ? undefined : { y: -4 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-colors duration-300 hover:border-black/20 dark:!bg-[#0E0F13]/88 dark:text-white dark:hover:border-white/28"
+      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-colors duration-300 hover:border-black/20 dark:text-white dark:hover:border-white/28"
     >
       {/* Clickable Product Link Area */}
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
-        {/* Full-bleed Loro Piana Dual Light/Dark Studio Garment Stage + Top-Left Badge */}
+        {/* Floating RGBA Transparent Garment over pure Liquid Glass + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-white/35 dark:bg-transparent ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-transparent ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
           {visualMode === "camisa" ? (
-            <div className="relative h-full w-full overflow-hidden">
+            <div className="relative h-full w-full overflow-hidden p-3 sm:p-4">
               <div
                 className={`relative h-full w-full ${
                   isMotionPaused
                     ? ""
-                    : "transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+                    : "transition-transform duration-500 ease-out group-hover:-translate-y-1 group-hover:scale-[1.04]"
                 }`}
               >
-                <picture className="block h-full w-full dark:hidden">
+                <picture className="block h-full w-full">
                   <source
                     media="(min-width: 768px)"
                     srcSet={shirt.studioImageHd}
@@ -143,20 +143,7 @@ function MinimalShirtCard({
                     src={shirt.studioImage}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-cover object-top mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
-                  />
-                </picture>
-                <picture className="hidden h-full w-full dark:block">
-                  <source
-                    media="(min-width: 768px)"
-                    srcSet={shirt.studioImageDarkHd}
-                    type="image/webp"
-                  />
-                  <img
-                    src={shirt.studioImageDark}
-                    alt={shirt.name}
-                    loading="lazy"
-                    className="h-full w-full object-cover object-top dark:[mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)]"
+                    className="h-full w-full object-contain object-center drop-shadow-[0_14px_20px_rgba(17,17,19,0.20)] dark:drop-shadow-[0_18px_26px_rgba(0,0,0,0.62)]"
                   />
                 </picture>
               </div>

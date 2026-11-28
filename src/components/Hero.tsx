@@ -14,10 +14,8 @@ interface HeroShowcaseSlide {
   id: string;
   name: string;
   fabric: string;
-  lightMobile: string;
-  lightHd: string;
-  darkMobile: string;
-  darkHd: string;
+  transparentMobile: string;
+  transparentHd: string;
   alt: string;
 }
 
@@ -26,40 +24,32 @@ const HERO_SHOWCASE_SLIDES: HeroShowcaseSlide[] = [
     id: "pima-piura-noche",
     name: "Piura Noche",
     fabric: "Algodón Pima",
-    lightMobile: "/images/shirts/light/pima-noche-mobile.webp",
-    lightHd: "/images/shirts/light/pima-noche-hd.webp",
-    darkMobile: "/images/shirts/dark/pima-noche-mobile.webp",
-    darkHd: "/images/shirts/dark/pima-noche-hd.webp",
+    transparentMobile: "/images/shirts/pima-noche-transparent-mobile.webp",
+    transparentHd: "/images/shirts/pima-noche-transparent-hd.webp",
     alt: "Camisa a medida Cristian Mancuso Piura Noche en Algodón Pima Peruano",
   },
   {
     id: "biella-lino-marfil",
     name: "Biella Marfil",
     fabric: "Lino Italiano",
-    lightMobile: "/images/shirts/light/lino-marfil-mobile.webp",
-    lightHd: "/images/shirts/light/lino-marfil-hd.webp",
-    darkMobile: "/images/shirts/dark/lino-marfil-mobile.webp",
-    darkHd: "/images/shirts/dark/lino-marfil-hd.webp",
+    transparentMobile: "/images/shirts/lino-marfil-transparent-mobile.webp",
+    transparentHd: "/images/shirts/lino-marfil-transparent-hd.webp",
     alt: "Camisa a medida Cristian Mancuso Biella Marfil en 100% Lino Italiano",
   },
   {
     id: "cuadros-ventana-lino-algodon",
     name: "Cuadros Ventana",
     fabric: "Lino & Algodón",
-    lightMobile: "/images/shirts/light/cuadros-ventana-mobile.webp",
-    lightHd: "/images/shirts/light/cuadros-ventana-hd.webp",
-    darkMobile: "/images/shirts/dark/cuadros-ventana-mobile.webp",
-    darkHd: "/images/shirts/dark/cuadros-ventana-hd.webp",
+    transparentMobile: "/images/shirts/cuadros-ventana-transparent-mobile.webp",
+    transparentHd: "/images/shirts/cuadros-ventana-transparent-hd.webp",
     alt: "Camisa a medida Cristian Mancuso Cuadros Ventana en Blend Lino y Algodón",
   },
   {
     id: "pima-piura-acero",
     name: "Piura Acero",
     fabric: "Algodón Pima",
-    lightMobile: "/images/shirts/light/pima-acero-mobile.webp",
-    lightHd: "/images/shirts/light/pima-acero-hd.webp",
-    darkMobile: "/images/shirts/dark/pima-acero-mobile.webp",
-    darkHd: "/images/shirts/dark/pima-acero-hd.webp",
+    transparentMobile: "/images/shirts/pima-acero-transparent-mobile.webp",
+    transparentHd: "/images/shirts/pima-acero-transparent-hd.webp",
     alt: "Camisa a medida Cristian Mancuso Piura Acero en Algodón Pima Peruano",
   },
 ];
@@ -248,7 +238,7 @@ export function Hero() {
                   : { duration: 5.6, repeat: Infinity, ease: "easeInOut" },
               }}
               style={{ transformStyle: "preserve-3d" }}
-              className="liquid-glass relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl !bg-white/35 shadow-[0_26px_64px_rgba(22,35,59,0.12)] select-none lg:h-[520px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
+              className="liquid-glass relative h-[clamp(355px,54svh,520px)] w-full overflow-hidden rounded-3xl shadow-[0_26px_64px_rgba(22,35,59,0.12)] select-none lg:h-[520px] dark:shadow-[0_30px_72px_rgba(0,0,0,0.62)]"
             >
               {/* Top crystalline Liquid Glass specular highlight */}
               <div
@@ -272,39 +262,22 @@ export function Hero() {
                     opacity: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
                     scale: { duration: 3.5, ease: "easeOut" },
                   }}
-                  className="absolute inset-0 h-full w-full p-0"
+                  className="absolute inset-0 h-full w-full p-4 sm:p-5"
                 >
-                  {/* Light Mode Loro Piana Ivory Studio Photograph */}
-                  <picture className="block h-full w-full dark:hidden">
+                  {/* Floating Transparent RGBA Studio Garment over pure Liquid Glass */}
+                  <picture className="block h-full w-full">
                     <source
                       media="(min-width: 768px)"
-                      srcSet={currentSlide.lightHd}
+                      srcSet={currentSlide.transparentHd}
                       type="image/webp"
                     />
                     <img
-                      src={currentSlide.lightMobile}
+                      src={currentSlide.transparentMobile}
                       alt={currentSlide.alt}
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
-                    />
-                  </picture>
-
-                  {/* Dark Mode Deep Charcoal Studio Photograph */}
-                  <picture className="hidden h-full w-full dark:block">
-                    <source
-                      media="(min-width: 768px)"
-                      srcSet={currentSlide.darkHd}
-                      type="image/webp"
-                    />
-                    <img
-                      src={currentSlide.darkMobile}
-                      alt={currentSlide.alt}
-                      loading="eager"
-                      fetchPriority={activeIndex === 0 ? "high" : "auto"}
-                      draggable={false}
-                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                      className="h-full w-full object-contain object-center drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_36px_rgba(0,0,0,0.65)]"
                     />
                   </picture>
                 </motion.div>

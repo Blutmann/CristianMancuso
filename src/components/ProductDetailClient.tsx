@@ -138,23 +138,17 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               aria-label="Vista Prenda"
               title="Vista Prenda"
               onClick={() => setViewMode("prenda")}
-              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
+              className={`liquid-glass cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl transition-all xl:w-28 ${
                 viewMode === "prenda"
-                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
-                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
+                  ? "!border-2 !border-[#16233B] opacity-100 shadow-md dark:!border-white"
+                  : "opacity-75 hover:opacity-100"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={shirt.studioImage}
                 alt={`${shirt.name} — Vista prenda`}
-                className="h-full w-full object-contain p-1 dark:hidden"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={shirt.studioImageDark}
-                alt={`${shirt.name} — Vista prenda`}
-                className="hidden h-full w-full object-contain p-1 dark:block"
+                className="h-full w-full object-contain p-1.5 drop-shadow-[0_6px_10px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_8px_12px_rgba(0,0,0,0.55)]"
               />
             </button>
 
@@ -166,23 +160,17 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               aria-label="Detalle Cuello y Botones"
               title="Detalle Cuello / Botones"
               onClick={() => setViewMode("cuello")}
-              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
+              className={`liquid-glass cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl transition-all xl:w-28 ${
                 viewMode === "cuello"
-                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
-                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
+                  ? "!border-2 !border-[#16233B] opacity-100 shadow-md dark:!border-white"
+                  : "opacity-75 hover:opacity-100"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={shirt.studioImage}
                 alt={`${shirt.name} — Detalle cuello y botones`}
-                className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:hidden"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={shirt.studioImageDark}
-                alt={`${shirt.name} — Detalle cuello y botones`}
-                className="hidden h-full w-full origin-top scale-[1.85] object-cover object-top dark:block"
+                className="h-full w-full origin-top scale-[1.85] object-contain object-top p-1 drop-shadow-[0_6px_10px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_8px_12px_rgba(0,0,0,0.55)]"
               />
             </button>
 
@@ -217,29 +205,23 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               aria-label="Detalle Puño y Confección"
               title="Detalle Puño / Confección"
               onClick={() => setViewMode("puno")}
-              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
+              className={`liquid-glass cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl transition-all xl:w-28 ${
                 viewMode === "puno"
-                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
-                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
+                  ? "!border-2 !border-[#16233B] opacity-100 shadow-md dark:!border-white"
+                  : "opacity-75 hover:opacity-100"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={shirt.studioImage}
                 alt={`${shirt.name} — Detalle puño y confección`}
-                className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:hidden"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={shirt.studioImageDark}
-                alt={`${shirt.name} — Detalle puño y confección`}
-                className="hidden h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:block"
+                className="h-full w-full origin-bottom-left scale-[1.75] object-contain object-bottom p-1 drop-shadow-[0_6px_10px_rgba(17,17,19,0.2)] dark:drop-shadow-[0_8px_12px_rgba(0,0,0,0.55)]"
               />
             </button>
           </div>
 
-          {/* Main Photo Stage — Liquid Glass */}
-          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-white/35 shadow-[0_20px_50px_rgba(22,35,59,0.10)] lg:aspect-[4/4.6] lg:h-[520px] lg:w-auto lg:min-h-0 lg:max-h-[540px] lg:flex-none dark:!bg-[#0E0F13]/82 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
+          {/* Main Photo Stage — Pure Liquid Glass with Floating Transparent RGBA Shirt */}
+          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl shadow-[0_20px_50px_rgba(22,35,59,0.10)] lg:aspect-[4/4.6] lg:h-[520px] lg:w-auto lg:min-h-0 lg:max-h-[540px] lg:flex-none dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
             {/* Top crystalline Liquid Glass specular highlight */}
             <div
               aria-hidden="true"
@@ -254,9 +236,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="relative h-full w-full p-0"
+                  className="relative h-full w-full p-4 sm:p-5"
                 >
-                  <picture className="block h-full w-full dark:hidden">
+                  <picture className="block h-full w-full">
                     <source
                       media="(min-width: 768px)"
                       srcSet={shirt.studioImageHd}
@@ -267,21 +249,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-cover object-center mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
-                    />
-                  </picture>
-                  <picture className="hidden h-full w-full dark:block">
-                    <source
-                      media="(min-width: 768px)"
-                      srcSet={shirt.studioImageDarkHd}
-                      type="image/webp"
-                    />
-                    <img
-                      src={shirt.studioImageDark}
-                      alt={shirt.name}
-                      loading="eager"
-                      fetchPriority="high"
-                      className="h-full w-full object-cover object-center dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                      className="h-full w-full object-contain object-center drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
                     />
                   </picture>
                 </motion.div>
@@ -294,9 +262,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="relative h-full w-full overflow-hidden"
+                  className="relative h-full w-full overflow-hidden p-3 sm:p-4"
                 >
-                  <picture className="block h-full w-full dark:hidden">
+                  <picture className="block h-full w-full">
                     <source
                       media="(min-width: 768px)"
                       srcSet={shirt.studioImageHd}
@@ -305,19 +273,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
-                    />
-                  </picture>
-                  <picture className="hidden h-full w-full dark:block">
-                    <source
-                      media="(min-width: 768px)"
-                      srcSet={shirt.studioImageDarkHd}
-                      type="image/webp"
-                    />
-                    <img
-                      src={shirt.studioImageDark}
-                      alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                      className="h-full w-full origin-top scale-[1.85] object-contain object-top drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
                     />
                   </picture>
                 </motion.div>
@@ -343,9 +299,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
                   transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                  className="relative h-full w-full overflow-hidden"
+                  className="relative h-full w-full overflow-hidden p-3 sm:p-4"
                 >
-                  <picture className="block h-full w-full dark:hidden">
+                  <picture className="block h-full w-full">
                     <source
                       media="(min-width: 768px)"
                       srcSet={shirt.studioImageHd}
@@ -354,19 +310,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de puño y confección`}
-                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
-                    />
-                  </picture>
-                  <picture className="hidden h-full w-full dark:block">
-                    <source
-                      media="(min-width: 768px)"
-                      srcSet={shirt.studioImageDarkHd}
-                      type="image/webp"
-                    />
-                    <img
-                      src={shirt.studioImageDark}
-                      alt={`${shirt.name} — Detalle de puño y confección`}
-                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                      className="h-full w-full origin-bottom-left scale-[1.75] object-contain object-bottom drop-shadow-[0_18px_28px_rgba(17,17,19,0.22)] dark:drop-shadow-[0_22px_34px_rgba(0,0,0,0.62)]"
                     />
                   </picture>
                 </motion.div>
@@ -539,8 +483,8 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                 href={`/coleccion/${item.id}`}
                 className="group liquid-glass flex h-full flex-col overflow-hidden rounded-2xl transition-colors duration-300 hover:border-black/20 dark:hover:border-white/28"
               >
-                <div className="relative aspect-[4/4.4] w-full overflow-hidden bg-[#F4F1EC] dark:bg-[#0E0F13]">
-                  <picture className="block h-full w-full dark:hidden">
+                <div className="relative aspect-[4/4.4] w-full overflow-hidden bg-transparent p-3">
+                  <picture className="block h-full w-full">
                     <source
                       media="(min-width: 768px)"
                       srcSet={item.studioImageHd}
@@ -550,20 +494,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       src={item.studioImage}
                       alt={item.name}
                       loading="lazy"
-                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
-                    />
-                  </picture>
-                  <picture className="hidden h-full w-full dark:block">
-                    <source
-                      media="(min-width: 768px)"
-                      srcSet={item.studioImageDarkHd}
-                      type="image/webp"
-                    />
-                    <img
-                      src={item.studioImageDark}
-                      alt={item.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                      className="h-full w-full object-contain object-center drop-shadow-[0_12px_18px_rgba(17,17,19,0.18)] transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.04] dark:drop-shadow-[0_16px_24px_rgba(0,0,0,0.58)]"
                     />
                   </picture>
                 </div>
