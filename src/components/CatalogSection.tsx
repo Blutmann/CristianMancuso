@@ -460,61 +460,6 @@ export function CatalogSection() {
               </button>
             </div>
           )}
-
-          {/* Desktop (md+): Inline Search + Sort Pills */}
-          <div className="hidden items-center gap-2.5 md:flex">
-            <div className="liquid-glass relative flex min-h-[44px] w-72 items-center rounded-full px-4 lg:w-80">
-              <Search
-                className="h-4 w-4 shrink-0 text-muted"
-                aria-hidden="true"
-              />
-              <input
-                id="catalog-search-input-desktop"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
-                aria-label="Buscar por tela o referencia de artículo"
-                className="w-full bg-transparent px-2.5 text-base text-[#111113] placeholder:text-muted/75 focus:outline-none md:text-sm dark:text-[#F8FAFC]"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  aria-label="Limpiar búsqueda"
-                  className="cursor-pointer inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
-                >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-
-            <div
-              role="radiogroup"
-              aria-label="Ordenar colección"
-              className="liquid-glass inline-flex items-center rounded-full p-1"
-            >
-              {SORT_OPTIONS.map((opt) => {
-                const active = sortOrder === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={active}
-                    onClick={() => setSortOrder(opt.id)}
-                    className={`cursor-pointer inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
-                      active
-                        ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
-                        : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
 
         {/* MOBILE (< md) Row 2: [Filtros (N)] + [Destacados ▾] + [🧵/👕] */}
@@ -583,9 +528,37 @@ export function CatalogSection() {
           </button>
         </div>
 
-        {/* DESKTOP (md+): Liquid Glass Filtros Popover Trigger + Quick Fabric Pills + Visual Mode Toggle + Grid (3/4 cols) */}
+        {/* DESKTOP (md+) Level 2: Single Unified Toolbar — Left: Search | Right: [Filtros ⌄] + [Sort] + [View] + [3 × 3 | 4 × 4] */}
         <div className="mt-5 hidden items-center justify-between gap-3 md:flex">
-          <div className="flex items-center gap-2.5">
+          {/* Left: Search */}
+          <div className="liquid-glass relative flex min-h-[44px] w-64 shrink-0 items-center rounded-full px-4 lg:w-72 xl:w-80">
+            <Search
+              className="h-4 w-4 shrink-0 text-muted"
+              aria-hidden="true"
+            />
+            <input
+              id="catalog-search-input-desktop"
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Buscar por tela o Ref. Art. (ej. 2529)..."
+              aria-label="Buscar por tela o referencia de artículo"
+              className="w-full bg-transparent px-2.5 text-sm text-[#111113] placeholder:text-muted/75 focus:outline-none dark:text-[#F8FAFC]"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery("")}
+                aria-label="Limpiar búsqueda"
+                className="cursor-pointer inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          {/* Right: [Filtros ⌄] + [Destacados | Menor precio | Mayor precio] + [🧵/👕] + [3 × 3 | 4 × 4] */}
+          <div className="flex items-center gap-2 lg:gap-2.5">
             <div ref={desktopFilterRef} className="relative">
               <button
                 id="catalog-filters-trigger-desktop"
@@ -593,7 +566,7 @@ export function CatalogSection() {
                 aria-expanded={filtersOpen}
                 aria-controls="catalog-filters-popover"
                 onClick={() => setFiltersOpen((prev) => !prev)}
-                className={`liquid-glass cursor-pointer inline-flex min-h-[42px] items-center gap-2 rounded-full px-4 text-xs font-semibold transition-colors ${
+                className={`liquid-glass cursor-pointer inline-flex min-h-[44px] items-center gap-2 whitespace-nowrap rounded-full px-4 text-xs font-semibold transition-colors ${
                   activeFilterCount > 0 || filtersOpen
                     ? "border-[#16233B]/45 text-[#16233B] dark:border-white/45 dark:text-white"
                     : "text-[#111113] hover:border-black/25 dark:text-white dark:hover:border-white/30"
@@ -630,7 +603,7 @@ export function CatalogSection() {
                         : { opacity: 0, y: 6, scale: 0.98 }
                     }
                     transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                    className="liquid-glass-active absolute top-full left-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
+                    className="liquid-glass-active absolute top-full right-0 z-40 mt-2.5 hidden w-[440px] rounded-2xl !bg-[#F7F6F3]/95 p-5 text-[#111113] shadow-[0_20px_54px_rgba(17,17,19,0.16)] md:block lg:left-0 lg:right-auto dark:!bg-[#11131A]/95 dark:text-[#F8FAFC] dark:shadow-[0_24px_60px_rgba(0,0,0,0.65)]"
                   >
                     <div className="space-y-4">
                       {/* Tipo de tela — Todas first */}
@@ -768,53 +741,33 @@ export function CatalogSection() {
               </AnimatePresence>
             </div>
 
-            {/* Quick Gama Pills on Desktop */}
+            {/* Sort Radio Pills */}
             <div
-              role="tablist"
-              aria-label="Filtrar por gama de tela"
-              className="scrollbar-none flex items-center gap-1.5 overflow-x-auto pb-0.5"
+              role="radiogroup"
+              aria-label="Ordenar colección"
+              className="liquid-glass inline-flex items-center rounded-full p-1"
             >
-              {FILTER_OPTIONS.map((option) => {
-                const isActive =
-                  !isGlobalSearchActive && selectedFabric === option.id;
+              {SORT_OPTIONS.map((opt) => {
+                const active = sortOrder === opt.id;
                 return (
                   <button
-                    key={option.label}
-                    id={`catalog-filter-${option.id ?? "all"}`}
+                    key={opt.id}
                     type="button"
-                    role="tab"
-                    aria-selected={isActive}
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedFabric(option.id);
-                    }}
-                    className={`cursor-pointer relative min-h-[40px] shrink-0 rounded-full px-4 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/40 dark:focus-visible:ring-white/60 ${
-                      isActive
-                        ? "font-semibold text-white dark:text-[#0B0B0E]"
-                        : "border border-black/10 bg-white/60 text-[#111113]/75 hover:bg-white dark:border-white/10 dark:bg-white/[0.05] dark:text-white/70 dark:hover:bg-white/[0.1] dark:hover:text-white"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => setSortOrder(opt.id)}
+                    className={`cursor-pointer inline-flex min-h-[36px] items-center whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
+                      active
+                        ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
+                        : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                     }`}
                   >
-                    {isActive && (
-                      <motion.span
-                        layoutId={
-                          isMotionPaused ? undefined : "catalog-filter-pill"
-                        }
-                        transition={{
-                          type: "spring",
-                          stiffness: 380,
-                          damping: 32,
-                        }}
-                        className="absolute inset-0 rounded-full bg-[#16233B] dark:bg-white"
-                      />
-                    )}
-                    <span className="relative z-10">{option.label}</span>
+                    {opt.label}
                   </button>
                 );
               })}
             </div>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-2.5">
             {/* Single Circular Visual Mode Toggle */}
             <button
               type="button"
@@ -827,7 +780,7 @@ export function CatalogSection() {
               title={
                 visualMode === "camisa" ? "Ver muestras de tela" : "Ver camisas"
               }
-              className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              className="liquid-glass cursor-pointer inline-flex min-h-[44px] min-w-[44px] shrink-0 items-center justify-center rounded-full text-[#111113] transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
             >
               {visualMode === "camisa" ? (
                 <SwatchBook className="h-4 w-4" aria-hidden="true" />
@@ -836,6 +789,7 @@ export function CatalogSection() {
               )}
             </button>
 
+            {/* Grid Columns Toggle: 3 × 3 | 4 × 4 */}
             <div
               role="radiogroup"
               aria-label="Columnas de la grilla"
@@ -846,28 +800,28 @@ export function CatalogSection() {
                 role="radio"
                 aria-checked={gridCols === 3}
                 onClick={() => setGridCols(3)}
-                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                   gridCols === 3
                     ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
                 <Grid2x2 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>3 cols</span>
+                <span>3 × 3</span>
               </button>
               <button
                 type="button"
                 role="radio"
                 aria-checked={gridCols === 4}
                 onClick={() => setGridCols(4)}
-                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 rounded-full px-3 text-xs font-medium transition-colors ${
+                className={`cursor-pointer inline-flex min-h-[36px] items-center gap-1.5 whitespace-nowrap rounded-full px-3 text-xs font-medium transition-colors ${
                   gridCols === 4
                     ? "bg-[#16233B] text-white dark:bg-white dark:text-[#0B0B0E]"
                     : "text-[#111113]/70 hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
                 }`}
               >
                 <Grid3x3 className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>4 cols</span>
+                <span>4 × 4</span>
               </button>
             </div>
           </div>
