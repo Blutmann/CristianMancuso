@@ -46,9 +46,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
   const sizes = shirt.sizeType === "alpha" ? ALPHA_SIZES : NUMERIC_SIZES;
   const defaultSize: CommercialSize = shirt.sizeType === "alpha" ? "M" : "40";
   const [selectedSize, setSelectedSize] = useState<CommercialSize>(defaultSize);
-  const [viewMode, setViewMode] = useState<"prenda" | "tejido" | "cuello">(
-    "prenda"
-  );
+  const [viewMode, setViewMode] = useState<
+    "prenda" | "cuello" | "tejido" | "puno"
+  >("prenda");
   const [justAdded, setJustAdded] = useState(false);
 
   const installmentArs = Math.round(shirt.priceArs / 3);
@@ -71,7 +71,13 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
 
   const cycleMobileView = () => {
     setViewMode((prev) =>
-      prev === "prenda" ? "tejido" : prev === "tejido" ? "cuello" : "prenda"
+      prev === "prenda"
+        ? "cuello"
+        : prev === "cuello"
+          ? "tejido"
+          : prev === "tejido"
+            ? "puno"
+            : "prenda"
     );
   };
 
@@ -118,11 +124,11 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-10">
         {/* LEFT COLUMN: Desktop Vertical 3-Thumbnail Strip + Main Photo Stage */}
         <div className="flex flex-col items-center gap-3 lg:col-span-6 lg:flex-row lg:items-start lg:gap-3.5">
-          {/* Desktop (lg+) Vertical 3-Thumbnail Strip on the Left */}
+          {/* Desktop (lg+) Vertical 4-Thumbnail Strip on the Left — full height of main card */}
           <div
             role="tablist"
             aria-label="Vistas del producto"
-            className="hidden shrink-0 flex-col gap-3 lg:flex"
+            className="hidden shrink-0 flex-col justify-between gap-3 lg:flex lg:h-[520px]"
           >
             {/* Thumbnail 1: Vista Prenda */}
             <button
@@ -132,10 +138,10 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               aria-label="Vista Prenda"
               title="Vista Prenda"
               onClick={() => setViewMode("prenda")}
-              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all dark:bg-[#0E0F13] ${
+              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
                 viewMode === "prenda"
                   ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
-                  : "border border-black/10 opacity-70 hover:opacity-100 dark:border-white/15"
+                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -152,7 +158,35 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               />
             </button>
 
-            {/* Thumbnail 2: Muestra de Tela */}
+            {/* Thumbnail 2: Detalle Cuello / Botones */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "cuello"}
+              aria-label="Detalle Cuello y Botones"
+              title="Detalle Cuello / Botones"
+              onClick={() => setViewMode("cuello")}
+              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
+                viewMode === "cuello"
+                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
+                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImage}
+                alt={`${shirt.name} — Detalle cuello y botones`}
+                className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:hidden"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImageDark}
+                alt={`${shirt.name} — Detalle cuello y botones`}
+                className="hidden h-full w-full origin-top scale-[1.85] object-cover object-top dark:block"
+              />
+            </button>
+
+            {/* Thumbnail 3: Muestra de Tela */}
             <button
               type="button"
               role="tab"
@@ -161,7 +195,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               title="Muestra de Tela"
               onClick={() => setViewMode("tejido")}
               style={{ backgroundColor: shirt.baseHex }}
-              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl transition-all ${
+              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl transition-all xl:w-28 ${
                 viewMode === "tejido"
                   ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
                   : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
@@ -175,31 +209,31 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               />
             </button>
 
-            {/* Thumbnail 3: Detalle Cuello / Botón */}
+            {/* Thumbnail 4: Detalle Puño / Confección */}
             <button
               type="button"
               role="tab"
-              aria-selected={viewMode === "cuello"}
-              aria-label="Detalle Cuello y Botón"
-              title="Detalle Cuello / Botón"
-              onClick={() => setViewMode("cuello")}
-              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all dark:bg-[#0E0F13] ${
-                viewMode === "cuello"
+              aria-selected={viewMode === "puno"}
+              aria-label="Detalle Puño y Confección"
+              title="Detalle Puño / Confección"
+              onClick={() => setViewMode("puno")}
+              className={`cursor-pointer relative w-24 flex-1 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all xl:w-28 dark:bg-[#0E0F13] ${
+                viewMode === "puno"
                   ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
-                  : "border border-black/10 opacity-70 hover:opacity-100 dark:border-white/15"
+                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
               }`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={shirt.studioImage}
-                alt={`${shirt.name} — Detalle cuello y botón`}
-                className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:hidden"
+                alt={`${shirt.name} — Detalle puño y confección`}
+                className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:hidden"
               />
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={shirt.studioImageDark}
-                alt={`${shirt.name} — Detalle cuello y botón`}
-                className="hidden h-full w-full origin-top scale-[1.85] object-cover object-top dark:block"
+                alt={`${shirt.name} — Detalle puño y confección`}
+                className="hidden h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:block"
               />
             </button>
           </div>
@@ -253,19 +287,6 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                 </motion.div>
               )}
 
-              {viewMode === "tejido" && (
-                <motion.div
-                  key="pdp-tejido"
-                  initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={isMotionPaused ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="flex h-full w-full items-center justify-center"
-                >
-                  <TailorFabricSwatch shirt={shirt} />
-                </motion.div>
-              )}
-
               {viewMode === "cuello" && (
                 <motion.div
                   key="pdp-cuello"
@@ -297,6 +318,55 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       src={shirt.studioImageDark}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
                       className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                    />
+                  </picture>
+                </motion.div>
+              )}
+
+              {viewMode === "tejido" && (
+                <motion.div
+                  key="pdp-tejido"
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="flex h-full w-full items-center justify-center"
+                >
+                  <TailorFabricSwatch shirt={shirt} />
+                </motion.div>
+              )}
+
+              {viewMode === "puno" && (
+                <motion.div
+                  key="pdp-puno"
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                  className="relative h-full w-full overflow-hidden"
+                >
+                  <picture className="block h-full w-full dark:hidden">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImage}
+                      alt={`${shirt.name} — Detalle de puño y confección`}
+                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply"
+                    />
+                  </picture>
+                  <picture className="hidden h-full w-full dark:block">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageDarkHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImageDark}
+                      alt={`${shirt.name} — Detalle de puño y confección`}
+                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
                     />
                   </picture>
                 </motion.div>

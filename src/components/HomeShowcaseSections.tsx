@@ -181,9 +181,20 @@ export function HomeShowcaseSections() {
               </h2>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Link href="/a-medida" className="ds-btn-primary">
-                  <span>Armar mi camisa</span>
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <Link
+                  id="home-bespoke-cta"
+                  href="/a-medida"
+                  className="liquid-glass group relative inline-flex min-h-[44px] items-center justify-center gap-2 overflow-hidden rounded-full border-2 border-[#16233B]/35 bg-[#16233B]/[0.06] px-6 text-xs font-semibold tracking-[0.04em] text-[#16233B] uppercase transition-all duration-200 hover:border-[#16233B] hover:bg-[#16233B]/12 dark:border-white/40 dark:bg-white/[0.10] dark:text-white dark:hover:border-white dark:hover:bg-white/16"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-3 top-0 h-px bg-gradient-to-r from-transparent via-white/90 to-transparent dark:via-white/50"
+                  />
+                  <span>Armá tu camisa</span>
+                  <ArrowRight
+                    className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </Link>
                 <Link href="/como-medir" className="ds-btn-secondary">
                   <Ruler className="h-4 w-4" aria-hidden="true" />

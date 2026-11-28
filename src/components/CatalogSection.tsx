@@ -417,24 +417,15 @@ export function CatalogSection() {
       <div className="mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-10">
         {/* ROW 1: Mobile (Title OR Inline Expanded Search) | Desktop (Title + live count) */}
         <div className="flex min-h-[44px] items-center justify-between gap-2.5">
-          {/* Desktop Title + Micro-counter (always visible on md+) | Mobile Title (hidden while mobile search is expanded) */}
-          <div
-            className={`items-baseline gap-3 ${
-              isMobileSearchExpanded ? "hidden md:flex" : "flex"
+          {/* Desktop Title (always visible on md+) | Mobile Title (hidden while mobile search is expanded) */}
+          <h1
+            id="coleccion-heading"
+            className={`ds-h1-page ${
+              isMobileSearchExpanded ? "hidden md:block" : "block"
             }`}
           >
-            <h1 id="coleccion-heading" className="ds-h1-page">
-              Colección
-            </h1>
-            <span
-              id="catalog-results-count"
-              aria-live="polite"
-              className="text-xs font-medium text-muted tabular-nums"
-            >
-              {visibleShirts.length}{" "}
-              {visibleShirts.length === 1 ? "prenda" : "prendas"}
-            </span>
-          </div>
+            Colección
+          </h1>
 
           {/* Mobile (< md) Expanded Search Input replacing Title in-place */}
           <AnimatePresence initial={false}>

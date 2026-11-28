@@ -40,6 +40,10 @@ export interface CatalogShirt {
   studioImageHd: string;
   studioImageDark: string;
   studioImageDarkHd: string;
+  backImage: string;
+  backImageHd: string;
+  backImageDark: string;
+  backImageDarkHd: string;
 }
 
 export const CATALOG_SHIRTS: CatalogShirt[] = [
@@ -63,6 +67,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/pima-noche-hd.webp",
     studioImageDark: "/images/shirts/dark/pima-noche-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/pima-noche-hd.webp",
+    backImage: "/images/shirts/light/pima-noche-back-mobile.webp",
+    backImageHd: "/images/shirts/light/pima-noche-back-hd.webp",
+    backImageDark: "/images/shirts/dark/pima-noche-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/pima-noche-back-hd.webp",
   },
   {
     id: "pima-piura-acero",
@@ -83,6 +91,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/pima-acero-hd.webp",
     studioImageDark: "/images/shirts/dark/pima-acero-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/pima-acero-hd.webp",
+    backImage: "/images/shirts/light/pima-acero-back-mobile.webp",
+    backImageHd: "/images/shirts/light/pima-acero-back-hd.webp",
+    backImageDark: "/images/shirts/dark/pima-acero-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/pima-acero-back-hd.webp",
   },
   {
     id: "biella-lino-negro",
@@ -103,6 +115,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/lino-negro-hd.webp",
     studioImageDark: "/images/shirts/dark/lino-negro-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/lino-negro-hd.webp",
+    backImage: "/images/shirts/light/lino-negro-back-mobile.webp",
+    backImageHd: "/images/shirts/light/lino-negro-back-hd.webp",
+    backImageDark: "/images/shirts/dark/lino-negro-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/lino-negro-back-hd.webp",
   },
   {
     id: "biella-lino-marfil",
@@ -124,6 +140,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/lino-marfil-hd.webp",
     studioImageDark: "/images/shirts/dark/lino-marfil-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/lino-marfil-hd.webp",
+    backImage: "/images/shirts/light/lino-marfil-back-mobile.webp",
+    backImageHd: "/images/shirts/light/lino-marfil-back-hd.webp",
+    backImageDark: "/images/shirts/dark/lino-marfil-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/lino-marfil-back-hd.webp",
   },
   {
     id: "urbano-oxford-grafito",
@@ -143,6 +163,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/oxford-grafito-hd.webp",
     studioImageDark: "/images/shirts/dark/oxford-grafito-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/oxford-grafito-hd.webp",
+    backImage: "/images/shirts/light/oxford-grafito-back-mobile.webp",
+    backImageHd: "/images/shirts/light/oxford-grafito-back-hd.webp",
+    backImageDark: "/images/shirts/dark/oxford-grafito-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/oxford-grafito-back-hd.webp",
   },
   {
     id: "cuadros-ventana-lino-algodon",
@@ -164,6 +188,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/cuadros-ventana-hd.webp",
     studioImageDark: "/images/shirts/dark/cuadros-ventana-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/cuadros-ventana-hd.webp",
+    backImage: "/images/shirts/light/cuadros-ventana-back-mobile.webp",
+    backImageHd: "/images/shirts/light/cuadros-ventana-back-hd.webp",
+    backImageDark: "/images/shirts/dark/cuadros-ventana-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/cuadros-ventana-back-hd.webp",
   },
   {
     id: "donna-cloque-raya-mineral",
@@ -185,6 +213,10 @@ export const CATALOG_SHIRTS: CatalogShirt[] = [
     studioImageHd: "/images/shirts/light/donna-mineral-hd.webp",
     studioImageDark: "/images/shirts/dark/donna-mineral-mobile.webp",
     studioImageDarkHd: "/images/shirts/dark/donna-mineral-hd.webp",
+    backImage: "/images/shirts/light/donna-mineral-back-mobile.webp",
+    backImageHd: "/images/shirts/light/donna-mineral-back-hd.webp",
+    backImageDark: "/images/shirts/dark/donna-mineral-back-mobile.webp",
+    backImageDarkHd: "/images/shirts/dark/donna-mineral-back-hd.webp",
   },
 ];
 

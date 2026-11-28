@@ -3,7 +3,7 @@
 import { Component, useState, useSyncExternalStore, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
-import { Box, ChevronLeft, ChevronRight } from "lucide-react";
+import { Box, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
@@ -52,6 +52,7 @@ function ShirtStudioFallback({
   isMotionPaused: boolean;
 }) {
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, active: false });
+  const [showBack, setShowBack] = useState(false);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isMotionPaused) return;
@@ -69,6 +70,11 @@ function ShirtStudioFallback({
     setTilt({ rotateX: 0, rotateY: 0, active: false });
   };
 
+  const lightSrc = showBack ? shirt.backImage : shirt.studioImage;
+  const lightHd = showBack ? shirt.backImageHd : shirt.studioImageHd;
+  const darkSrc = showBack ? shirt.backImageDark : shirt.studioImageDark;
+  const darkHd = showBack ? shirt.backImageDarkHd : shirt.studioImageDarkHd;
+
   return (
     <div
       onPointerMove={handlePointerMove}
@@ -77,6 +83,22 @@ function ShirtStudioFallback({
       className="flex h-full w-full flex-col items-center justify-center p-1 sm:p-2"
     >
       <motion.div
+        id="stage-2d-card"
+        role="button"
+        tabIndex={0}
+        aria-pressed={showBack}
+        aria-label={
+          showBack
+            ? `Ver frente de ${shirt.name}`
+            : `Ver espalda de ${shirt.name}`
+        }
+        onClick={() => setShowBack((prev) => !prev)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setShowBack((prev) => !prev);
+          }
+        }}
         animate={
           isMotionPaused
             ? { y: 0, rotateX: 0, rotateY: 0 }
@@ -96,7 +118,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)]"
+        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
@@ -106,22 +128,28 @@ function ShirtStudioFallback({
 
         <AnimatePresence mode="wait">
           <motion.div
-            key={shirt.id}
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.97, y: 6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.97, y: -4 }}
-            transition={{ type: "spring", stiffness: 320, damping: 26 }}
+            key={`${shirt.id}-${showBack ? "back" : "front"}`}
+            initial={
+              isMotionPaused ? false : { opacity: 0, scale: 0.97, rotateY: 12 }
+            }
+            animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+            exit={
+              isMotionPaused
+                ? undefined
+                : { opacity: 0, scale: 0.97, rotateY: -12 }
+            }
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="h-full w-full"
           >
             <picture className="block h-full w-full dark:hidden">
               <source
                 media="(min-width: 768px)"
-                srcSet={shirt.studioImageHd}
+                srcSet={lightHd}
                 type="image/webp"
               />
               <img
-                src={shirt.studioImage}
-                alt={shirt.name}
+                src={lightSrc}
+                alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
                 draggable={false}
                 className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply select-none"
               />
@@ -129,18 +157,28 @@ function ShirtStudioFallback({
             <picture className="hidden h-full w-full dark:block">
               <source
                 media="(min-width: 768px)"
-                srcSet={shirt.studioImageDarkHd}
+                srcSet={darkHd}
                 type="image/webp"
               />
               <img
-                src={shirt.studioImageDark}
-                alt={shirt.name}
+                src={darkSrc}
+                alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
                 draggable={false}
                 className="h-full w-full scale-[1.10] object-contain object-center select-none dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
               />
             </picture>
           </motion.div>
         </AnimatePresence>
+
+        {/* Discreet Liquid Glass Front / Back flip hint chip */}
+        <span
+          id="stage-flip-chip"
+          aria-hidden="true"
+          className="liquid-glass pointer-events-none absolute right-3 bottom-3 z-20 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-[#111113]/85 transition-transform duration-200 group-hover:scale-[1.03] dark:text-white/90"
+        >
+          <RotateCw className="h-3 w-3" aria-hidden="true" />
+          <span>{showBack ? "Ver frente" : "Ver espalda"}</span>
+        </span>
 
         {/* Periodic soft specular sheen sweep across studio card */}
         {!isMotionPaused && (
