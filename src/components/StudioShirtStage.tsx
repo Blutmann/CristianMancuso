@@ -383,7 +383,7 @@ export function StudioShirtStage({
                 handleCollarSwipe(-1);
               }
             }}
-            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            className="liquid-glass relative flex h-[360px] w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing sm:h-[420px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
           >
             <AnimatePresence mode="sync">
               <motion.div
@@ -470,7 +470,7 @@ export function StudioShirtStage({
                 handleButtonSwipe(-1);
               }
             }}
-            className="relative flex h-full w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            className="liquid-glass relative flex h-[360px] w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing sm:h-[420px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
           >
             <AnimatePresence mode="sync">
               <motion.div

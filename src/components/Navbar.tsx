@@ -90,8 +90,8 @@ export function Navbar() {
             aria-label="Navegación principal"
             className={`pointer-events-auto relative flex h-16 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-[28px] saturate-[220%] transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
               isScrolled
-                ? "liquid-glass-active !bg-white/24 border-white/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(255,255,255,0.45),0_14px_40px_rgba(22,35,59,0.09)] dark:!bg-[#111113]/42 dark:border-white/26 dark:shadow-[inset_0_1.5px_0_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
-                : "liquid-glass !bg-white/24 border-white/75 dark:!bg-[#111113]/42 dark:border-white/22"
+                ? "liquid-glass-active !bg-white/48 border-white shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(255,255,255,0.5),0_14px_40px_rgba(22,35,59,0.11)] dark:!bg-[#111113]/42 dark:border-white/26 dark:shadow-[inset_0_1.5px_0_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
+                : "liquid-glass !bg-white/48 border-white dark:!bg-[#111113]/42 dark:border-white/22"
             }`}
           >
             {/* Diagonal iOS Liquid Glass specular sheen */}

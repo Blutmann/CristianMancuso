@@ -318,18 +318,8 @@ export const MONOGRAM_THREAD_OPTIONS = [
   { id: "Azul Noche", label: "Azul Noche", hex: "#1B2E4B", ring: "rgba(147,197,253,0.35)" },
 ] as const;
 
-export const NUMERIC_SIZES = [
-  "36",
-  "38",
-  "40",
-  "42",
-  "44",
-  "46",
-  "48",
-  "50",
-  "52",
-] as const;
-export const ALPHA_SIZES = ["XS", "S", "M", "L", "XL", "XXL"] as const;
+export const NUMERIC_SIZES = ["38", "40", "42", "44", "46"] as const;
+export const ALPHA_SIZES = ["S", "M", "L", "XL", "XXL"] as const;
 
 export type ButtonOption = (typeof BUTTON_OPTIONS)[number]["id"];
 export type MonogramPlacement = (typeof MONOGRAM_PLACEMENTS)[number];
