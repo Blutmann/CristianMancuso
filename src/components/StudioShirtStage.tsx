@@ -80,7 +80,7 @@ function ShirtStudioFallback({
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={{ perspective: "1000px" }}
-      className="flex h-full w-full flex-col items-center justify-center p-1 sm:p-2"
+      className="flex h-full w-full flex-col items-center justify-center p-0"
     >
       <motion.div
         id="stage-2d-card"
@@ -118,12 +118,12 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_22px_54px_rgba(17,17,19,0.14)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[58vh] lg:min-h-[480px] lg:max-h-[580px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
+        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-white/35 shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/35 via-white/10 to-transparent dark:from-white/14 dark:via-white/[0.03]"
+          className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/45 via-white/12 to-transparent dark:from-white/14 dark:via-white/[0.03]"
         />
 
         <AnimatePresence mode="wait">
@@ -151,7 +151,7 @@ function ShirtStudioFallback({
                 src={lightSrc}
                 alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
                 draggable={false}
-                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply select-none"
+                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] select-none"
               />
             </picture>
             <picture className="hidden h-full w-full dark:block">
@@ -297,7 +297,7 @@ export function StudioShirtStage({
   const show3DViewer = is3DActive && !webglFailed;
 
   return (
-    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[520px]">
+    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[560px]">
       {/* Persistent corner 3D / Foto toggle button for Step 1 & Step 4 */}
       {(step === 1 || step === 4) && (
         <button

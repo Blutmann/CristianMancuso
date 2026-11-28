@@ -239,11 +239,11 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
           </div>
 
           {/* Main Photo Stage — Liquid Glass */}
-          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-[#F4F1EC]/76 shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:aspect-[4/4.6] lg:h-[520px] lg:w-auto lg:min-h-0 lg:max-h-[540px] lg:flex-none dark:!bg-[#0E0F13]/82 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
+          <div className="liquid-glass relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl !bg-white/35 shadow-[0_20px_50px_rgba(22,35,59,0.10)] lg:aspect-[4/4.6] lg:h-[520px] lg:w-auto lg:min-h-0 lg:max-h-[540px] lg:flex-none dark:!bg-[#0E0F13]/82 dark:shadow-[0_24px_60px_rgba(0,0,0,0.52)]">
             {/* Top crystalline Liquid Glass specular highlight */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/35 via-white/10 to-transparent dark:from-white/14 dark:via-white/[0.03]"
+              className="pointer-events-none absolute inset-x-0 top-0 z-10 h-24 bg-gradient-to-b from-white/45 via-white/12 to-transparent dark:from-white/14 dark:via-white/[0.03]"
             />
 
             <AnimatePresence mode="wait">
@@ -267,7 +267,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-cover object-center mix-blend-multiply"
+                      className="h-full w-full object-cover object-center mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -305,7 +305,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply"
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -354,7 +354,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de puño y confección`}
-                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply"
+                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -494,7 +494,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
               whileTap={isMotionPaused ? undefined : { scale: 0.98 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
               onClick={handleAddToCart}
-              className="cursor-pointer inline-flex min-h-[48px] w-full items-center justify-center gap-2 rounded-full bg-[#16233B] px-6 text-xs font-semibold tracking-[0.04em] text-white uppercase shadow-lg transition-colors duration-200 hover:bg-[#1E2F4D] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="ds-btn-primary min-h-[48px] w-full"
             >
               {justAdded ? (
                 <>

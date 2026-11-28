@@ -162,13 +162,31 @@ body {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
-  background-color: #16233B;
   color: #FFFFFF;
-  transition: background-color 200ms ease, transform 200ms ease, opacity 200ms ease;
+  background: linear-gradient(
+    135deg,
+    rgba(22, 35, 59, 0.88) 0%,
+    rgba(22, 35, 59, 0.72) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  box-shadow:
+    0 10px 28px rgba(22, 35, 59, 0.22),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.38);
+  transition: background 200ms ease, border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease, opacity 200ms ease;
 }
 
 .ds-btn-primary:hover {
-  background-color: #1E2F4F;
+  background: linear-gradient(
+    135deg,
+    rgba(22, 35, 59, 0.94) 0%,
+    rgba(30, 47, 79, 0.82) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.52);
+  box-shadow:
+    0 12px 32px rgba(22, 35, 59, 0.28),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.48);
 }
 
 .ds-btn-primary:disabled {
@@ -177,12 +195,29 @@ body {
 }
 
 html.dark .ds-btn-primary {
-  background-color: #FFFFFF;
   color: #0B0B0E;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(230, 234, 242, 0.78) 100%
+  );
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.40),
+    inset 0 1.5px 0 rgba(255, 255, 255, 1);
 }
 
 html.dark .ds-btn-primary:hover {
-  background-color: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(238, 241, 247, 0.88) 100%
+  );
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.48),
+    inset 0 1.5px 0 rgba(255, 255, 255, 1);
 }
 
 .ds-btn-secondary {
@@ -202,41 +237,48 @@ html.dark .ds-btn-primary:hover {
   color: #111113;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.84) 0%,
-    rgba(255, 255, 255, 0.66) 55%,
-    rgba(255, 255, 255, 0.78) 100%
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.18) 55%,
+    rgba(255, 255, 255, 0.34) 100%
   );
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(17, 17, 19, 0.10);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.92),
-    0 8px 24px rgba(0, 0, 0, 0.05);
-  transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.96),
+    0 8px 24px rgba(22, 35, 59, 0.06);
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
 .ds-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.96);
-  border-color: rgba(17, 17, 19, 0.18);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.62) 0%,
+    rgba(255, 255, 255, 0.32) 55%,
+    rgba(255, 255, 255, 0.52) 100%
+  );
+  border-color: rgba(255, 255, 255, 1);
 }
 
 html.dark .ds-btn-secondary {
   color: #F8FAFC;
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.04) 55%,
-    rgba(255, 255, 255, 0.09) 100%
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.03) 55%,
+    rgba(255, 255, 255, 0.07) 100%
   );
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.20);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.28),
-    0 12px 32px rgba(0, 0, 0, 0.45);
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.26),
+    0 12px 32px rgba(0, 0, 0, 0.44);
 }
 
 html.dark .ds-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
 }
 
 /* Lenis smooth scroll base */
@@ -268,13 +310,13 @@ html.dark ::selection {
   color: #FFFFFF;
 }
 
-/* Dual Liquid Glass Specular Surfaces — Real Refractive Liquid Glass v5.1 */
+/* Dual Liquid Glass Specular Surfaces — Real Refractive Liquid Glass v5.2 */
 .liquid-glass {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.52) 0%,
-    rgba(255, 255, 255, 0.24) 55%,
-    rgba(255, 255, 255, 0.44) 100%
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.18) 55%,
+    rgba(255, 255, 255, 0.34) 100%
   );
   backdrop-filter: blur(28px) saturate(210%);
   -webkit-backdrop-filter: blur(28px) saturate(210%);

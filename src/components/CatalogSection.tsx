@@ -120,7 +120,7 @@ function MinimalShirtCard({
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
         {/* Full-bleed Loro Piana Dual Light/Dark Studio Garment Stage + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-[#F4F1EC] dark:!bg-[#0E0F13]/82 ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-white/35 dark:!bg-[#0E0F13]/82 ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
@@ -143,7 +143,7 @@ function MinimalShirtCard({
                     src={shirt.studioImage}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-cover object-top"
+                    className="h-full w-full object-cover object-top mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
                   />
                 </picture>
                 <picture className="hidden h-full w-full dark:block">
@@ -209,7 +209,7 @@ function MinimalShirtCard({
               }}
               aria-label={`Elegir talle para ${shirt.name}`}
               title={`Agregar ${shirt.name}`}
-              className="cursor-pointer inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#16233B] text-white shadow-sm transition-colors duration-200 hover:bg-[#1E2F4D] sm:h-10 sm:w-10 dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="ds-btn-primary !min-h-0 !p-0 h-11 w-11 shrink-0 sm:h-10 sm:w-10"
             >
               <Plus className="h-4 w-4 stroke-[2.2]" aria-hidden="true" />
             </motion.button>

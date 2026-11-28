@@ -280,7 +280,7 @@ export function ShirtBuilderSection() {
       aria-labelledby="builder-heading"
       className="relative overflow-x-clip bg-transparent text-[#111113] dark:text-[#F5F5F7]"
     >
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-5 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:h-[100svh] lg:gap-4 lg:px-10 lg:pt-28 lg:pb-6">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-[1360px] flex-col justify-between gap-2.5 px-5 pt-20 pb-5 sm:gap-3 sm:px-8 sm:pt-24 sm:pb-6 lg:min-h-[100svh] lg:h-auto lg:gap-3 lg:px-10 lg:pt-24 lg:pb-6">
         {/* TOP ROW: Page Title + Minimalist Apple-style Progress Header */}
         <div className="flex flex-col gap-3.5 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
           <h1 id="builder-heading" className="ds-h1-page">
@@ -307,7 +307,7 @@ export function ShirtBuilderSection() {
                 <button
                   type="button"
                   onClick={() => setStep((step - 1) as BuilderStep)}
-                  className="cursor-pointer inline-flex min-h-[32px] items-center gap-0.5 rounded-full px-2 -mr-2 text-xs font-medium text-[#111113]/70 transition-colors hover:text-[#111113] dark:text-white/70 dark:hover:text-white"
+                  className="liquid-glass cursor-pointer inline-flex min-h-[32px] items-center gap-0.5 rounded-full px-3 text-xs font-medium text-[#111113]/80 transition-colors hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Volver</span>

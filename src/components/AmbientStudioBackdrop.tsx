@@ -6,34 +6,34 @@ export function AmbientStudioBackdrop() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-[#F7F6F3] transition-colors duration-500 dark:bg-[#0B0B0E]"
     >
-      {/* LIGHT MODE: Rich warm sand (#D9CCBA), champagne (#E6DCCB), and mist blue (#C3D0E2) orbs + diagonal ribbon for perceptible Liquid Glass refraction */}
+      {/* LIGHT MODE: Rich warm sand (196,178,152) and mist blue (155,176,206) orbs + diagonal ribbon for perceptible Liquid Glass refraction */}
       <div className="absolute inset-0 opacity-100 transition-opacity duration-500 dark:opacity-0">
         <div
-          className="animate-orb-slow absolute -top-[10%] -left-[8%] h-[68vh] w-[68vh] rounded-full blur-[82px] md:blur-[108px]"
+          className="animate-orb-slow absolute -top-[10%] -left-[8%] h-[68vh] w-[68vh] rounded-full blur-[80px] md:blur-[104px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(217,204,186,0.95) 0%, rgba(230,220,203,0.68) 46%, transparent 74%)",
+              "radial-gradient(circle, rgba(196,178,152,0.52) 0%, rgba(217,204,186,0.34) 48%, transparent 74%)",
           }}
         />
         <div
-          className="animate-orb-reverse absolute top-[14%] -right-[8%] h-[66vh] w-[66vh] rounded-full blur-[86px] md:blur-[112px]"
+          className="animate-orb-reverse absolute top-[14%] -right-[8%] h-[66vh] w-[66vh] rounded-full blur-[84px] md:blur-[108px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(195,208,226,0.92) 0%, rgba(195,208,226,0.52) 48%, transparent 74%)",
+              "radial-gradient(circle, rgba(155,176,206,0.48) 0%, rgba(182,200,226,0.30) 48%, transparent 74%)",
           }}
         />
         <div
-          className="animate-orb-drift-third absolute -bottom-[10%] left-[16%] h-[62vh] w-[62vh] rounded-full blur-[84px] md:blur-[110px]"
+          className="animate-orb-drift-third absolute -bottom-[10%] left-[16%] h-[62vh] w-[62vh] rounded-full blur-[82px] md:blur-[106px]"
           style={{
             background:
-              "radial-gradient(circle, rgba(217,204,186,0.88) 0%, rgba(230,220,203,0.62) 48%, transparent 76%)",
+              "radial-gradient(circle, rgba(196,178,152,0.46) 0%, rgba(230,220,203,0.34) 48%, transparent 76%)",
           }}
         />
         <div
-          className="animate-orb-slow absolute top-[40%] left-[18%] h-[44vh] w-[74vw] -rotate-12 rounded-full blur-[90px] md:blur-[114px]"
+          className="animate-orb-slow absolute top-[38%] left-[16%] h-[44vh] w-[76vw] -rotate-12 rounded-full blur-[86px] md:blur-[110px]"
           style={{
             background:
-              "linear-gradient(90deg, rgba(195,208,226,0.68) 0%, rgba(230,220,203,0.74) 50%, rgba(217,204,186,0.78) 100%)",
+              "linear-gradient(90deg, rgba(155,176,206,0.36) 0%, rgba(230,220,203,0.42) 50%, rgba(196,178,152,0.44) 100%)",
           }}
         />
       </div>

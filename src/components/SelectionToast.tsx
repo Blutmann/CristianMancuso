@@ -38,7 +38,7 @@ export function SelectionToast() {
                 dismissToast();
                 openDrawer();
               }}
-              className="cursor-pointer inline-flex min-h-[36px] shrink-0 items-center gap-1.5 rounded-full bg-[#16233B] px-3.5 text-[11px] font-semibold tracking-[0.04em] text-white uppercase transition-colors hover:bg-[#1E2F4F] dark:bg-white dark:text-[#0B0B0E] dark:hover:bg-white/90"
+              className="ds-btn-primary !min-h-[36px] shrink-0 !gap-1.5 !px-3.5 !text-[11px]"
             >
               <ShoppingBag className="h-3 w-3" aria-hidden="true" />
               <span>Ver bolsa</span>
