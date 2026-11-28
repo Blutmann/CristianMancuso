@@ -12,19 +12,19 @@ const GAMA_VISUAL: Record<
   { image: string; shortCopy: string }
 > = {
   urbano: {
-    image: "/images/shirts/oxford-grafito.png",
+    image: "/images/shirts/oxford-grafito-transparent-mobile.webp",
     shortCopy: "Uso diario, fácil planchado.",
   },
   pima: {
-    image: "/images/shirts/pima-acero.png",
+    image: "/images/shirts/pima-acero-transparent-mobile.webp",
     shortCopy: "Fibra extra larga, tacto sedoso.",
   },
   italiano: {
-    image: "/images/shirts/lino-marfil.png",
+    image: "/images/shirts/lino-marfil-transparent-mobile.webp",
     shortCopy: "Tejedurías italianas, frescura superior.",
   },
   donna: {
-    image: "/images/shirts/donna-mineral.png",
+    image: "/images/shirts/donna-mineral-transparent-mobile.webp",
     shortCopy: "Corte femenino, cloqué liviano.",
   },
 };
