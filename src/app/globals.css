@@ -4,8 +4,8 @@
 
 :root {
   /* Design System v2.0 — Light Mode (Default) */
-  --bg-canvas: #F7F6F3;
-  --bg-page: #F7F6F3;
+  --bg-canvas: #E4E9F2;
+  --bg-page: #E4E9F2;
   --surface-elevated: #FFFFFF;
   --glass-surface: rgba(255, 255, 255, 0.78);
   --glass-border: rgba(17, 17, 19, 0.10);
@@ -59,7 +59,7 @@ html.dark {
 }
 
 body {
-  background-color: var(--bg-canvas);
+  background-color: transparent;
   color: var(--text-primary);
   font-family: var(--font-sans);
   overflow-x: clip;

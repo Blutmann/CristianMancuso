@@ -290,9 +290,9 @@ export function ShirtBuilderSection() {
           {/* Apple-style Stepper: "Paso X de 4 · Nombre" + discreet "‹ Volver" + ultra-thin 2px progress bar */}
           <div
             aria-label={`Paso ${step} de 4: ${STEP_NAMES[step]}`}
-            className="flex w-full flex-col gap-2 lg:w-72 xl:w-80"
+            className="flex w-full shrink-0 flex-col gap-2 lg:w-72 xl:w-80"
           >
-            <div className="flex min-h-[28px] items-center justify-between gap-3">
+            <div className="flex min-h-[40px] w-full items-center justify-between gap-3">
               <p className="text-xs font-medium tracking-wide text-[#111113]/75 dark:text-white/75">
                 <span>Paso {step} de 4</span>
                 <span aria-hidden="true" className="mx-1.5 opacity-40">
@@ -307,7 +307,7 @@ export function ShirtBuilderSection() {
                 <button
                   type="button"
                   onClick={() => setStep((step - 1) as BuilderStep)}
-                  className="liquid-glass cursor-pointer inline-flex min-h-[32px] items-center gap-0.5 rounded-full px-3 text-xs font-medium text-[#111113]/80 transition-colors hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
+                  className="liquid-glass cursor-pointer inline-flex min-h-[34px] items-center gap-0.5 rounded-full px-3 text-xs font-medium text-[#111113]/80 transition-colors hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>Volver</span>

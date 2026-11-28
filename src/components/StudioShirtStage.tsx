@@ -47,12 +47,15 @@ class WebGLErrorBoundary extends Component<
 function ShirtStudioFallback({
   shirt,
   isMotionPaused,
+  showBack,
+  onToggleBack,
 }: {
   shirt: CatalogShirt;
   isMotionPaused: boolean;
+  showBack: boolean;
+  onToggleBack: () => void;
 }) {
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, active: false });
-  const [showBack, setShowBack] = useState(false);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (isMotionPaused) return;
@@ -92,11 +95,11 @@ function ShirtStudioFallback({
             ? `Ver frente de ${shirt.name}`
             : `Ver espalda de ${shirt.name}`
         }
-        onClick={() => setShowBack((prev) => !prev)}
+        onClick={onToggleBack}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            setShowBack((prev) => !prev);
+            onToggleBack();
           }
         }}
         animate={
@@ -118,7 +121,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-white/35 shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
+        className="liquid-glass group cursor-pointer relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl !bg-white/35 shadow-[0_22px_54px_rgba(22,35,59,0.12)] will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#16233B]/50 sm:h-[350px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px] dark:!bg-[#0E0F13]/82 dark:shadow-[0_26px_64px_rgba(0,0,0,0.62)] dark:focus-visible:ring-white/50"
       >
         {/* Top crystalline Liquid Glass specular highlight */}
         <div
@@ -169,16 +172,6 @@ function ShirtStudioFallback({
             </picture>
           </motion.div>
         </AnimatePresence>
-
-        {/* Discreet Liquid Glass Front / Back flip hint chip */}
-        <span
-          id="stage-flip-chip"
-          aria-hidden="true"
-          className="liquid-glass pointer-events-none absolute right-3 bottom-3 z-20 inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold text-[#111113]/85 transition-transform duration-200 group-hover:scale-[1.03] dark:text-white/90"
-        >
-          <RotateCw className="h-3 w-3" aria-hidden="true" />
-          <span>{showBack ? "Ver frente" : "Ver espalda"}</span>
-        </span>
 
         {/* Periodic soft specular sheen sweep across studio card */}
         {!isMotionPaused && (
@@ -270,6 +263,7 @@ export function StudioShirtStage({
     getDesktopServerSnapshot
   );
   const [user3DOverride, setUser3DOverride] = useState<boolean | null>(null);
+  const [showBack, setShowBack] = useState(false);
   const is3DActive = user3DOverride ?? isDesktopDefault;
 
   const selectedButton =
@@ -297,313 +291,346 @@ export function StudioShirtStage({
   const show3DViewer = is3DActive && !webglFailed;
 
   return (
-    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[560px]">
-      {/* Persistent corner 3D / Foto toggle button for Step 1 & Step 4 */}
-      {(step === 1 || step === 4) && (
-        <button
-          id="stage-3d-toggle"
-          type="button"
-          onClick={() => {
-            const next = !is3DActive;
-            if (next) {
-              setWebglFailed(false);
-            }
-            setUser3DOverride(next);
-          }}
-          aria-pressed={show3DViewer}
-          aria-label={
-            show3DViewer
-              ? "Volver a foto de estudio"
-              : "Activar vista 3D interactiva 360°"
-          }
-          title={show3DViewer ? "Ver foto de estudio" : "Ver en 3D (360°)"}
-          className={`liquid-glass cursor-pointer absolute top-2.5 right-2.5 z-40 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wider transition-all ${
-            show3DViewer
-              ? "border-2 border-[#16233B] text-[#111113] dark:border-white dark:text-white"
-              : "text-[#111113]/80 hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
-          }`}
-        >
-          <Box className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>3D</span>
-        </button>
-      )}
-
-      <AnimatePresence mode="wait">
-        {/* STEP 1 & STEP 4: Large Floating Studio Photo (Mobile default) or Interactive 3D Model (Optional / Desktop default) */}
-        {(step === 1 || step === 4) && (
-          <motion.div
-            key={show3DViewer ? "stage-glb-3d" : "stage-studio-photo"}
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ duration: 0.28 }}
-            className="relative h-[460px] w-full sm:h-[520px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px]"
-          >
-            {show3DViewer ? (
-              <WebGLErrorBoundary
-                fallback={
-                  <ShirtStudioFallback
+    <div className="relative flex w-full flex-col items-center justify-center bg-transparent">
+      <div className="relative flex w-full items-center justify-center">
+        <AnimatePresence mode="wait">
+          {/* STEP 1 & STEP 4: Large Floating Studio Photo (Mobile default) or Interactive 3D Model (Optional / Desktop default) */}
+          {(step === 1 || step === 4) && (
+            <motion.div
+              key={show3DViewer ? "stage-glb-3d" : "stage-studio-photo"}
+              initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.28 }}
+              className={
+                show3DViewer
+                  ? "relative h-[420px] w-full sm:h-[480px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px]"
+                  : "relative flex h-[320px] w-full items-center justify-center sm:h-[360px] lg:h-[60vh] lg:min-h-[500px] lg:max-h-[600px]"
+              }
+            >
+              {show3DViewer ? (
+                <WebGLErrorBoundary
+                  fallback={
+                    <ShirtStudioFallback
+                      shirt={shirt}
+                      isMotionPaused={isMotionPaused}
+                      showBack={showBack}
+                      onToggleBack={() => setShowBack((prev) => !prev)}
+                    />
+                  }
+                >
+                  <ShirtGLBViewer
                     shirt={shirt}
+                    buttonId={buttonId}
+                    step={step}
                     isMotionPaused={isMotionPaused}
+                    onWebGLError={() => setWebglFailed(true)}
                   />
-                }
-              >
-                <ShirtGLBViewer
+                </WebGLErrorBoundary>
+              ) : (
+                <ShirtStudioFallback
                   shirt={shirt}
-                  buttonId={buttonId}
-                  step={step}
                   isMotionPaused={isMotionPaused}
-                  onWebGLError={() => setWebglFailed(true)}
+                  showBack={showBack}
+                  onToggleBack={() => setShowBack((prev) => !prev)}
                 />
-              </WebGLErrorBoundary>
-            ) : (
-              <ShirtStudioFallback
-                shirt={shirt}
-                isMotionPaused={isMotionPaused}
-              />
-            )}
-          </motion.div>
-        )}
+              )}
+            </motion.div>
+          )}
 
-        {/* STEP 2: Full-bleed Studio Editorial Collar Frame (Light & Dark native studio macros) */}
-        {step === 2 && (
-          <motion.div
-            key="stage-collar-macro"
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 320, damping: 26 }}
-            drag={onCollarChange ? "x" : false}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.22}
-            onDragEnd={(_, info) => {
-              if (info.offset.x < -38) {
-                handleCollarSwipe(1);
-              } else if (info.offset.x > 38) {
-                handleCollarSwipe(-1);
-              }
-            }}
-            className="liquid-glass relative flex h-[360px] w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing sm:h-[420px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
-          >
-            <AnimatePresence mode="sync">
-              <motion.div
-                key={collar}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full select-none"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={collarMeta.macroImage}
-                  alt={`Macro editorial Cuello ${collar}`}
-                  draggable={false}
-                  className="h-full w-full object-cover object-center dark:hidden"
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={collarMeta.macroImageDark}
-                  alt={`Macro editorial Cuello ${collar}`}
-                  draggable={false}
-                  className="hidden h-full w-full object-cover object-center dark:block"
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Discreet Previous / Next Collar Arrows (Adaptive Liquid Glass) */}
-            {onCollarChange && (
-              <>
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => handleCollarSwipe(-1)}
-                  aria-label="Cuello anterior"
-                  className="cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/75 text-[#111113] shadow-sm backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white"
+          {/* STEP 2: 4:3 Studio Editorial Collar Frame (Light & Dark native studio macros) */}
+          {step === 2 && (
+            <motion.div
+              key="stage-collar-macro"
+              initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              drag={onCollarChange ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.22}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -38) {
+                  handleCollarSwipe(1);
+                } else if (info.offset.x > 38) {
+                  handleCollarSwipe(-1);
+                }
+              }}
+              className="liquid-glass relative mx-auto flex aspect-[4/3] max-h-[540px] w-full max-w-[740px] cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            >
+              <AnimatePresence mode="sync">
+                <motion.div
+                  key={collar}
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none"
                 >
-                  <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => handleCollarSwipe(1)}
-                  aria-label="Siguiente cuello"
-                  className="cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/75 text-[#111113] shadow-sm backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white"
-                >
-                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </>
-            )}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={collarMeta.macroImage}
+                    alt={`Macro editorial Cuello ${collar}`}
+                    draggable={false}
+                    className="h-full w-full object-cover object-center dark:hidden"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={collarMeta.macroImageDark}
+                    alt={`Macro editorial Cuello ${collar}`}
+                    draggable={false}
+                    className="hidden h-full w-full object-cover object-center dark:block"
+                  />
+                </motion.div>
+              </AnimatePresence>
 
-            {/* Floating Collar Spec Pill (Adaptive Liquid Glass) */}
-            <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full border border-black/10 bg-white/75 px-4 py-1.5 text-xs text-[#111113] shadow-sm backdrop-blur-md sm:bottom-4 sm:py-2 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
-              <span className="font-semibold">Cuello {collar}</span>
-              <span
-                aria-hidden="true"
-                className="hidden text-black/25 sm:inline dark:text-white/30"
-              >
-                ·
-              </span>
-              <span className="hidden text-[#111113]/75 sm:inline dark:text-white/80">
-                {collarMeta.detail}
-              </span>
-            </div>
-          </motion.div>
-        )}
-
-        {/* STEP 3: Full-bleed Studio Editorial White Placket & Button Frame (Light & Dark native studio macros) */}
-        {step === 3 && (
-          <motion.div
-            key="stage-button-macro"
-            initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 320, damping: 26 }}
-            drag={onButtonChange ? "x" : false}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.22}
-            onDragEnd={(_, info) => {
-              if (info.offset.x < -38) {
-                handleButtonSwipe(1);
-              } else if (info.offset.x > 38) {
-                handleButtonSwipe(-1);
-              }
-            }}
-            className="liquid-glass relative flex h-[360px] w-full cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing sm:h-[420px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
-          >
-            <AnimatePresence mode="sync">
-              <motion.div
-                key={selectedButton.id}
-                initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={isMotionPaused ? undefined : { opacity: 0 }}
-                transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                className="pointer-events-none absolute inset-0 h-full w-full select-none"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedButton.macroImage}
-                  alt={`Macro editorial Botón ${selectedButton.label}`}
-                  draggable={false}
-                  className="h-full w-full object-cover object-center dark:hidden"
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedButton.macroImageDark}
-                  alt={`Macro editorial Botón ${selectedButton.label}`}
-                  draggable={false}
-                  className="hidden h-full w-full object-cover object-center dark:block"
-                />
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Discreet Previous / Next Button Arrows (Adaptive Liquid Glass) */}
-            {onButtonChange && (
-              <>
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => handleButtonSwipe(-1)}
-                  aria-label="Botón anterior"
-                  className="cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/75 text-[#111113] shadow-sm backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white"
-                >
-                  <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                </button>
-                <button
-                  type="button"
-                  onPointerDown={(e) => e.stopPropagation()}
-                  onClick={() => handleButtonSwipe(1)}
-                  aria-label="Siguiente botón"
-                  className="cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/75 text-[#111113] shadow-sm backdrop-blur-md transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white"
-                >
-                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                </button>
-              </>
-            )}
-
-            {/* Floating Button Detail Pill (Adaptive Liquid Glass) */}
-            <div className="pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full border border-black/10 bg-white/75 px-4 py-1.5 text-xs text-[#111113] shadow-sm backdrop-blur-md sm:bottom-4 sm:py-2 dark:border-white/15 dark:bg-[#111113]/75 dark:text-white">
-              <span
-                aria-hidden="true"
-                className="h-3.5 w-3.5 shrink-0 rounded-full border shadow-sm"
-                style={{
-                  backgroundColor: selectedButton.fill,
-                  borderColor: selectedButton.ring,
-                }}
-              />
-              <span className="font-semibold">Botón {selectedButton.label}</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts anchored around the Garment */}
-      <AnimatePresence>
-        {step === 4 && (
-          <motion.div
-            initial={isMotionPaused ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
-          >
-            <div className="relative h-full w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[520px]">
-              {(
-                [
-                  {
-                    key: "cuello",
-                    code: "(A)",
-                    name: "Cuello",
-                    pos: "left-1/2 top-3 -translate-x-1/2 lg:top-5",
-                  },
-                  {
-                    key: "pecho",
-                    code: "(B)",
-                    name: "Pecho",
-                    pos: "right-2 top-1/2 -translate-y-1/2 sm:right-3 lg:right-4",
-                  },
-                  {
-                    key: "manga",
-                    code: "(C)",
-                    name: "Manga",
-                    pos: "left-2 top-[44%] -translate-y-1/2 sm:left-3 lg:left-4",
-                  },
-                  {
-                    key: "largo",
-                    code: "(D)",
-                    name: "Largo",
-                    pos: "bottom-3 right-2 sm:right-3 lg:bottom-5 lg:right-4",
-                  },
-                ] as const
-              ).map((item) => {
-                const active =
-                  focusedMeasure === item.key || Boolean(measurements[item.key]);
-                return (
-                  <div
-                    key={item.key}
-                    aria-label={`${item.name}: ${measurements[item.key] ? `${measurements[item.key]} cm` : "sin completar"}`}
-                    className={`liquid-glass absolute inline-flex items-baseline gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
-                      active
-                        ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
-                        : "text-[#111113]/75 dark:text-white/75"
-                    }`}
+              {/* Discreet Previous / Next Collar Arrows (Real Liquid Glass) */}
+              {onCollarChange && (
+                <>
+                  <button
+                    type="button"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => handleCollarSwipe(-1)}
+                    aria-label="Cuello anterior"
+                    className="liquid-glass dark:!bg-[#111113]/68 cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
                   >
-                    <span className="font-mono font-bold text-[#16233B] dark:text-[#D6C3A5]">
-                      {item.code}
-                    </span>
-                    <span className="font-mono text-sm font-bold text-[#111113] sm:text-base dark:text-white">
-                      {measurements[item.key]
-                        ? `${measurements[item.key]} cm`
-                        : "— cm"}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => handleCollarSwipe(1)}
+                    aria-label="Siguiente cuello"
+                    className="liquid-glass dark:!bg-[#111113]/68 cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                  >
+                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </>
+              )}
+
+              {/* Floating Collar Spec Pill (Real Liquid Glass) */}
+              <div className="liquid-glass dark:!bg-[#111113]/68 pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#16233B] dark:bg-white" />
+                <span className="font-semibold">Cuello {collar}</span>
+                <span
+                  aria-hidden="true"
+                  className="hidden text-black/25 sm:inline dark:text-white/30"
+                >
+                  ·
+                </span>
+                <span className="hidden text-[#111113]/75 sm:inline dark:text-white/80">
+                  {collarMeta.detail}
+                </span>
+              </div>
+            </motion.div>
+          )}
+
+          {/* STEP 3: 4:3 Studio Editorial White Placket & Button Frame (Light & Dark native studio macros) */}
+          {step === 3 && (
+            <motion.div
+              key="stage-button-macro"
+              initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+              drag={onButtonChange ? "x" : false}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.22}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -38) {
+                  handleButtonSwipe(1);
+                } else if (info.offset.x > 38) {
+                  handleButtonSwipe(-1);
+                }
+              }}
+              className="liquid-glass dark:!bg-[#111113]/68 relative mx-auto flex aspect-[4/3] max-h-[540px] w-full max-w-[740px] cursor-grab touch-pan-y items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_18px_48px_rgba(17,17,19,0.08)] active:cursor-grabbing dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.45)]"
+            >
+              <AnimatePresence mode="sync">
+                <motion.div
+                  key={selectedButton.id}
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 1.03 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={selectedButton.macroImage}
+                    alt={`Macro editorial Botón ${selectedButton.label}`}
+                    draggable={false}
+                    className="h-full w-full object-cover object-center dark:hidden"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={selectedButton.macroImageDark}
+                    alt={`Macro editorial Botón ${selectedButton.label}`}
+                    draggable={false}
+                    className="hidden h-full w-full object-cover object-center dark:block"
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Discreet Previous / Next Button Arrows (Real Liquid Glass) */}
+              {onButtonChange && (
+                <>
+                  <button
+                    type="button"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => handleButtonSwipe(-1)}
+                    aria-label="Botón anterior"
+                    className="liquid-glass dark:!bg-[#111113]/68 cursor-pointer absolute top-1/2 left-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:left-3 sm:h-10 sm:w-10 dark:text-white"
+                  >
+                    <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                  <button
+                    type="button"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => handleButtonSwipe(1)}
+                    aria-label="Siguiente botón"
+                    className="liquid-glass dark:!bg-[#111113]/68 cursor-pointer absolute top-1/2 right-2.5 z-20 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-[#111113] transition-transform hover:scale-105 active:scale-95 sm:right-3 sm:h-10 sm:w-10 dark:text-white"
+                  >
+                    <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                </>
+              )}
+
+              {/* Floating Button Detail Pill (Real Liquid Glass) */}
+              <div className="liquid-glass dark:!bg-[#111113]/68 pointer-events-none absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-1.5 text-xs text-[#111113] sm:bottom-4 sm:py-2 dark:text-white">
+                <span
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5 shrink-0 rounded-full border shadow-sm"
+                  style={{
+                    backgroundColor: selectedButton.fill,
+                    borderColor: selectedButton.ring,
+                  }}
+                />
+                <span className="font-semibold">
+                  Botón {selectedButton.label}
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* STEP 4 OVERLAY: Floating cm Measurement Callouts anchored around the Garment */}
+        <AnimatePresence>
+          {step === 4 && (
+            <motion.div
+              initial={isMotionPaused ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+            >
+              <div className="relative h-full w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[520px]">
+                {(
+                  [
+                    {
+                      key: "cuello",
+                      code: "(A)",
+                      name: "Cuello",
+                      pos: "left-1/2 top-3 -translate-x-1/2 lg:top-5",
+                    },
+                    {
+                      key: "pecho",
+                      code: "(B)",
+                      name: "Pecho",
+                      pos: "right-2 top-1/2 -translate-y-1/2 sm:right-3 lg:right-4",
+                    },
+                    {
+                      key: "manga",
+                      code: "(C)",
+                      name: "Manga",
+                      pos: "left-2 top-[44%] -translate-y-1/2 sm:left-3 lg:left-4",
+                    },
+                    {
+                      key: "largo",
+                      code: "(D)",
+                      name: "Largo",
+                      pos: "bottom-3 right-2 sm:right-3 lg:bottom-5 lg:right-4",
+                    },
+                  ] as const
+                ).map((item) => {
+                  const active =
+                    focusedMeasure === item.key ||
+                    Boolean(measurements[item.key]);
+                  return (
+                    <div
+                      key={item.key}
+                      aria-label={`${item.name}: ${measurements[item.key] ? `${measurements[item.key]} cm` : "sin completar"}`}
+                      className={`liquid-glass absolute inline-flex items-baseline gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
+                        active
+                          ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
+                          : "text-[#111113]/75 dark:text-white/75"
+                      }`}
+                    >
+                      <span className="font-mono font-bold text-[#16233B] dark:text-[#D6C3A5]">
+                        {item.code}
+                      </span>
+                      <span className="font-mono text-sm font-bold text-[#111113] sm:text-base dark:text-white">
+                        {measurements[item.key]
+                          ? `${measurements[item.key]} cm`
+                          : "— cm"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* External Compact Liquid Glass Controls Row BELOW the card (Step 1 & Step 4) */}
+      {(step === 1 || step === 4) && (
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <button
+            id="stage-3d-toggle"
+            type="button"
+            onClick={() => {
+              const next = !is3DActive;
+              if (next) {
+                setWebglFailed(false);
+              }
+              setUser3DOverride(next);
+            }}
+            aria-pressed={show3DViewer}
+            aria-label={
+              show3DViewer
+                ? "Volver a foto de estudio"
+                : "Activar vista 3D interactiva 360°"
+            }
+            title={show3DViewer ? "Ver foto de estudio" : "Ver en 3D (360°)"}
+            className={`liquid-glass cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-[11px] font-semibold tracking-wider transition-all ${
+              show3DViewer
+                ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                : "text-[#111113]/85 hover:text-[#111113] dark:text-white/85 dark:hover:text-white"
+            }`}
+          >
+            <Box className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>3D</span>
+          </button>
+
+          {!show3DViewer && (
+            <button
+              id="stage-flip-chip"
+              type="button"
+              onClick={() => setShowBack((prev) => !prev)}
+              aria-pressed={showBack}
+              aria-label={
+                showBack
+                  ? `Ver frente de ${shirt.name}`
+                  : `Ver espalda de ${shirt.name}`
+              }
+              className="liquid-glass cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-[11px] font-semibold text-[#111113]/85 transition-all hover:text-[#111113] dark:text-white/90 dark:hover:text-white"
+            >
+              <RotateCw className="h-3.5 w-3.5" aria-hidden="true" />
+              <span>{showBack ? "Ver frente" : "Ver espalda"}</span>
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

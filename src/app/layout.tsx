@@ -66,7 +66,7 @@ export default function RootLayout({
       lang="es-AR"
       className={`${plusJakartaSans.variable} ${jetBrainsMono.variable}`}
     >
-      <body className="min-h-screen bg-[#F7F6F3] text-[#111113] font-sans antialiased transition-colors duration-300 dark:bg-[#0B0B0E] dark:text-[#F8FAFC]">
+      <body className="min-h-screen bg-transparent text-[#111113] font-sans antialiased transition-colors duration-300 dark:text-[#F8FAFC]">
         <ThemeProvider>
           <MotionProvider>
             <AtelierProvider>

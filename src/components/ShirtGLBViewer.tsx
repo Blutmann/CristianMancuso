@@ -575,7 +575,7 @@ function Clo3DShirtModel({
   });
 
   return (
-    <group ref={groupRef} position={[0, 0.04, 0]}>
+    <group ref={groupRef} position={[0, -0.02, 0]}>
       <group scale={normScale}>
         <Center>
           <primitive object={clonedScene} />
