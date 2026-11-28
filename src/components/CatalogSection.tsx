@@ -143,7 +143,7 @@ function MinimalShirtCard({
                     src={shirt.studioImage}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-cover object-top mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
+                    className="h-full w-full object-cover object-top mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
                   />
                 </picture>
                 <picture className="hidden h-full w-full dark:block">

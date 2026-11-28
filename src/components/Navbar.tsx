@@ -88,16 +88,22 @@ export function Navbar() {
         <div className="mx-auto w-full lg:max-w-[1360px] lg:px-10">
           <nav
             aria-label="Navegación principal"
-            className={`pointer-events-auto relative flex h-16 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-2xl saturate-200 transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
+            className={`pointer-events-auto relative flex h-16 w-full items-center justify-between overflow-hidden rounded-none border-x-0 border-t-0 border-b px-4 backdrop-blur-[28px] saturate-[220%] transition-all duration-300 sm:px-6 lg:h-auto lg:rounded-2xl lg:border lg:px-5 lg:py-2 ${
               isScrolled
-                ? "liquid-glass-active !bg-white/48 border-white/65 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85),0_14px_40px_rgba(0,0,0,0.08)] dark:!bg-[#111113]/48 dark:border-white/24 dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
-                : "liquid-glass !bg-white/48 border-white/55 dark:!bg-[#111113]/48 dark:border-white/20"
+                ? "liquid-glass-active !bg-white/24 border-white/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(255,255,255,0.45),0_14px_40px_rgba(22,35,59,0.09)] dark:!bg-[#111113]/42 dark:border-white/26 dark:shadow-[inset_0_1.5px_0_rgba(255,255,255,0.34),0_20px_50px_rgba(0,0,0,0.55)]"
+                : "liquid-glass !bg-white/24 border-white/75 dark:!bg-[#111113]/42 dark:border-white/22"
             }`}
           >
+            {/* Diagonal iOS Liquid Glass specular sheen */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[linear-gradient(125deg,rgba(255,255,255,0.36)_0%,rgba(255,255,255,0.06)_38%,transparent_62%,rgba(255,255,255,0.22)_100%)] dark:bg-[linear-gradient(125deg,rgba(255,255,255,0.12)_0%,transparent_45%,rgba(255,255,255,0.05)_100%)]"
+            />
+
             {/* Top specular rim highlight */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent dark:via-white/35"
+              className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/95 to-transparent dark:via-white/40"
             />
 
             {/* Full 4-Sided Perimeter Interior Stitch (Desktop Capsule Detail) */}

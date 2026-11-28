@@ -287,7 +287,7 @@ export function Hero() {
                       loading="eager"
                       fetchPriority={activeIndex === 0 ? "high" : "auto"}
                       draggable={false}
-                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
+                      className="h-full w-full scale-[1.12] object-contain object-[50%_42%] mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
                     />
                   </picture>
 

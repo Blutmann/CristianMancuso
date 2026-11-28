@@ -267,7 +267,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                       alt={shirt.name}
                       loading="eager"
                       fetchPriority="high"
-                      className="h-full w-full object-cover object-center mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
+                      className="h-full w-full object-cover object-center mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -305,7 +305,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de cuello y botones`}
-                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">
@@ -354,7 +354,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     <img
                       src={shirt.studioImage}
                       alt={`${shirt.name} — Detalle de puño y confección`}
-                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)]"
+                      className="h-full w-full origin-bottom-left scale-[1.75] object-cover object-bottom mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] dark:brightness-100 dark:contrast-100"
                     />
                   </picture>
                   <picture className="hidden h-full w-full dark:block">

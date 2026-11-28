@@ -151,7 +151,7 @@ function ShirtStudioFallback({
                 src={lightSrc}
                 alt={`${shirt.name} — ${showBack ? "Espalda" : "Frente"}`}
                 draggable={false}
-                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] select-none"
+                className="h-full w-full scale-[1.10] object-contain object-center mix-blend-multiply brightness-[1.06] contrast-[1.03] [mask-image:radial-gradient(ellipse_90%_94%_at_50%_48%,black_72%,transparent_100%)] select-none dark:brightness-100 dark:contrast-100"
               />
             </picture>
             <picture className="hidden h-full w-full dark:block">
@@ -337,7 +337,7 @@ export function StudioShirtStage({
             animate={{ opacity: 1, scale: 1 }}
             exit={isMotionPaused ? undefined : { opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.28 }}
-            className="relative h-[360px] w-full sm:h-[400px] lg:h-full"
+            className="relative h-[460px] w-full sm:h-[520px] lg:h-[62vh] lg:min-h-[540px] lg:max-h-[640px]"
           >
             {show3DViewer ? (
               <WebGLErrorBoundary
