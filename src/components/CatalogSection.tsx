@@ -5,8 +5,6 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Grid2x2,
   Grid3x3,
   Plus,
@@ -236,7 +234,6 @@ export function CatalogSection() {
   const [sizeSheetShirt, setSizeSheetShirt] = useState<CatalogShirt | null>(
     null
   );
-  const sizeTrackRef = useRef<HTMLDivElement | null>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement | null>(null);
   const desktopFilterRef = useRef<HTMLDivElement | null>(null);
 
@@ -369,15 +366,6 @@ export function CatalogSection() {
       commercialSize: size,
     });
     setSizeSheetShirt(null);
-  };
-
-  const scrollSizeTrack = (direction: -1 | 1) => {
-    const el = sizeTrackRef.current;
-    if (!el) return;
-    el.scrollBy({
-      left: direction * 160,
-      behavior: isMotionPaused ? "auto" : "smooth",
-    });
   };
 
   const sheetSizes = sizeSheetShirt
@@ -1120,7 +1108,7 @@ export function CatalogSection() {
               animate={{ y: 0, opacity: 1, scale: 1 }}
               exit={isMotionPaused ? undefined : { y: 32, opacity: 0, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              className="liquid-glass-active w-full rounded-t-2xl border-x-0 border-b-0 !bg-[#F7F6F3]/98 p-5 pb-8 text-[#111113] shadow-[0_-18px_48px_rgba(0,0,0,0.22)] sm:max-w-md sm:rounded-2xl sm:border sm:p-6 dark:!bg-[#0B0B0E]/98 dark:text-[#F8FAFC]"
+              className="liquid-glass-active w-full rounded-t-2xl border-x-0 border-b-0 !bg-[#F7F6F3]/98 p-5 pb-8 text-[#111113] shadow-[0_-18px_48px_rgba(0,0,0,0.22)] sm:max-w-2xl sm:rounded-2xl sm:border sm:p-6 dark:!bg-[#0B0B0E]/98 dark:text-[#F8FAFC]"
             >
               <div
                 aria-hidden="true"
@@ -1166,45 +1154,22 @@ export function CatalogSection() {
                 Elegí tu talle
               </p>
 
-              {/* Horizontally Scrollable Scalable Size Strip with Discreet ‹ / › Arrows */}
-              <div className="mt-2.5 flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => scrollSizeTrack(-1)}
-                  aria-label="Ver talles anteriores"
-                  className="cursor-pointer inline-flex h-10 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
-                >
-                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                </button>
-
-                <div
-                  ref={sizeTrackRef}
-                  className="scrollbar-none flex flex-1 items-center gap-2 overflow-x-auto py-0.5"
-                >
-                  {sheetSizes.map((size) => (
-                    <motion.button
-                      key={size}
-                      type="button"
-                      whileHover={isMotionPaused ? undefined : { scale: 1.05 }}
-                      whileTap={isMotionPaused ? undefined : { scale: 0.93 }}
-                      transition={{ type: "spring", stiffness: 320, damping: 26 }}
-                      onClick={() => handleSelectSize(size)}
-                      aria-label={`Agregar ${sizeSheetShirt.name} talle ${size}`}
-                      className="cursor-pointer flex h-12 min-w-[52px] shrink-0 items-center justify-center rounded-full border border-black/14 bg-white/90 px-4 text-sm font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
-                    >
-                      {size}
-                    </motion.button>
-                  ))}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => scrollSizeTrack(1)}
-                  aria-label="Ver talles siguientes"
-                  className="cursor-pointer inline-flex h-10 w-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-black/[0.06] hover:text-[#111113] dark:hover:bg-white/10 dark:hover:text-white"
-                >
-                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
-                </button>
+              {/* All sizes visible cleanly with flex-wrap (zero horizontal scroll or arrows) */}
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2 py-0.5">
+                {sheetSizes.map((size) => (
+                  <motion.button
+                    key={size}
+                    type="button"
+                    whileHover={isMotionPaused ? undefined : { scale: 1.05 }}
+                    whileTap={isMotionPaused ? undefined : { scale: 0.93 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                    onClick={() => handleSelectSize(size)}
+                    aria-label={`Agregar ${sizeSheetShirt.name} talle ${size}`}
+                    className="cursor-pointer flex h-11 min-w-[52px] items-center justify-center rounded-full border border-black/14 bg-white/90 px-4 text-sm font-semibold text-[#111113] transition-colors hover:bg-[#16233B] hover:text-white dark:border-white/18 dark:bg-white/[0.08] dark:text-white dark:hover:bg-white dark:hover:text-[#0B0B0E]"
+                  >
+                    {size}
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
           </motion.div>

@@ -814,12 +814,16 @@ export default function ShirtGLBViewer({
             }}
             onCreated={({ gl }) => {
               const canvas = gl.domElement;
+              let disposed = false;
               const handleContextLost = (e: Event) => {
                 e.preventDefault();
-                onWebGLError?.();
+                if (!disposed) {
+                  onWebGLError?.();
+                }
               };
               canvas.addEventListener("webglcontextlost", handleContextLost);
               canvasCleanupRef.current = () => {
+                disposed = true;
                 canvas.removeEventListener(
                   "webglcontextlost",
                   handleContextLost

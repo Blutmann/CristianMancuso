@@ -96,7 +96,7 @@ function ShirtStudioFallback({
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
         }}
         style={{ transformStyle: "preserve-3d" }}
-        className="relative aspect-[3/4] h-[92%] max-h-[410px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_22px_54px_rgba(17,17,19,0.16)] will-change-transform dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_26px_64px_rgba(0,0,0,0.6)]"
+        className="relative aspect-[3/4] h-[310px] overflow-hidden rounded-3xl border border-black/10 bg-[#F4F1EC] shadow-[0_22px_54px_rgba(17,17,19,0.16)] will-change-transform sm:h-[350px] lg:h-[52vh] lg:min-h-[430px] lg:max-h-[540px] dark:border-white/14 dark:bg-[#0E0F13] dark:shadow-[0_26px_64px_rgba(0,0,0,0.6)]"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -253,21 +253,28 @@ export function StudioShirtStage({
   const show3DViewer = is3DActive && !webglFailed;
 
   return (
-    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full">
-      {/* Discreet corner 3D toggle button for Step 1 & Step 4 */}
-      {(step === 1 || step === 4) && !webglFailed && (
+    <div className="relative flex h-[360px] w-full items-center justify-center bg-transparent sm:h-[400px] lg:h-full lg:min-h-[460px]">
+      {/* Persistent corner 3D / Foto toggle button for Step 1 & Step 4 */}
+      {(step === 1 || step === 4) && (
         <button
+          id="stage-3d-toggle"
           type="button"
-          onClick={() => setUser3DOverride(!is3DActive)}
-          aria-pressed={is3DActive}
+          onClick={() => {
+            const next = !is3DActive;
+            if (next) {
+              setWebglFailed(false);
+            }
+            setUser3DOverride(next);
+          }}
+          aria-pressed={show3DViewer}
           aria-label={
-            is3DActive
+            show3DViewer
               ? "Volver a foto de estudio"
               : "Activar vista 3D interactiva 360°"
           }
-          title={is3DActive ? "Ver foto de estudio" : "Ver en 3D (360°)"}
-          className={`liquid-glass cursor-pointer absolute top-2.5 right-2.5 z-30 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wider transition-all ${
-            is3DActive
+          title={show3DViewer ? "Ver foto de estudio" : "Ver en 3D (360°)"}
+          className={`liquid-glass cursor-pointer absolute top-2.5 right-2.5 z-40 inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3 text-[11px] font-semibold tracking-wider transition-all ${
+            show3DViewer
               ? "border-2 border-[#16233B] text-[#111113] dark:border-white dark:text-white"
               : "text-[#111113]/80 hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
           }`}
@@ -487,7 +494,7 @@ export function StudioShirtStage({
         )}
       </AnimatePresence>
 
-      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts over the 3D Garment */}
+      {/* STEP 4 OVERLAY: Floating cm Measurement Callouts anchored around the Garment */}
       <AnimatePresence>
         {step === 4 && (
           <motion.div
@@ -495,59 +502,61 @@ export function StudioShirtStage({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="pointer-events-none absolute inset-0 z-30"
+            className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
           >
-            {(
-              [
-                {
-                  key: "cuello",
-                  code: "(A)",
-                  name: "Cuello",
-                  pos: "left-1/2 top-3.5 -translate-x-1/2",
-                },
-                {
-                  key: "pecho",
-                  code: "(B)",
-                  name: "Pecho",
-                  pos: "right-3 top-1/2 -translate-y-1/2 sm:right-6",
-                },
-                {
-                  key: "manga",
-                  code: "(C)",
-                  name: "Manga",
-                  pos: "left-3 top-[44%] -translate-y-1/2 sm:left-6",
-                },
-                {
-                  key: "largo",
-                  code: "(D)",
-                  name: "Largo",
-                  pos: "bottom-3.5 right-3 sm:right-6",
-                },
-              ] as const
-            ).map((item) => {
-              const active =
-                focusedMeasure === item.key || Boolean(measurements[item.key]);
-              return (
-                <div
-                  key={item.key}
-                  aria-label={`${item.name}: ${measurements[item.key] ? `${measurements[item.key]} cm` : "sin completar"}`}
-                  className={`liquid-glass absolute inline-flex items-baseline gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
-                    active
-                      ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
-                      : "text-[#111113]/75 dark:text-white/75"
-                  }`}
-                >
-                  <span className="font-mono font-bold text-[#16233B] dark:text-[#D6C3A5]">
-                    {item.code}
-                  </span>
-                  <span className="font-mono text-sm font-bold text-[#111113] sm:text-base dark:text-white">
-                    {measurements[item.key]
-                      ? `${measurements[item.key]} cm`
-                      : "— cm"}
-                  </span>
-                </div>
-              );
-            })}
+            <div className="relative h-full w-full max-w-[340px] sm:max-w-[380px] lg:max-w-[460px]">
+              {(
+                [
+                  {
+                    key: "cuello",
+                    code: "(A)",
+                    name: "Cuello",
+                    pos: "left-1/2 top-3 -translate-x-1/2 lg:top-5",
+                  },
+                  {
+                    key: "pecho",
+                    code: "(B)",
+                    name: "Pecho",
+                    pos: "right-2 top-1/2 -translate-y-1/2 sm:right-3 lg:right-4",
+                  },
+                  {
+                    key: "manga",
+                    code: "(C)",
+                    name: "Manga",
+                    pos: "left-2 top-[44%] -translate-y-1/2 sm:left-3 lg:left-4",
+                  },
+                  {
+                    key: "largo",
+                    code: "(D)",
+                    name: "Largo",
+                    pos: "bottom-3 right-2 sm:right-3 lg:bottom-5 lg:right-4",
+                  },
+                ] as const
+              ).map((item) => {
+                const active =
+                  focusedMeasure === item.key || Boolean(measurements[item.key]);
+                return (
+                  <div
+                    key={item.key}
+                    aria-label={`${item.name}: ${measurements[item.key] ? `${measurements[item.key]} cm` : "sin completar"}`}
+                    className={`liquid-glass absolute inline-flex items-baseline gap-1.5 rounded-full px-3.5 py-1.5 text-xs transition-all sm:px-4 sm:py-2 sm:text-sm ${item.pos} ${
+                      active
+                        ? "border-[#16233B]/50 text-[#111113] shadow-md dark:border-white/55 dark:text-white"
+                        : "text-[#111113]/75 dark:text-white/75"
+                    }`}
+                  >
+                    <span className="font-mono font-bold text-[#16233B] dark:text-[#D6C3A5]">
+                      {item.code}
+                    </span>
+                    <span className="font-mono text-sm font-bold text-[#111113] sm:text-base dark:text-white">
+                      {measurements[item.key]
+                        ? `${measurements[item.key]} cm`
+                        : "— cm"}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

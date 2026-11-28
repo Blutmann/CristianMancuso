@@ -46,7 +46,9 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
   const sizes = shirt.sizeType === "alpha" ? ALPHA_SIZES : NUMERIC_SIZES;
   const defaultSize: CommercialSize = shirt.sizeType === "alpha" ? "M" : "40";
   const [selectedSize, setSelectedSize] = useState<CommercialSize>(defaultSize);
-  const [viewMode, setViewMode] = useState<"prenda" | "tejido">("prenda");
+  const [viewMode, setViewMode] = useState<"prenda" | "tejido" | "cuello">(
+    "prenda"
+  );
   const [justAdded, setJustAdded] = useState(false);
 
   const installmentArs = Math.round(shirt.priceArs / 3);
@@ -65,6 +67,12 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
     setJustAdded(true);
     openDrawer();
     window.setTimeout(() => setJustAdded(false), 1800);
+  };
+
+  const cycleMobileView = () => {
+    setViewMode((prev) =>
+      prev === "prenda" ? "tejido" : prev === "tejido" ? "cuello" : "prenda"
+    );
   };
 
   return (
@@ -107,12 +115,99 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       </nav>
 
       {/* 2-Column Clean PDP Layout */}
-      <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-12">
-        {/* LEFT COLUMN: Compact Mobile Photo Stage (keeps CTA above the fold on iPhone) + Desktop 4:5 Stage */}
-        <div className="flex flex-col items-center lg:col-span-6">
-          <div className="relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-auto lg:min-h-0 lg:max-h-[540px] lg:aspect-[4/5] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
+      <div className="mt-4 grid grid-cols-1 items-start gap-5 lg:mt-6 lg:grid-cols-12 lg:gap-10">
+        {/* LEFT COLUMN: Desktop Vertical 3-Thumbnail Strip + Main Photo Stage */}
+        <div className="flex flex-col items-center gap-3 lg:col-span-6 lg:flex-row lg:items-start lg:gap-3.5">
+          {/* Desktop (lg+) Vertical 3-Thumbnail Strip on the Left */}
+          <div
+            role="tablist"
+            aria-label="Vistas del producto"
+            className="hidden shrink-0 flex-col gap-3 lg:flex"
+          >
+            {/* Thumbnail 1: Vista Prenda */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "prenda"}
+              aria-label="Vista Prenda"
+              title="Vista Prenda"
+              onClick={() => setViewMode("prenda")}
+              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all dark:bg-[#0E0F13] ${
+                viewMode === "prenda"
+                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
+                  : "border border-black/10 opacity-70 hover:opacity-100 dark:border-white/15"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImage}
+                alt={`${shirt.name} — Vista prenda`}
+                className="h-full w-full object-contain p-1 dark:hidden"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImageDark}
+                alt={`${shirt.name} — Vista prenda`}
+                className="hidden h-full w-full object-contain p-1 dark:block"
+              />
+            </button>
+
+            {/* Thumbnail 2: Muestra de Tela */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "tejido"}
+              aria-label="Muestra de Tela"
+              title="Muestra de Tela"
+              onClick={() => setViewMode("tejido")}
+              style={{ backgroundColor: shirt.baseHex }}
+              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl transition-all ${
+                viewMode === "tejido"
+                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
+                  : "border border-black/10 opacity-75 hover:opacity-100 dark:border-white/15"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImage}
+                alt={`${shirt.name} — Muestra de tela`}
+                className="h-full w-full scale-[3.2] object-cover object-center"
+              />
+            </button>
+
+            {/* Thumbnail 3: Detalle Cuello / Botón */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={viewMode === "cuello"}
+              aria-label="Detalle Cuello y Botón"
+              title="Detalle Cuello / Botón"
+              onClick={() => setViewMode("cuello")}
+              className={`cursor-pointer relative h-24 w-20 overflow-hidden rounded-2xl bg-[#F4F1EC] transition-all dark:bg-[#0E0F13] ${
+                viewMode === "cuello"
+                  ? "border-2 border-[#16233B] opacity-100 shadow-md dark:border-white"
+                  : "border border-black/10 opacity-70 hover:opacity-100 dark:border-white/15"
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImage}
+                alt={`${shirt.name} — Detalle cuello y botón`}
+                className="h-full w-full origin-top scale-[1.85] object-cover object-top dark:hidden"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={shirt.studioImageDark}
+                alt={`${shirt.name} — Detalle cuello y botón`}
+                className="hidden h-full w-full origin-top scale-[1.85] object-cover object-top dark:block"
+              />
+            </button>
+          </div>
+
+          {/* Main Photo Stage */}
+          <div className="relative flex h-[38svh] min-h-[260px] max-h-[340px] w-full flex-1 items-center justify-center overflow-hidden rounded-3xl bg-[#F4F1EC] shadow-[0_20px_50px_rgba(17,17,19,0.12)] lg:h-[520px] lg:min-h-0 lg:max-h-[540px] dark:bg-[#0E0F13] dark:shadow-[0_24px_60px_rgba(0,0,0,0.5)]">
             <AnimatePresence mode="wait">
-              {viewMode === "prenda" ? (
+              {viewMode === "prenda" && (
                 <motion.div
                   key="pdp-prenda"
                   initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
@@ -150,39 +245,80 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
                     />
                   </picture>
                 </motion.div>
-              ) : (
+              )}
+
+              {viewMode === "tejido" && (
                 <motion.div
                   key="pdp-tejido"
                   initial={isMotionPaused ? false : { opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={isMotionPaused ? undefined : { opacity: 0 }}
-                  transition={{ duration: 0.32 }}
+                  transition={{ duration: 0.3 }}
                   className="flex h-full w-full items-center justify-center"
                 >
                   <TailorFabricSwatch shirt={shirt} />
                 </motion.div>
               )}
+
+              {viewMode === "cuello" && (
+                <motion.div
+                  key="pdp-cuello"
+                  initial={isMotionPaused ? false : { opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={isMotionPaused ? undefined : { opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 26 }}
+                  className="relative h-full w-full overflow-hidden"
+                >
+                  <picture className="block h-full w-full dark:hidden">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImage}
+                      alt={`${shirt.name} — Detalle de cuello y botones`}
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top"
+                    />
+                  </picture>
+                  <picture className="hidden h-full w-full dark:block">
+                    <source
+                      media="(min-width: 768px)"
+                      srcSet={shirt.studioImageDarkHd}
+                      type="image/webp"
+                    />
+                    <img
+                      src={shirt.studioImageDark}
+                      alt={`${shirt.name} — Detalle de cuello y botones`}
+                      className="h-full w-full origin-top scale-[1.85] object-cover object-top"
+                    />
+                  </picture>
+                </motion.div>
+              )}
             </AnimatePresence>
 
-            {/* Compact Icon-Only Circular Liquid Glass View Toggle inside bottom-right corner */}
+            {/* Mobile (< lg) Compact Icon-Only Circular Liquid Glass View Switcher inside bottom-right corner */}
             <motion.button
               type="button"
               whileHover={isMotionPaused ? undefined : { scale: 1.06 }}
               whileTap={isMotionPaused ? undefined : { scale: 0.92 }}
               transition={{ type: "spring", stiffness: 320, damping: 26 }}
-              onClick={() =>
-                setViewMode((prev) => (prev === "prenda" ? "tejido" : "prenda"))
-              }
-              aria-pressed={viewMode === "tejido"}
+              onClick={cycleMobileView}
               aria-label={
                 viewMode === "prenda"
-                  ? "Cambiar a muestra de tela"
-                  : "Cambiar a vista de prenda"
+                  ? "Ver muestra de tela"
+                  : viewMode === "tejido"
+                    ? "Ver detalle de cuello y botón"
+                    : "Volver a vista de prenda"
               }
               title={
-                viewMode === "prenda" ? "Ver muestra de tela" : "Ver prenda"
+                viewMode === "prenda"
+                  ? "Ver muestra de tela"
+                  : viewMode === "tejido"
+                    ? "Ver detalle cuello"
+                    : "Ver prenda"
               }
-              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111113] shadow-sm transition-colors hover:border-black/25 dark:text-white dark:hover:border-white/30"
+              className="liquid-glass cursor-pointer absolute right-3 bottom-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full text-[#111113] shadow-sm transition-colors hover:border-black/25 lg:hidden dark:text-white dark:hover:border-white/30"
             >
               {viewMode === "prenda" ? (
                 <SwatchBook className="h-4 w-4" aria-hidden="true" />
@@ -316,7 +452,7 @@ export function ProductDetailClient({ shirt }: { shirt: CatalogShirt }) {
       {/* RELATED SUGGESTIONS: También te puede interesar */}
       <section
         aria-labelledby="related-heading"
-        className="mt-16 border-t border-black/10 pt-12 dark:border-white/10"
+        className="mt-8 border-t border-black/10 pt-6 lg:mt-10 lg:pt-8 dark:border-white/10"
       >
         <h2 id="related-heading" className="ds-h2">
           También te puede interesar
