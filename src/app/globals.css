@@ -4,8 +4,8 @@
 
 :root {
   /* Design System v2.0 — Light Mode (Default) */
-  --bg-canvas: #E4E9F2;
-  --bg-page: #E4E9F2;
+  --bg-canvas: #F6F4EF;
+  --bg-page: #F6F4EF;
   --surface-elevated: #FFFFFF;
   --glass-surface: rgba(255, 255, 255, 0.78);
   --glass-border: rgba(17, 17, 19, 0.10);

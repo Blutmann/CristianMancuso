@@ -248,7 +248,7 @@ export function SelectionDrawer() {
             {selectionItems.length > 0 && (
               <div className="border-t border-black/10 bg-white/75 px-6 py-5 backdrop-blur-xl dark:border-white/12 dark:bg-[#14161D]/85">
                 <div className="flex items-center justify-between text-xs text-muted">
-                  <span>Confección a medida e iniciales</span>
+                  <span>Confección a medida</span>
                   <span className="font-semibold text-[#16233B] dark:text-gold">
                     Sin cargo
                   </span>

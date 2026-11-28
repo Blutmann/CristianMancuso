@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
+  Box,
   Check,
   ChevronLeft,
   Ruler,
@@ -91,6 +92,19 @@ function getSwatchStyle(shirt: CatalogShirt): React.CSSProperties {
   };
 }
 
+const subscribeDesktopMedia = (callback: () => void) => {
+  if (typeof window === "undefined") return () => {};
+  const mql = window.matchMedia("(min-width: 1024px)");
+  mql.addEventListener("change", callback);
+  return () => mql.removeEventListener("change", callback);
+};
+
+const getDesktopSnapshot = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(min-width: 1024px)").matches;
+
+const getDesktopServerSnapshot = () => false;
+
 export function ShirtBuilderSection() {
   const {
     currency,
@@ -102,6 +116,17 @@ export function ShirtBuilderSection() {
   const { isMotionPaused } = useMotion();
 
   const [step, setStep] = useState<BuilderStep>(1);
+  const [webglFailed, setWebglFailed] = useState(false);
+  // Mobile (< lg) defaults to large floating studio photo; desktop (lg+) defaults to 3D viewer
+  const isDesktopDefault = useSyncExternalStore(
+    subscribeDesktopMedia,
+    getDesktopSnapshot,
+    getDesktopServerSnapshot
+  );
+  const [user3DOverride, setUser3DOverride] = useState<boolean | null>(null);
+  const is3DActive = user3DOverride ?? isDesktopDefault;
+  const show3DViewer = is3DActive && !webglFailed;
+
   const [fabricCategory, setFabricCategory] =
     useState<FabricCategoryId | null>(null);
   const [collar, setCollar] = useState<CollarOption>("Italiano");
@@ -303,7 +328,34 @@ export function ShirtBuilderSection() {
                 </span>
               </p>
 
-              {step > 1 && (
+              {step === 1 ? (
+                <button
+                  id="stage-3d-toggle"
+                  type="button"
+                  onClick={() => {
+                    const next = !is3DActive;
+                    if (next) {
+                      setWebglFailed(false);
+                    }
+                    setUser3DOverride(next);
+                  }}
+                  aria-pressed={show3DViewer}
+                  aria-label={
+                    show3DViewer
+                      ? "Volver a foto de estudio"
+                      : "Activar vista 3D interactiva 360°"
+                  }
+                  title={show3DViewer ? "Ver foto de estudio" : "Ver en 3D (360°)"}
+                  className={`liquid-glass cursor-pointer inline-flex min-h-[34px] items-center gap-1.5 rounded-full px-3 text-xs font-semibold tracking-wide transition-all ${
+                    show3DViewer
+                      ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
+                      : "text-[#111113]/80 hover:text-[#111113] dark:text-white/80 dark:hover:text-white"
+                  }`}
+                >
+                  <Box className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>3D</span>
+                </button>
+              ) : (
                 <button
                   type="button"
                   onClick={() => setStep((step - 1) as BuilderStep)}
@@ -349,6 +401,8 @@ export function ShirtBuilderSection() {
             measurements={measurements}
             focusedMeasure={focusedMeasure}
             isMotionPaused={isMotionPaused}
+            show3DViewer={show3DViewer}
+            onWebGLError={() => setWebglFailed(true)}
           />
         </div>
 

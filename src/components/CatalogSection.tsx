@@ -114,13 +114,13 @@ function MinimalShirtCard({
     <motion.article
       whileHover={isMotionPaused ? undefined : { y: -4 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-colors duration-300 hover:border-black/20 dark:text-white dark:hover:border-white/28"
+      className="group liquid-glass flex flex-col overflow-hidden rounded-2xl text-[#111113] transition-colors duration-300 hover:border-black/20 dark:!bg-[#0E0F13]/88 dark:text-white dark:hover:border-white/28"
     >
       {/* Clickable Product Link Area */}
       <Link href={`/coleccion/${shirt.id}`} className="flex flex-1 flex-col">
         {/* Full-bleed Loro Piana Dual Light/Dark Studio Garment Stage + Top-Left Badge */}
         <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-white/35 dark:!bg-[#0E0F13]/82 ${
+          className={`relative flex w-full items-center justify-center overflow-hidden bg-white/35 dark:bg-transparent ${
             isWide ? "aspect-[4/4.6]" : "aspect-[4/4.4]"
           }`}
         >
@@ -156,7 +156,7 @@ function MinimalShirtCard({
                     src={shirt.studioImageDark}
                     alt={shirt.name}
                     loading="lazy"
-                    className="h-full w-full object-cover object-top dark:[mask-image:radial-gradient(ellipse_88%_92%_at_50%_48%,black_68%,transparent_100%)]"
+                    className="h-full w-full object-cover object-top dark:[mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)]"
                   />
                 </picture>
               </div>

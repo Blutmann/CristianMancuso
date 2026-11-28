@@ -1,9 +1,9 @@
 "use client";
 
-import { Component, useState, useSyncExternalStore, type ReactNode } from "react";
+import { Component, useState, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
-import { Box, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   BUTTON_OPTIONS,
   COLLAR_META,
@@ -47,14 +47,11 @@ class WebGLErrorBoundary extends Component<
 function ShirtStudioFallback({
   shirt,
   isMotionPaused,
-  showBack,
-  onToggleBack,
 }: {
   shirt: CatalogShirt;
   isMotionPaused: boolean;
-  showBack: boolean;
-  onToggleBack: () => void;
 }) {
+  const [showBack, setShowBack] = useState(false);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, active: false });
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -95,11 +92,11 @@ function ShirtStudioFallback({
             ? `Ver frente de ${shirt.name}`
             : `Ver espalda de ${shirt.name}`
         }
-        onClick={onToggleBack}
+        onClick={() => setShowBack((prev) => !prev)}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            onToggleBack();
+            setShowBack((prev) => !prev);
           }
         }}
         animate={
@@ -229,20 +226,9 @@ export interface StudioShirtStageProps {
   measurements: BespokeMeasurements;
   focusedMeasure: MeasureKey | null;
   isMotionPaused: boolean;
+  show3DViewer: boolean;
+  onWebGLError: () => void;
 }
-
-const subscribeDesktopMedia = (callback: () => void) => {
-  if (typeof window === "undefined") return () => {};
-  const mql = window.matchMedia("(min-width: 1024px)");
-  mql.addEventListener("change", callback);
-  return () => mql.removeEventListener("change", callback);
-};
-
-const getDesktopSnapshot = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia("(min-width: 1024px)").matches;
-
-const getDesktopServerSnapshot = () => false;
 
 export function StudioShirtStage({
   shirt,
@@ -254,18 +240,9 @@ export function StudioShirtStage({
   measurements,
   focusedMeasure,
   isMotionPaused,
+  show3DViewer,
+  onWebGLError,
 }: StudioShirtStageProps) {
-  const [webglFailed, setWebglFailed] = useState(false);
-  // Mobile (< lg) defaults to large floating studio photo; desktop (lg+) defaults to 3D viewer
-  const isDesktopDefault = useSyncExternalStore(
-    subscribeDesktopMedia,
-    getDesktopSnapshot,
-    getDesktopServerSnapshot
-  );
-  const [user3DOverride, setUser3DOverride] = useState<boolean | null>(null);
-  const [showBack, setShowBack] = useState(false);
-  const is3DActive = user3DOverride ?? isDesktopDefault;
-
   const selectedButton =
     BUTTON_OPTIONS.find((b) => b.id === buttonId) ?? BUTTON_OPTIONS[3];
   const collarMeta = COLLAR_META[collar];
@@ -287,8 +264,6 @@ export function StudioShirtStage({
       (idx + direction + BUTTON_OPTIONS.length) % BUTTON_OPTIONS.length;
     onButtonChange(BUTTON_OPTIONS[nextIdx].id);
   };
-
-  const show3DViewer = is3DActive && !webglFailed;
 
   return (
     <div className="relative flex w-full flex-col items-center justify-center bg-transparent">
@@ -314,8 +289,6 @@ export function StudioShirtStage({
                     <ShirtStudioFallback
                       shirt={shirt}
                       isMotionPaused={isMotionPaused}
-                      showBack={showBack}
-                      onToggleBack={() => setShowBack((prev) => !prev)}
                     />
                   }
                 >
@@ -324,15 +297,13 @@ export function StudioShirtStage({
                     buttonId={buttonId}
                     step={step}
                     isMotionPaused={isMotionPaused}
-                    onWebGLError={() => setWebglFailed(true)}
+                    onWebGLError={onWebGLError}
                   />
                 </WebGLErrorBoundary>
               ) : (
                 <ShirtStudioFallback
                   shirt={shirt}
                   isMotionPaused={isMotionPaused}
-                  showBack={showBack}
-                  onToggleBack={() => setShowBack((prev) => !prev)}
                 />
               )}
             </motion.div>
@@ -581,56 +552,6 @@ export function StudioShirtStage({
           )}
         </AnimatePresence>
       </div>
-
-      {/* External Compact Liquid Glass Controls Row BELOW the card (Step 1 & Step 4) */}
-      {(step === 1 || step === 4) && (
-        <div className="mt-3 flex items-center justify-center gap-2">
-          <button
-            id="stage-3d-toggle"
-            type="button"
-            onClick={() => {
-              const next = !is3DActive;
-              if (next) {
-                setWebglFailed(false);
-              }
-              setUser3DOverride(next);
-            }}
-            aria-pressed={show3DViewer}
-            aria-label={
-              show3DViewer
-                ? "Volver a foto de estudio"
-                : "Activar vista 3D interactiva 360°"
-            }
-            title={show3DViewer ? "Ver foto de estudio" : "Ver en 3D (360°)"}
-            className={`liquid-glass cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-[11px] font-semibold tracking-wider transition-all ${
-              show3DViewer
-                ? "border-2 border-[#16233B] bg-[#16233B]/10 text-[#16233B] dark:border-white dark:bg-white/12 dark:text-white"
-                : "text-[#111113]/85 hover:text-[#111113] dark:text-white/85 dark:hover:text-white"
-            }`}
-          >
-            <Box className="h-3.5 w-3.5" aria-hidden="true" />
-            <span>3D</span>
-          </button>
-
-          {!show3DViewer && (
-            <button
-              id="stage-flip-chip"
-              type="button"
-              onClick={() => setShowBack((prev) => !prev)}
-              aria-pressed={showBack}
-              aria-label={
-                showBack
-                  ? `Ver frente de ${shirt.name}`
-                  : `Ver espalda de ${shirt.name}`
-              }
-              className="liquid-glass cursor-pointer inline-flex min-h-[38px] items-center gap-1.5 rounded-full px-3.5 text-[11px] font-semibold text-[#111113]/85 transition-all hover:text-[#111113] dark:text-white/90 dark:hover:text-white"
-            >
-              <RotateCw className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>{showBack ? "Ver frente" : "Ver espalda"}</span>
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
